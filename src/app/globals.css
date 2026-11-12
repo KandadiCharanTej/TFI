@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+:root {
+  --ivory: #FFF8E9;
+  --yellow: #FFCB45;
+  --coral: #FF704D;
+  --cobalt: #4385EA;
+  --green: #83CBA2;
+  --lavender: #CBB8F5;
+  --black: #171717;
+  --white: #FFFFFF;
+}
+
+@layer base {
+  body {
+    background-color: var(--ivory);
+    color: var(--black);
+    font-family: var(--font-sans), 'Noto Sans Telugu', system-ui, -apple-system, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Neo-Brutalist utility classes */
+.neo-box {
+  border: 3px solid #171717;
+  box-shadow: 4px 4px 0px #171717;
+  border-radius: 1rem;
+}
+
+.neo-box-sm {
+  border: 2px solid #171717;
+  box-shadow: 2px 2px 0px #171717;
+  border-radius: 0.75rem;
+}
+
+.neo-box-lg {
+  border: 3px solid #171717;
+  box-shadow: 6px 6px 0px #171717;
+  border-radius: 1.25rem;
+}
+
+.neo-btn {
+  border: 3px solid #171717;
+  box-shadow: 4px 4px 0px #171717;
+  border-radius: 1rem;
+  font-weight: 800;
+  transition: all 0.1s ease;
+  user-select: none;
+}
+
+.neo-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0px #171717;
+}
+
+.neo-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #171717;
+}
+
+.neo-btn-sm {
+  border: 2px solid #171717;
+  box-shadow: 3px 3px 0px #171717;
+  border-radius: 0.625rem;
+  font-weight: 700;
+  transition: all 0.1s ease;
+}
+
+.neo-btn-sm:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px #171717;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #FFF8E9;
+}
+::-webkit-scrollbar-thumb {
+  background: #171717;
+  border-radius: 9999px;
+}
