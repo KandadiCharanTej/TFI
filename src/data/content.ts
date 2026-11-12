@@ -523,3 +523,4 @@ export const EMOJI_CINEMA_DATA: EmojiCinemaItem[] = [
     difficulty: 'Medium'
   }
 ];
+

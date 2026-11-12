@@ -4,260 +4,210 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { EMOJI_CINEMA_DATA } from '@/data/content';
 import { EmojiCinemaItem } from '@/types';
-import { NeoButton, NeoCard, NeoBadge } from '@/components/ui/NeoPrimitives';
-import { CinemaClapperIcon } from '@/components/ui/Illustrations';
-import { Timer, ArrowLeft, Trophy, RotateCcw, CheckCircle2, XCircle } from 'lucide-react';
+import { PopcornEmojiIcon } from '@/components/ui/EditorialArt';
+import { ArrowLeft, Clock, RotateCcw, Trophy } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export default function EmojiCinemaPage() {
   const [gameState, setGameState] = useState<'setup' | 'playing' | 'results'>('setup');
-  const [timerSeconds, setTimerSeconds] = useState<number>(20);
-  const [timeLeft, setTimeLeft] = useState<number>(20);
+  const [timeLeft, setTimeLeft] = useState<number>(45); // 00:45 matching reference
+  const [roundNumber, setRoundNumber] = useState<number>(1);
+  const totalRounds = 5;
 
   const [deck, setDeck] = useState<EmojiCinemaItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const [isAnswerRevealed, setIsAnswerRevealed] = useState<boolean>(false);
-  const [history, setHistory] = useState<{ emojis: string; chosen: string; correct: string; isCorrect: boolean; explanation: string }[]>([]);
+  const [isAnswered, setIsAnswered] = useState<boolean>(false);
 
-  const startEmojiCinema = () => {
+  const startQuiz = () => {
     const shuffled = [...EMOJI_CINEMA_DATA].sort(() => Math.random() - 0.5);
     setDeck(shuffled);
     setCurrentIndex(0);
     setScore(0);
-    setHistory([]);
+    setRoundNumber(1);
     setSelectedOption(null);
-    setIsAnswerRevealed(false);
-    setTimeLeft(timerSeconds);
+    setIsAnswered(false);
+    setTimeLeft(45);
     setGameState('playing');
   };
 
   useEffect(() => {
-    if (gameState !== 'playing' || isAnswerRevealed) return;
+    if (gameState !== 'playing' || isAnswered) return;
     if (timeLeft <= 0) {
-      handleOptionPick(-1); // Timed out
+      handleOptionPick(-1);
       return;
     }
     const timer = setInterval(() => {
       setTimeLeft((prev) => prev - 1);
     }, 1000);
     return () => clearInterval(timer);
-  }, [gameState, isAnswerRevealed, timeLeft]);
+  }, [gameState, isAnswered, timeLeft]);
 
   const handleOptionPick = (optionIndex: number) => {
-    if (isAnswerRevealed) return;
+    if (isAnswered) return;
     setSelectedOption(optionIndex);
-    setIsAnswerRevealed(true);
+    setIsAnswered(true);
 
     const currentItem = deck[currentIndex];
-    const pickedOption = optionIndex >= 0 ? currentItem.options[optionIndex] : null;
-    const isCorrect = pickedOption ? pickedOption.isCorrect : false;
-    const correctOption = currentItem.options.find((o) => o.isCorrect);
+    const picked = optionIndex >= 0 ? currentItem.options[optionIndex] : null;
 
-    if (isCorrect) {
-      setScore((s) => s + 10);
+    if (picked && picked.isCorrect) {
+      setScore((s) => s + 1);
       confetti({ particleCount: 30, spread: 50 });
     }
 
-    setHistory((prev) => [
-      ...prev,
-      {
-        emojis: currentItem.emojis,
-        chosen: pickedOption ? pickedOption.english : 'Timed out',
-        correct: correctOption ? correctOption.english : '',
-        isCorrect,
-        explanation: currentItem.explanation,
-      },
-    ]);
+    setTimeout(() => {
+      if (roundNumber >= totalRounds || currentIndex + 1 >= deck.length) {
+        setGameState('results');
+        confetti({ particleCount: 90, spread: 70 });
+      } else {
+        setRoundNumber((r) => r + 1);
+        setCurrentIndex((i) => i + 1);
+        setSelectedOption(null);
+        setIsAnswered(false);
+        setTimeLeft(45);
+      }
+    }, 1200);
   };
 
-  const nextPuzzle = () => {
-    if (currentIndex + 1 >= deck.length) {
-      setGameState('results');
-      confetti({ particleCount: 90, spread: 70 });
-    } else {
-      setCurrentIndex((i) => i + 1);
-      setSelectedOption(null);
-      setIsAnswerRevealed(false);
-      setTimeLeft(timerSeconds);
-    }
+  const formatTimer = (secs: number) => {
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
-  const currentItem = deck[currentIndex];
+  const currentItem = deck[currentIndex] || EMOJI_CINEMA_DATA[0];
 
   return (
-    <div className="max-w-xl mx-auto space-y-4">
+    <div className="max-w-md mx-auto space-y-4 pb-12">
+      {/* SETUP */}
       {gameState === 'setup' && (
-        <NeoCard bg="bg-[#4385EA]" size="lg" className="space-y-6 text-white">
+        <div className="bg-white border-2 border-[#171717] rounded-3xl p-6 shadow-[3px_3px_0_#171717] space-y-4 text-center">
           <div className="flex items-center justify-between">
-            <Link href="/games" className="inline-flex items-center gap-1 font-black text-xs hover:underline text-white">
-              <ArrowLeft className="w-4 h-4" /> Back to Games
+            <Link href="/games" className="p-1 hover:bg-[#FFCB45]/30 rounded-lg">
+              <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
             </Link>
-            <NeoBadge variant="yellow">EMOJI PUZZLE</NeoBadge>
+            <h1 className="text-xl font-black text-[#171717]">Emoji Cinema</h1>
+            <div className="w-5" />
           </div>
 
-          <div className="text-center space-y-2">
-            <div className="flex justify-center">
-              <CinemaClapperIcon className="w-20 h-20" />
-            </div>
-            <h1 className="text-3xl font-black text-white">EMOJI CINEMA</h1>
-            <p className="text-sm font-extrabold text-white/90">
-              Decode the Telugu movie title from emoji clues before the timer runs out!
+          <div className="w-20 h-20 bg-[#FFE082] rounded-2xl border-2 border-[#171717] mx-auto flex items-center justify-center shadow-[2px_2px_0_#171717]">
+            <PopcornEmojiIcon className="w-14 h-14" />
+          </div>
+
+          <div className="space-y-1">
+            <h2 className="text-2xl font-black text-[#171717]">Guess the Movie!</h2>
+            <p className="text-xs font-semibold text-neutral-600 max-w-xs mx-auto">
+              Decipher popular Telugu movies from emoji clues before the timer runs out!
             </p>
           </div>
 
-          <div className="bg-white text-[#171717] p-4 rounded-2xl border-3 border-[#171717] space-y-2">
-            <label className="text-xs font-black uppercase text-neutral-600 block">Timer Per Question</label>
-            <div className="grid grid-cols-3 gap-2">
-              {[15, 20, 30].map((t) => (
-                <button
-                  key={t}
-                  onClick={() => setTimerSeconds(t)}
-                  className={`py-2 rounded-xl border-2 border-[#171717] font-black text-xs transition-all ${
-                    timerSeconds === t
-                      ? 'bg-[#FFCB45] shadow-[2px_2px_0_#171717] -translate-y-0.5'
-                      : 'bg-neutral-100'
-                  }`}
-                >
-                  {t} Seconds
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <NeoButton variant="primary" fullWidth size="lg" onClick={startEmojiCinema}>
-            START EMOJI QUIZ 🧩
-          </NeoButton>
-        </NeoCard>
+          <button
+            onClick={startQuiz}
+            className="w-full py-4 bg-[#FFCB45] border-2 border-[#171717] rounded-2xl font-black text-base shadow-[2.5px_2.5px_0_#171717] hover:bg-[#ffd45e] active:translate-x-0.5 active:translate-y-0.5 mt-2 cursor-pointer transition-all"
+          >
+            Start Quiz 🍿
+          </button>
+        </div>
       )}
 
-      {gameState === 'playing' && currentItem && (
+      {/* GAMEPLAY MATCHING REFERENCE SCREEN 8 */}
+      {gameState === 'playing' && (
         <div className="space-y-4">
-          {/* Top Bar */}
-          <div className="flex items-center justify-between bg-white p-3 rounded-xl border-3 border-[#171717] shadow-[3px_3px_0_#171717]">
-            <span className="text-xs font-black bg-[#4385EA] text-white px-2.5 py-1 rounded-lg">
-              Question {currentIndex + 1} / {deck.length}
-            </span>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1 font-black text-xl text-[#171717]">
-                <Timer className="w-5 h-5 text-[#FF704D]" />
-                <span className={timeLeft <= 5 ? 'text-red-600 animate-pulse' : ''}>{timeLeft}s</span>
-              </div>
-              <span className="text-xs font-black bg-[#FFCB45] border-2 border-[#171717] px-2 py-0.5 rounded">
-                Score: {score}
-              </span>
+          {/* Top Bar: Back arrow, "Emoji Cinema", yellow pill timer 00:45 */}
+          <div className="flex items-center justify-between px-1">
+            <button onClick={() => setGameState('setup')} className="p-1 hover:bg-[#FFCB45]/30 rounded-lg">
+              <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
+            </button>
+            <h1 className="text-lg font-black text-[#171717]">Emoji Cinema</h1>
+
+            <div className="flex items-center gap-1 bg-[#FFCB45] px-3 py-1 rounded-full border-2 border-[#171717] shadow-[1.5px_1.5px_0_#171717] text-xs font-black">
+              <Clock className="w-3.5 h-3.5 stroke-[3]" />
+              <span>{formatTimer(timeLeft)}</span>
             </div>
           </div>
 
-          {/* Emoji Clue Banner */}
-          <NeoCard bg="bg-[#FFF8E9]" size="lg" className="text-center py-8 space-y-3">
-            <NeoBadge variant="coral">GUESS THE TELUGU MOVIE</NeoBadge>
-            <div className="text-4xl sm:text-5xl tracking-widest my-4 filter drop-shadow">
+          {/* Big White Emoji Clue Box matching reference screen 8: Popcorn + Heart + Clapperboard */}
+          <div className="bg-white border-2 border-[#171717] rounded-3xl p-8 shadow-[3px_3px_0_#171717] flex items-center justify-center min-h-[160px] text-center">
+            <span className="text-4xl sm:text-5xl tracking-widest filter drop-shadow-sm">
               {currentItem.emojis}
-            </div>
-            <p className="text-xs font-bold text-neutral-500">
-              Select the correct film that matches this emoji combination:
-            </p>
-          </NeoCard>
+            </span>
+          </div>
 
-          {/* 4 Choices */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {/* 4 Answer options in 2x2 grid matching reference screen 8: [A. Arjun Reddy] [B. Jersey] [C. Geetha Govindam] [D. Majili] */}
+          <div className="grid grid-cols-2 gap-3 pt-2">
             {currentItem.options.map((option, idx) => {
-              let btnClass = 'bg-white hover:bg-neutral-50';
-              if (isAnswerRevealed) {
+              const letter = ['A', 'B', 'C', 'D'][idx];
+              let cardStyle = 'bg-white hover:bg-neutral-50';
+
+              if (isAnswered) {
                 if (option.isCorrect) {
-                  btnClass = 'bg-[#83CBA2] border-green-700 text-black';
+                  cardStyle = 'bg-[#88D49E] text-black font-black';
                 } else if (selectedOption === idx) {
-                  btnClass = 'bg-[#FF704D] border-red-700 text-white';
+                  cardStyle = 'bg-[#FFA6BA] text-black font-black';
                 } else {
-                  btnClass = 'bg-neutral-100 opacity-60';
+                  cardStyle = 'bg-neutral-100 opacity-60';
                 }
               }
 
               return (
                 <button
                   key={idx}
-                  disabled={isAnswerRevealed}
+                  disabled={isAnswered}
                   onClick={() => handleOptionPick(idx)}
-                  className={`p-4 rounded-2xl border-3 border-[#171717] font-black text-left shadow-[3px_3px_0_#171717] transition-all flex items-center justify-between ${btnClass}`}
+                  className={`p-3.5 border-2 border-[#171717] rounded-2xl shadow-[2px_2px_0_#171717] font-black text-xs text-left cursor-pointer transition-all active:translate-x-0.5 active:translate-y-0.5 ${cardStyle}`}
                 >
-                  <div>
-                    <div className="text-base">{option.telugu}</div>
-                    <div className="text-xs opacity-80">{option.english}</div>
-                  </div>
-                  {isAnswerRevealed && option.isCorrect && (
-                    <CheckCircle2 className="w-5 h-5 text-green-900 shrink-0" />
-                  )}
-                  {isAnswerRevealed && selectedOption === idx && !option.isCorrect && (
-                    <XCircle className="w-5 h-5 text-white shrink-0" />
-                  )}
+                  <span className="text-neutral-500 mr-1.5">{letter}.</span>
+                  <span>{option.english}</span>
                 </button>
               );
             })}
           </div>
 
-          {/* Explanation Banner when answered */}
-          {isAnswerRevealed && (
-            <div className="p-4 bg-white border-3 border-[#171717] rounded-2xl shadow-[4px_4px_0_#171717] space-y-3 animate-in fade-in">
-              <div className="text-xs font-black uppercase text-neutral-500">Clue Explanation:</div>
-              <p className="text-sm font-bold text-[#171717]">
-                💡 {currentItem.explanation}
-              </p>
-              <NeoButton variant="primary" fullWidth size="md" onClick={nextPuzzle}>
-                {currentIndex + 1 >= deck.length ? 'SEE RESULTS 🏆' : 'NEXT PUZZLE ➡️'}
-              </NeoButton>
+          {/* Explanation reveal */}
+          {isAnswered && (
+            <div className="p-3 bg-[#FFF8E9] border-2 border-[#171717] rounded-xl text-center text-xs font-bold text-neutral-800 animate-in fade-in">
+              💡 {currentItem.explanation}
             </div>
           )}
+
+          {/* Footer stats */}
+          <div className="flex items-center justify-between px-2 pt-2 text-xs font-black text-[#171717]">
+            <span>Score: {score}</span>
+            <span>Question: {roundNumber}/{totalRounds}</span>
+          </div>
         </div>
       )}
 
+      {/* RESULTS */}
       {gameState === 'results' && (
-        <NeoCard bg="bg-[#FFF8E9]" size="lg" className="space-y-6">
-          <div className="text-center space-y-2">
-            <div className="flex justify-center">
-              <Trophy className="w-16 h-16 text-[#FFCB45]" />
-            </div>
-            <h2 className="text-3xl font-black text-[#171717]">QUIZ FINISHED!</h2>
-            <p className="text-sm font-bold text-neutral-600">
-              Total Score: <span className="text-2xl font-black text-[#FF704D]">{score} / {deck.length * 10}</span>
+        <div className="bg-white border-2 border-[#171717] rounded-3xl p-6 shadow-[3px_3px_0_#171717] space-y-4 text-center">
+          <div className="w-16 h-16 bg-[#FFCB45] rounded-2xl border-2 border-[#171717] mx-auto flex items-center justify-center shadow-[2px_2px_0_#171717]">
+            <Trophy className="w-10 h-10 text-[#171717]" />
+          </div>
+          <div className="space-y-1">
+            <h2 className="text-2xl font-black text-[#171717]">Quiz Completed!</h2>
+            <p className="text-xs font-bold text-neutral-600">
+              Score: <span className="text-[#FF704D] font-black">{score}</span> / {totalRounds}
             </p>
           </div>
 
-          {/* Review List */}
-          <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
-            <div className="text-xs font-black uppercase">Question Breakdown:</div>
-            {history.map((h, i) => (
-              <div
-                key={i}
-                className={`p-3 rounded-xl border-2 border-[#171717] text-xs font-bold ${
-                  h.isCorrect ? 'bg-green-100' : 'bg-red-50'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-base">{h.emojis}</span>
-                  <span className={h.isCorrect ? 'text-green-800 font-black' : 'text-red-700 font-black'}>
-                    {h.isCorrect ? '✓ +10' : '✕ Missed'}
-                  </span>
-                </div>
-                <div>Correct Answer: {h.correct}</div>
-                <div className="text-[11px] text-neutral-600 italic mt-0.5">{h.explanation}</div>
-              </div>
-            ))}
-          </div>
-
           <div className="grid grid-cols-2 gap-3 pt-2">
-            <NeoButton variant="primary" fullWidth size="md" onClick={startEmojiCinema}>
+            <button
+              onClick={startQuiz}
+              className="py-3 bg-[#FFCB45] border-2 border-[#171717] rounded-xl font-black text-xs shadow-[2px_2px_0_#171717] flex items-center justify-center gap-1.5"
+            >
               <RotateCcw className="w-4 h-4" />
-              <span>PLAY AGAIN</span>
-            </NeoButton>
-            <Link href="/games">
-              <NeoButton variant="white" fullWidth size="md">
-                BACK TO GAMES
-              </NeoButton>
+              <span>Play Again</span>
+            </button>
+            <Link href="/games" className="block">
+              <button className="w-full py-3 bg-[#FFF8E9] border-2 border-[#171717] rounded-xl font-black text-xs shadow-[2px_2px_0_#171717]">
+                Back to Games
+              </button>
             </Link>
           </div>
-        </NeoCard>
+        </div>
       )}
     </div>
   );

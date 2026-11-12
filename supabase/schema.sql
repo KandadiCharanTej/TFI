@@ -51,3 +51,4 @@ CREATE TABLE IF NOT EXISTS auction_bids (
   bid_amount_cr INTEGER NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+

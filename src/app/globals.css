@@ -2,10 +2,16 @@
 
 :root {
   --ivory: #FFF8E9;
+  --cream-card: #FDFBF4;
   --yellow: #FFCB45;
+  --yellow-light: #FFE082;
+  --pink-card: #FFA6BA;
+  --pink-soft: #FFD1DC;
+  --blue-card: #B3D4FC;
+  --blue-soft: #D7E8FC;
   --coral: #FF704D;
-  --cobalt: #4385EA;
-  --green: #83CBA2;
+  --coral-light: #FF9E80;
+  --green: #88D49E;
   --lavender: #CBB8F5;
   --black: #171717;
   --white: #FFFFFF;
@@ -15,66 +21,107 @@
   body {
     background-color: var(--ivory);
     color: var(--black);
-    font-family: var(--font-sans), 'Noto Sans Telugu', system-ui, -apple-system, sans-serif;
+    font-family: var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     -webkit-tap-highlight-color: transparent;
+    user-select: none;
   }
 }
 
-/* Neo-Brutalist utility classes */
-.neo-box {
-  border: 3px solid #171717;
-  box-shadow: 4px 4px 0px #171717;
-  border-radius: 1rem;
-}
-
-.neo-box-sm {
+/* Soft Neo-Brutalist & Editorial Tokens matching reference image */
+.nb-card {
+  background-color: #FFFFFF;
   border: 2px solid #171717;
-  box-shadow: 2px 2px 0px #171717;
-  border-radius: 0.75rem;
-}
-
-.neo-box-lg {
-  border: 3px solid #171717;
-  box-shadow: 6px 6px 0px #171717;
   border-radius: 1.25rem;
+  box-shadow: 2.5px 2.5px 0px #171717;
 }
 
-.neo-btn {
-  border: 3px solid #171717;
-  box-shadow: 4px 4px 0px #171717;
+.nb-card-pink {
+  background-color: #FFA6BA;
+  border: 2px solid #171717;
+  border-radius: 1.25rem;
+  box-shadow: 2.5px 2.5px 0px #171717;
+}
+
+.nb-card-blue {
+  background-color: #B3D4FC;
+  border: 2px solid #171717;
+  border-radius: 1.25rem;
+  box-shadow: 2.5px 2.5px 0px #171717;
+}
+
+.nb-card-yellow {
+  background-color: #FFCB45;
+  border: 2px solid #171717;
+  border-radius: 1.25rem;
+  box-shadow: 2.5px 2.5px 0px #171717;
+}
+
+.nb-card-orange {
+  background-color: #FF9E80;
+  border: 2px solid #171717;
+  border-radius: 1.25rem;
+  box-shadow: 2.5px 2.5px 0px #171717;
+}
+
+.nb-card-purple {
+  background-color: #D2C2F8;
+  border: 2px solid #171717;
+  border-radius: 1.25rem;
+  box-shadow: 2.5px 2.5px 0px #171717;
+}
+
+.nb-btn {
+  border: 2px solid #171717;
   border-radius: 1rem;
   font-weight: 800;
-  transition: all 0.1s ease;
-  user-select: none;
+  box-shadow: 2.5px 2.5px 0px #171717;
+  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
 }
 
-.neo-btn:hover {
+.nb-btn:hover {
   transform: translate(-1px, -1px);
-  box-shadow: 5px 5px 0px #171717;
+  box-shadow: 3.5px 3.5px 0px #171717;
 }
 
-.neo-btn:active {
+.nb-btn:active {
   transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0px #171717;
+  box-shadow: 0.5px 0.5px 0px #171717;
 }
 
-.neo-btn-sm {
+.nb-btn-yellow {
+  background-color: #FFCB45;
+  color: #171717;
+}
+.nb-btn-yellow:hover {
+  background-color: #ffd45e;
+}
+
+.nb-btn-green {
+  background-color: #88D49E;
+  color: #171717;
+}
+
+.nb-btn-pink {
+  background-color: #FFA6BA;
+  color: #171717;
+}
+
+.nb-pill {
   border: 2px solid #171717;
-  box-shadow: 3px 3px 0px #171717;
-  border-radius: 0.625rem;
-  font-weight: 700;
-  transition: all 0.1s ease;
+  border-radius: 9999px;
+  font-weight: 800;
+  box-shadow: 1.5px 1.5px 0px #171717;
 }
 
-.neo-btn-sm:active {
-  transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0px #171717;
-}
-
-/* Custom scrollbar */
+/* Custom scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: #FFF8E9;

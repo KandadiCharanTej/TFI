@@ -1,135 +1,120 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { NeoCard, NeoButton, NeoBadge } from '@/components/ui/NeoPrimitives';
-import { TeluguHeroIcon, AuctionGavelIcon, CinemaClapperIcon, CharadesMaskIcon } from '@/components/ui/Illustrations';
-import { Gamepad2, ArrowRight } from 'lucide-react';
+import { ForeheadPlayerIcon, PopcornEmojiIcon, WoodenGavelIllustration, ClapperboardDoodle, MimeActorIllustration } from '@/components/ui/EditorialArt';
+import { ArrowLeft, ChevronRight } from 'lucide-react';
 
 export default function GamesCataloguePage() {
+  const [activeTab, setActiveTab] = useState<'All' | 'Cinema' | 'Party'>('All');
+
   const games = [
     {
-      id: 'auction',
-      name: 'TFI Box Office Auction',
-      telugu: 'బాక్స్ ఆఫీస్ వేలం',
-      description: 'The flagship auction game! Budget ₹100 Cr, manage purse, bid against friends, and score massive points based on Box Office, Audience reception, and Cult Repeat Value.',
-      modes: ['Online Multiplayer', 'Single Device Pass-and-Play'],
-      players: '2-10 Players',
-      href: '/games/auction',
-      bg: 'bg-[#FFCB45]',
-      icon: AuctionGavelIcon,
-      tag: 'FLAGSHIP',
-      tagColor: 'coral' as const,
-    },
-    {
       id: 'head-set-go',
-      name: 'Head Set Go',
-      telugu: 'హెడ్ సెట్ గో',
-      description: 'Place your phone on your forehead! Friends mimic, describe, and quote legendary Telugu dialogues while you guess before the buzzer sounds.',
-      modes: ['Forehead / Tilt Controls', 'Touch Button Controls'],
-      players: '2+ Players',
+      title: 'Head Set Go',
+      subtitle: 'Guess movies!',
+      category: 'Party',
       href: '/games/head-set-go',
-      bg: 'bg-[#83CBA2]',
-      icon: TeluguHeroIcon,
-      tag: 'PARTY FAVORITE',
-      tagColor: 'yellow' as const,
+      icon: ForeheadPlayerIcon,
+      bg: 'bg-[#B3D4FC]',
     },
     {
       id: 'transify',
-      name: 'Transify',
-      telugu: 'ట్రాన్సిఫై',
-      description: 'Crazy English literal translations of Telugu movie names! The Judge reads out the English phrase, and friends race to decode the Telugu original.',
-      modes: ['Single Device Pass-and-Play', 'Judge Scoring Mode'],
-      players: '2-8 Players',
+      title: 'Transify',
+      subtitle: 'Crack the funny translations!',
+      category: 'Cinema',
       href: '/games/transify',
-      bg: 'bg-[#CBB8F5]',
-      icon: CinemaClapperIcon,
-      tag: 'COMEDY',
-      tagColor: 'lavender' as const,
+      icon: ClapperboardDoodle,
+      bg: 'bg-[#FFA6BA]',
     },
     {
       id: 'dumb-charades',
-      name: 'Dumb Charades',
-      teluguTitle: 'డంబ్ చారేడ్స్',
-      description: 'Two teams clash! Pass the phone with a private tap-to-reveal curtain so opponents cannot see the secret movie before you act it out.',
-      modes: ['Team 1 vs Team 2', 'Curtain Screen'],
-      players: '4-12 Players (2 Teams)',
+      title: 'Dumb Charades',
+      subtitle: 'Act it out!',
+      category: 'Party',
       href: '/games/dumb-charades',
-      bg: 'bg-[#FF704D]',
-      icon: CharadesMaskIcon,
-      tag: 'TEAM BATTLE',
-      tagColor: 'green' as const,
+      icon: MimeActorIllustration,
+      bg: 'bg-[#FF9E80]',
     },
     {
       id: 'emoji-cinema',
-      name: 'Emoji Cinema',
-      telugu: 'ఎమోజి సినిమా',
-      description: 'Test your brain against rapid-fire emoji puzzles representing blockbusters, heroes, and cult song sequences.',
-      modes: ['Solo Time Attack', 'Pass & Score'],
-      players: '1-6 Players',
+      title: 'Emoji Cinema',
+      subtitle: 'Guess the movie!',
+      category: 'Cinema',
       href: '/games/emoji-cinema',
-      bg: 'bg-[#4385EA]',
-      icon: CinemaClapperIcon,
-      tag: 'TRIVIA PUZZLE',
-      tagColor: 'white' as const,
+      icon: PopcornEmojiIcon,
+      bg: 'bg-[#FFE082]',
+    },
+    {
+      id: 'auction',
+      title: 'TFI Box Office Auction',
+      subtitle: 'Bid & Build!',
+      category: 'Cinema',
+      href: '/games/auction',
+      icon: WoodenGavelIllustration,
+      bg: 'bg-[#D2C2F8]',
     },
   ];
 
+  const filteredGames = activeTab === 'All' ? games : games.filter((g) => g.category === activeTab);
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <div className="p-3 bg-[#FFCB45] border-3 border-[#171717] rounded-xl shadow-[3px_3px_0_#171717]">
-          <Gamepad2 className="w-8 h-8 text-[#171717]" />
-        </div>
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-[#171717]">
-            TELUGU CINEMA GAMES
-          </h1>
-          <p className="text-xs sm:text-sm font-bold text-neutral-600">
-            5 unique party games crafted exclusively for Tollywood lovers.
-          </p>
-        </div>
+    <div className="max-w-md mx-auto space-y-4 pb-12">
+      {/* Top Header matching reference screen 4: Back arrow + "Games" */}
+      <div className="flex items-center justify-between px-1">
+        <Link href="/" className="p-1 hover:bg-[#FFCB45]/30 rounded-lg">
+          <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
+        </Link>
+        <h1 className="text-xl font-black text-[#171717] tracking-tight">
+          Games
+        </h1>
+        <div className="w-5" /> {/* balance spacing */}
       </div>
 
-      <div className="space-y-4">
-        {games.map((game) => {
+      {/* Filter Tabs matching reference screen 4: Pills [All] [Cinema] [Party] */}
+      <div className="flex items-center gap-2 pt-1">
+        {(['All', 'Cinema', 'Party'] as const).map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`px-5 py-1.5 rounded-full border-2 border-[#171717] text-xs font-black transition-all ${
+              activeTab === tab
+                ? 'bg-[#FFCB45] shadow-[2px_2px_0_#171717] -translate-y-0.5'
+                : 'bg-white hover:bg-neutral-50'
+            }`}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+
+      {/* Game Cards List matching reference screen 4 */}
+      <div className="space-y-3 pt-2">
+        {filteredGames.map((game) => {
           const Icon = game.icon;
           return (
-            <NeoCard key={game.id} bg={game.bg} size="lg" className="flex flex-col md:flex-row gap-5 items-start md:items-center justify-between">
-              <div className="flex items-start gap-4 flex-1">
-                <div className="p-3 bg-white border-3 border-[#171717] rounded-2xl shadow-[3px_3px_0_#171717] shrink-0">
-                  <Icon className="w-10 h-10" />
-                </div>
-                <div className="space-y-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <NeoBadge variant={game.tagColor}>{game.tag}</NeoBadge>
-                    <span className="text-xs font-black bg-[#171717] text-white px-2 py-0.5 rounded">
-                      {game.players}
-                    </span>
+            <Link key={game.id} href={game.href} className="block group">
+              <div className="p-3 bg-white border-2 border-[#171717] rounded-2xl shadow-[2.5px_2.5px_0_#171717] flex items-center justify-between hover:bg-[#FFF8E9] transition-all">
+                <div className="flex items-center gap-3.5">
+                  {/* Square thumbnail with rounded border */}
+                  <div className={`w-14 h-14 ${game.bg} border-2 border-[#171717] rounded-xl flex items-center justify-center p-2 shadow-[1px_1px_0_#171717] shrink-0`}>
+                    <Icon className="w-9 h-9" />
                   </div>
-                  <h2 className="text-xl font-black text-[#171717]">{game.name}</h2>
-                  <p className="text-xs font-semibold text-[#171717]/80 line-clamp-2 md:line-clamp-none max-w-xl">
-                    {game.description}
-                  </p>
-                  <div className="pt-2 flex flex-wrap gap-1.5">
-                    {game.modes.map((m, i) => (
-                      <span key={i} className="text-[11px] font-bold bg-white/80 border border-[#171717] px-2 py-0.5 rounded-full">
-                        ✓ {m}
-                      </span>
-                    ))}
+                  <div>
+                    <h2 className="text-base font-black text-[#171717] group-hover:text-[#FF704D] transition-colors leading-tight">
+                      {game.title}
+                    </h2>
+                    <p className="text-xs font-semibold text-neutral-600 mt-0.5">
+                      {game.subtitle}
+                    </p>
                   </div>
                 </div>
-              </div>
 
-              <div className="w-full md:w-auto shrink-0">
-                <Link href={game.href}>
-                  <NeoButton variant="white" fullWidth size="md">
-                    <span>PLAY NOW</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </NeoButton>
-                </Link>
+                <div className="p-1.5 bg-[#FFF8E9] group-hover:bg-[#FFCB45] border-2 border-[#171717] rounded-xl shadow-[1px_1px_0_#171717] transition-all">
+                  <ChevronRight className="w-4 h-4 stroke-[3]" />
+                </div>
               </div>
-            </NeoCard>
+            </Link>
           );
         })}
       </div>

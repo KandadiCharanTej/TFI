@@ -4,23 +4,18 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { DUMB_CHARADES_DATA } from '@/data/content';
 import { DumbCharadesItem } from '@/types';
-import { NeoButton, NeoCard, NeoBadge } from '@/components/ui/NeoPrimitives';
-import { CharadesMaskIcon } from '@/components/ui/Illustrations';
-import { Timer, Eye, Check, SkipForward, ArrowLeft, Trophy, Users, RotateCcw } from 'lucide-react';
+import { MimeActorIllustration } from '@/components/ui/EditorialArt';
+import { ArrowLeft, Clock, Check, X, RotateCcw, Trophy, Eye } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export default function DumbCharadesPage() {
-  const [gameState, setGameState] = useState<'setup' | 'handoff' | 'acting' | 'results'>('setup');
-  const [team1Name, setTeam1Name] = useState<string>('Team Chiru');
-  const [team2Name, setTeam2Name] = useState<string>('Team Balayya');
-  const [team1Score, setTeam1Score] = useState<number>(0);
-  const [team2Score, setTeam2Score] = useState<number>(0);
-  const [currentTurnTeam, setCurrentTurnTeam] = useState<1 | 2>(1);
+  const [gameState, setGameState] = useState<'setup' | 'handoff' | 'playing' | 'results'>('setup');
+  const [teamAScore, setTeamAScore] = useState<number>(12); // sample starting / reference looks
+  const [teamBScore, setTeamBScore] = useState<number>(10);
+  const [currentTurn, setCurrentTurn] = useState<'Team A' | 'Team B'>('Team A');
+  const [timeLeft, setTimeLeft] = useState<number>(60); // 01:00 matching reference
   const [roundNumber, setRoundNumber] = useState<number>(1);
-  const [totalRounds, setTotalRounds] = useState<number>(6); // 3 turns each
-
-  const [timerSeconds, setTimerSeconds] = useState<number>(60);
-  const [timeLeft, setTimeLeft] = useState<number>(60);
+  const totalRounds = 6;
 
   const [deck, setDeck] = useState<DumbCharadesItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -29,17 +24,18 @@ export default function DumbCharadesPage() {
     const shuffled = [...DUMB_CHARADES_DATA].sort(() => Math.random() - 0.5);
     setDeck(shuffled);
     setCurrentIndex(0);
-    setTeam1Score(0);
-    setTeam2Score(0);
-    setCurrentTurnTeam(1);
+    setTeamAScore(0);
+    setTeamBScore(0);
+    setCurrentTurn('Team A');
     setRoundNumber(1);
+    setTimeLeft(60);
     setGameState('handoff');
   };
 
   useEffect(() => {
-    if (gameState !== 'acting') return;
+    if (gameState !== 'playing') return;
     if (timeLeft <= 0) {
-      handleTurnFinish(false);
+      handleFinishTurn(false);
       return;
     }
     const timer = setInterval(() => {
@@ -48,237 +44,189 @@ export default function DumbCharadesPage() {
     return () => clearInterval(timer);
   }, [gameState, timeLeft]);
 
-  const handleTurnFinish = (isGuessed: boolean) => {
+  const handleFinishTurn = (isGuessed: boolean) => {
     if (isGuessed) {
-      if (currentTurnTeam === 1) {
-        setTeam1Score((s) => s + 1);
-      } else {
-        setTeam2Score((s) => s + 1);
-      }
+      if (currentTurn === 'Team A') setTeamAScore((s) => s + 1);
+      else setTeamBScore((s) => s + 1);
     }
 
     if (roundNumber >= totalRounds) {
       setGameState('results');
-      confetti({ particleCount: 100, spread: 80 });
-      return;
+      confetti({ particleCount: 90, spread: 70 });
+    } else {
+      setRoundNumber((r) => r + 1);
+      setCurrentTurn((t) => (t === 'Team A' ? 'Team B' : 'Team A'));
+      setCurrentIndex((i) => (i + 1) % deck.length);
+      setTimeLeft(60);
+      setGameState('handoff');
     }
+  };
 
-    // Switch turns
-    setCurrentTurnTeam((t) => (t === 1 ? 2 : 1));
-    setRoundNumber((r) => r + 1);
-    setCurrentIndex((i) => (i + 1) % deck.length);
-    setGameState('handoff');
+  const formatTimer = (secs: number) => {
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
   const currentItem = deck[currentIndex] || DUMB_CHARADES_DATA[0];
-  const activeTeamName = currentTurnTeam === 1 ? team1Name : team2Name;
 
   return (
-    <div className="max-w-xl mx-auto space-y-4">
+    <div className="max-w-md mx-auto space-y-4 pb-12">
+      {/* SETUP */}
       {gameState === 'setup' && (
-        <NeoCard bg="bg-[#FF704D]" size="lg" className="space-y-6 text-white">
+        <div className="bg-white border-2 border-[#171717] rounded-3xl p-6 shadow-[3px_3px_0_#171717] space-y-4 text-center">
           <div className="flex items-center justify-between">
-            <Link href="/games" className="inline-flex items-center gap-1 font-black text-xs hover:underline text-white">
-              <ArrowLeft className="w-4 h-4" /> Back to Games
+            <Link href="/games" className="p-1 hover:bg-[#FFCB45]/30 rounded-lg">
+              <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
             </Link>
-            <NeoBadge variant="yellow">TEAM BATTLE</NeoBadge>
+            <h1 className="text-xl font-black text-[#171717]">Dumb Charades</h1>
+            <div className="w-5" />
           </div>
 
-          <div className="text-center space-y-2">
-            <div className="flex justify-center">
-              <CharadesMaskIcon className="w-20 h-20" />
-            </div>
-            <h1 className="text-3xl font-black text-white">DUMB CHARADES</h1>
-            <p className="text-sm font-extrabold text-white/90">
-              Act out legendary Telugu movie titles with gestures only. No speaking!
+          <div className="w-24 h-24 mx-auto flex items-center justify-center">
+            <MimeActorIllustration className="w-24 h-24" />
+          </div>
+
+          <div className="space-y-1">
+            <h2 className="text-2xl font-black text-[#171717]">Act it Out!</h2>
+            <p className="text-xs font-semibold text-neutral-600 max-w-xs mx-auto">
+              Team A vs Team B. One player receives a secret Telugu movie title and acts it out with gestures only!
             </p>
           </div>
 
-          {/* Team configuration */}
-          <div className="space-y-3 bg-white text-[#171717] p-4 rounded-2xl border-3 border-[#171717]">
-            <div>
-              <label className="text-xs font-black uppercase text-neutral-500">Team 1 Name</label>
-              <input
-                type="text"
-                value={team1Name}
-                onChange={(e) => setTeam1Name(e.target.value)}
-                className="w-full px-3 py-2 border-2 border-[#171717] rounded-xl font-bold text-sm"
-              />
-            </div>
-            <div>
-              <label className="text-xs font-black uppercase text-neutral-500">Team 2 Name</label>
-              <input
-                type="text"
-                value={team2Name}
-                onChange={(e) => setTeam2Name(e.target.value)}
-                className="w-full px-3 py-2 border-2 border-[#171717] rounded-xl font-bold text-sm"
-              />
-            </div>
-          </div>
-
-          {/* Rounds & Timer */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="bg-white text-[#171717] p-3 rounded-xl border-2 border-[#171717]">
-              <label className="text-xs font-black uppercase block mb-1">Rounds per Team</label>
-              <select
-                value={totalRounds}
-                onChange={(e) => setTotalRounds(Number(e.target.value))}
-                className="w-full bg-neutral-100 p-2 font-bold text-xs rounded-lg border border-[#171717]"
-              >
-                <option value={4}>2 each (4 turns)</option>
-                <option value={6}>3 each (6 turns)</option>
-                <option value={10}>5 each (10 turns)</option>
-              </select>
-            </div>
-            <div className="bg-white text-[#171717] p-3 rounded-xl border-2 border-[#171717]">
-              <label className="text-xs font-black uppercase block mb-1">Time per Turn</label>
-              <select
-                value={timerSeconds}
-                onChange={(e) => setTimerSeconds(Number(e.target.value))}
-                className="w-full bg-neutral-100 p-2 font-bold text-xs rounded-lg border border-[#171717]"
-              >
-                <option value={45}>45 Seconds</option>
-                <option value={60}>60 Seconds</option>
-                <option value={90}>90 Seconds</option>
-              </select>
-            </div>
-          </div>
-
-          <NeoButton variant="primary" fullWidth size="lg" onClick={startCharades}>
-            START CHARADES CLASH 🔥
-          </NeoButton>
-        </NeoCard>
+          <button
+            onClick={startCharades}
+            className="w-full py-4 bg-[#FFCB45] border-2 border-[#171717] rounded-2xl font-black text-base shadow-[2.5px_2.5px_0_#171717] hover:bg-[#ffd45e] active:translate-x-0.5 active:translate-y-0.5 mt-2 cursor-pointer transition-all"
+          >
+            Start Battle 🔥
+          </button>
+        </div>
       )}
 
-      {/* Secret Handoff Privacy Screen */}
+      {/* HANDOFF CURTAIN */}
       {gameState === 'handoff' && (
-        <NeoCard bg="bg-[#FFCB45]" size="lg" className="text-center py-10 space-y-6">
-          <NeoBadge variant="coral">CONFIDENTIAL HANDOFF</NeoBadge>
-          <div className="space-y-2">
-            <div className="text-xs font-black uppercase tracking-wider text-neutral-700">
-              Round {roundNumber} of {totalRounds}
-            </div>
-            <h2 className="text-3xl font-black text-[#171717]">
-              Pass Phone to: <br />
-              <span className="text-4xl text-[#FF704D]">{activeTeamName} Actor</span>
-            </h2>
-            <p className="text-xs font-extrabold text-neutral-700 max-w-sm mx-auto">
-              Teammates look away! Only the person acting should look at the secret movie on the next screen.
-            </p>
+        <div className="bg-[#FFCB45] border-2 border-[#171717] rounded-3xl p-8 shadow-[3.5px_3.5px_0_#171717] space-y-5 text-center">
+          <div className="inline-block px-3 py-1 bg-white border-2 border-[#171717] rounded-full text-xs font-black">
+            Turn: {currentTurn}
           </div>
+          <h2 className="text-3xl font-black text-[#171717]">
+            Pass Device to <br /> {currentTurn} Actor
+          </h2>
+          <p className="text-xs font-bold text-neutral-800">
+            Teammates look away! Only the acting player should reveal the secret movie title.
+          </p>
 
-          <div className="pt-4">
-            <NeoButton
-              variant="white"
-              size="lg"
-              fullWidth
-              onClick={() => {
-                setTimeLeft(timerSeconds);
-                setGameState('acting');
-              }}
-            >
-              <Eye className="w-5 h-5" />
-              <span>I AM THE ACTOR (SHOW SECRET)</span>
-            </NeoButton>
-          </div>
-        </NeoCard>
+          <button
+            onClick={() => setGameState('playing')}
+            className="w-full py-4 bg-white border-2 border-[#171717] rounded-2xl font-black text-base shadow-[2.5px_2.5px_0_#171717] hover:bg-neutral-50 active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer transition-all"
+          >
+            <Eye className="w-5 h-5" />
+            <span>Show Secret Movie</span>
+          </button>
+        </div>
       )}
 
-      {/* Live Acting Screen */}
-      {gameState === 'acting' && currentItem && (
+      {/* GAMEPLAY MATCHING REFERENCE SCREEN 7 */}
+      {gameState === 'playing' && (
         <div className="space-y-4">
-          <div className="flex items-center justify-between bg-white p-3 rounded-xl border-3 border-[#171717] shadow-[3px_3px_0_#171717]">
-            <div>
-              <div className="text-xs font-black bg-[#FF704D] text-white px-2 py-0.5 rounded inline-block">
-                Turn: {activeTeamName}
-              </div>
-              <div className="text-[11px] font-bold text-neutral-500 mt-0.5">
-                Score: {team1Name} ({team1Score}) vs {team2Name} ({team2Score})
-              </div>
+          {/* Top Bar: Back arrow, "Dumb Charades" */}
+          <div className="flex items-center justify-between px-1">
+            <button onClick={() => setGameState('setup')} className="p-1 hover:bg-[#FFCB45]/30 rounded-lg">
+              <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
+            </button>
+            <h1 className="text-lg font-black text-[#171717]">Dumb Charades</h1>
+            <div className="w-5" />
+          </div>
+
+          {/* Team A and Team B Cards matching reference screen 7 */}
+          <div className="grid grid-cols-2 gap-3">
+            {/* Team A (Blue Card) */}
+            <div className="p-4 bg-[#B3D4FC] border-2 border-[#171717] rounded-2xl shadow-[2.5px_2.5px_0_#171717] text-center">
+              <span className="text-xs font-black text-[#171717] block">Team A</span>
+              <span className="text-2xl font-black text-[#171717]">{teamAScore}</span>
             </div>
-            <div className="flex items-center gap-1 font-black text-2xl text-[#171717]">
-              <Timer className="w-6 h-6 text-[#FF704D]" />
-              <span className={timeLeft <= 15 ? 'text-red-600 animate-pulse' : ''}>{timeLeft}s</span>
+
+            {/* Team B (Pink Card) */}
+            <div className="p-4 bg-[#FFA6BA] border-2 border-[#171717] rounded-2xl shadow-[2.5px_2.5px_0_#171717] text-center">
+              <span className="text-xs font-black text-[#171717] block">Team B</span>
+              <span className="text-2xl font-black text-[#171717]">{teamBScore}</span>
             </div>
           </div>
 
-          {/* Confidential Movie Card */}
-          <NeoCard bg="bg-[#FFF8E9]" size="lg" className="text-center py-8 space-y-3">
-            <NeoBadge variant="yellow">ACT THIS MOVIE ONLY!</NeoBadge>
-            <h3 className="text-3xl sm:text-4xl font-black text-[#171717]">
-              {currentItem.movieTelugu}
-            </h3>
-            <p className="text-xl font-extrabold text-[#4385EA]">
-              {currentItem.movieEnglish} ({currentItem.year})
-            </p>
-
-            <div className="bg-white p-3 rounded-xl border-2 border-[#171717] text-left max-w-md mx-auto mt-4 space-y-1">
-              <div className="text-xs font-black text-neutral-500">Key Hints for the Actor:</div>
-              <div className="text-xs font-bold text-neutral-800">Star: {currentItem.hero}</div>
-              <div className="text-xs font-medium text-neutral-600">Scene clue: {currentItem.hint}</div>
+          {/* Secret Movie Title Reveal for the Actor */}
+          <div className="p-3 bg-white border-2 border-[#171717] rounded-2xl text-center shadow-[1.5px_1.5px_0_#171717]">
+            <span className="text-[11px] font-black uppercase text-neutral-500">Secret Movie (Only You See This):</span>
+            <div className="text-xl font-black text-[#171717] mt-0.5">
+              {currentItem.movieEnglish} ({currentItem.movieTelugu})
             </div>
-          </NeoCard>
+          </div>
 
+          {/* Center Mime Silhouette Card matching reference screen 7 */}
+          <div className="bg-white border-2 border-[#171717] rounded-3xl p-6 shadow-[3px_3px_0_#171717] flex flex-col items-center justify-center text-center">
+            <MimeActorIllustration className="w-36 h-36" />
+            <h3 className="text-base font-black text-[#171717] mt-2">
+              Act out the movie!
+            </h3>
+          </div>
+
+          {/* Center Yellow Pill Timer matching reference screen 7: e.g. [⏱️ 01:00] with small rays */}
+          <div className="flex items-center justify-center gap-2 pt-1">
+            <div className="flex items-center gap-1.5 bg-[#FFCB45] px-5 py-2 rounded-full border-2 border-[#171717] shadow-[2px_2px_0_#171717] text-sm font-black">
+              <Clock className="w-4 h-4 stroke-[3]" />
+              <span>{formatTimer(timeLeft)}</span>
+            </div>
+          </div>
+
+          {/* Action buttons */}
           <div className="grid grid-cols-2 gap-3 pt-2">
             <button
-              onClick={() => handleTurnFinish(false)}
-              className="py-3.5 bg-[#FF704D] text-white border-3 border-[#171717] rounded-2xl font-black text-sm shadow-[3px_3px_0_#171717] active:translate-y-1 flex items-center justify-center gap-2"
+              onClick={() => handleFinishTurn(false)}
+              className="py-3.5 bg-[#FFA6BA] border-2 border-[#171717] rounded-2xl font-black text-sm text-[#171717] shadow-[2.5px_2.5px_0_#171717] active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-center gap-1.5"
             >
-              <SkipForward className="w-5 h-5" />
-              <span>TIME OUT / PASS</span>
+              <X className="w-5 h-5 stroke-[3]" />
+              <span>Time Out / Pass</span>
             </button>
             <button
-              onClick={() => handleTurnFinish(true)}
-              className="py-3.5 bg-[#83CBA2] text-[#171717] border-3 border-[#171717] rounded-2xl font-black text-sm shadow-[3px_3px_0_#171717] active:translate-y-1 flex items-center justify-center gap-2"
+              onClick={() => handleFinishTurn(true)}
+              className="py-3.5 bg-[#88D49E] border-2 border-[#171717] rounded-2xl font-black text-sm text-[#171717] shadow-[2.5px_2.5px_0_#171717] active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-center gap-1.5"
             >
               <Check className="w-5 h-5 stroke-[3]" />
-              <span>TEAM GUESSED IT! (+1)</span>
+              <span>Team Guessed It!</span>
             </button>
           </div>
         </div>
       )}
 
-      {/* Results Screen */}
+      {/* RESULTS */}
       {gameState === 'results' && (
-        <NeoCard bg="bg-[#FFF8E9]" size="lg" className="text-center space-y-6">
-          <div className="flex justify-center">
-            <Trophy className="w-20 h-20 text-[#FFCB45]" />
+        <div className="bg-white border-2 border-[#171717] rounded-3xl p-6 shadow-[3px_3px_0_#171717] space-y-4 text-center">
+          <div className="w-16 h-16 bg-[#FFCB45] rounded-2xl border-2 border-[#171717] mx-auto flex items-center justify-center shadow-[2px_2px_0_#171717]">
+            <Trophy className="w-10 h-10 text-[#171717]" />
           </div>
-
           <div className="space-y-1">
-            <h2 className="text-3xl font-black text-[#171717]">
-              {team1Score > team2Score
-                ? `${team1Name} WINS! 🏆`
-                : team2Score > team1Score
-                ? `${team2Name} WINS! 🏆`
-                : `IT'S A DRAMATIC TIE! 🤝`}
+            <h2 className="text-2xl font-black text-[#171717]">
+              {teamAScore > teamBScore ? 'Team A Wins! 🏆' : teamBScore > teamAScore ? 'Team B Wins! 🏆' : "It's a Tie! 🤝"}
             </h2>
-            <p className="text-sm font-bold text-neutral-600">Tollywood Dumb Charades Championship</p>
+            <p className="text-xs font-bold text-neutral-600">
+              Team A: {teamAScore} Pts | Team B: {teamBScore} Pts
+            </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className={`p-4 rounded-2xl border-3 border-[#171717] ${team1Score >= team2Score ? 'bg-[#FFCB45]' : 'bg-white'}`}>
-              <div className="text-xs font-black uppercase">{team1Name}</div>
-              <div className="text-3xl font-black mt-1">{team1Score} Pts</div>
-            </div>
-            <div className={`p-4 rounded-2xl border-3 border-[#171717] ${team2Score >= team1Score ? 'bg-[#FFCB45]' : 'bg-white'}`}>
-              <div className="text-xs font-black uppercase">{team2Name}</div>
-              <div className="text-3xl font-black mt-1">{team2Score} Pts</div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3 pt-4">
-            <NeoButton variant="coral" fullWidth size="md" onClick={startCharades}>
+          <div className="grid grid-cols-2 gap-3 pt-2">
+            <button
+              onClick={startCharades}
+              className="py-3 bg-[#FFCB45] border-2 border-[#171717] rounded-xl font-black text-xs shadow-[2px_2px_0_#171717] flex items-center justify-center gap-1.5"
+            >
               <RotateCcw className="w-4 h-4" />
-              <span>REMATCH</span>
-            </NeoButton>
-            <Link href="/games">
-              <NeoButton variant="white" fullWidth size="md">
-                BACK TO GAMES
-              </NeoButton>
+              <span>Rematch</span>
+            </button>
+            <Link href="/games" className="block">
+              <button className="w-full py-3 bg-[#FFF8E9] border-2 border-[#171717] rounded-xl font-black text-xs shadow-[2px_2px_0_#171717]">
+                Back to Games
+              </button>
             </Link>
           </div>
-        </NeoCard>
+        </div>
       )}
     </div>
   );

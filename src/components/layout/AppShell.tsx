@@ -3,37 +3,32 @@
 import React, { Suspense } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Gamepad2, Users, User } from 'lucide-react';
-import { CinemaClapperIcon } from '@/components/ui/Illustrations';
+import { Home, Gamepad2, Users, User, Menu, Bell } from 'lucide-react';
+import { ClapperboardDoodle, DoodleStar } from '@/components/ui/EditorialArt';
 
 export const AppHeader: React.FC = () => {
   return (
-    <header className="sticky top-0 z-40 bg-[#FFF8E9] border-b-3 border-[#171717] px-4 py-3 shadow-[0_2px_0_#171717]">
-      <div className="max-w-4xl mx-auto flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 group">
-          <CinemaClapperIcon className="w-8 h-8 group-hover:rotate-6 transition-transform" />
-          <div>
-            <span className="text-xl font-black tracking-tight text-[#171717] block leading-none">
-              TFI <span className="text-[#FF704D]">&</span> PITCH
-            </span>
-            <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#171717]/70">
-              తెలుగు సినిమా గేమ్స్
-            </span>
-          </div>
+    <header className="sticky top-0 z-40 bg-[#FFF8E9] px-4 py-3">
+      <div className="max-w-md mx-auto flex items-center justify-between">
+        {/* Left hamburger / menu */}
+        <Link href="/profile" className="p-1 hover:bg-[#FFCB45]/30 rounded-lg text-[#171717]">
+          <Menu className="w-5 h-5 stroke-[2.5]" />
         </Link>
-        <div className="flex items-center gap-2">
-          <Link
-            href="/games"
-            className="hidden sm:inline-flex px-3 py-1 bg-[#FFCB45] border-2 border-[#171717] rounded-lg font-black text-xs shadow-[2px_2px_0_#171717] hover:translate-x-0.5 hover:translate-y-0.5"
-          >
-            PLAY NOW 🍿
-          </Link>
-          <Link
-            href="/profile"
-            className="w-9 h-9 bg-[#CBB8F5] border-2 border-[#171717] rounded-full flex items-center justify-center font-black text-sm shadow-[2px_2px_0_#171717]"
-          >
-            <User className="w-4 h-4 text-[#171717]" />
-          </Link>
+
+        {/* Center Logo matching reference: small clapperboard + "TFI & Pitch" */}
+        <Link href="/" className="flex items-center gap-1.5 group">
+          <ClapperboardDoodle className="w-7 h-7 -rotate-6 transition-transform group-hover:rotate-0" />
+          <span className="text-xl font-black tracking-tight text-[#171717]">
+            TFI & Pitch
+          </span>
+        </Link>
+
+        {/* Right notification bell */}
+        <div className="relative">
+          <button className="p-1 hover:bg-[#FFCB45]/30 rounded-lg text-[#171717]">
+            <Bell className="w-5 h-5 stroke-[2.5]" />
+          </button>
+          <span className="absolute top-1 right-1 w-2 h-2 bg-[#FF704D] rounded-full border border-[#171717]" />
         </div>
       </div>
     </header>
@@ -51,7 +46,7 @@ const BottomNavContent: React.FC = () => {
   ];
 
   return (
-    <div className="flex justify-around items-center">
+    <div className="flex justify-around items-center max-w-md mx-auto">
       {navItems.map((item) => {
         const isActive = pathname === item.href;
         const Icon = item.icon;
@@ -59,14 +54,14 @@ const BottomNavContent: React.FC = () => {
           <Link
             key={item.href}
             href={item.href}
-            className={`flex flex-col items-center py-1 px-3 rounded-xl transition-all ${
-              isActive
-                ? 'bg-[#FFCB45] border-2 border-[#171717] shadow-[2px_2px_0_#171717] -translate-y-1'
-                : 'text-[#171717]/70 hover:text-[#171717]'
+            className={`flex flex-col items-center py-1 px-3 transition-transform ${
+              isActive ? 'text-[#171717] scale-105 font-black' : 'text-[#171717]/60 font-bold hover:text-[#171717]'
             }`}
           >
-            <Icon className="w-5 h-5 stroke-[2.5]" />
-            <span className="text-[10px] font-black uppercase mt-0.5">{item.label}</span>
+            <div className={`p-1 rounded-xl ${isActive ? 'bg-[#FFCB45] border-2 border-[#171717] shadow-[1.5px_1.5px_0_#171717]' : ''}`}>
+              <Icon className="w-5 h-5 stroke-[2.5]" />
+            </div>
+            <span className="text-[10px] mt-0.5 tracking-tight">{item.label}</span>
           </Link>
         );
       })}
@@ -76,7 +71,7 @@ const BottomNavContent: React.FC = () => {
 
 export const BottomNav: React.FC = () => {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t-3 border-[#171717] px-2 py-2 sm:hidden shadow-[0_-2px_0_#171717]">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-[#FFF8E9] border-t-2 border-[#171717] py-2 px-3 shadow-[0_-2px_0_#171717]">
       <Suspense fallback={<div className="h-10" />}>
         <BottomNavContent />
       </Suspense>

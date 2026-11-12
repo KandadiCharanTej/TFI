@@ -45,3 +45,4 @@ export const CharadesMaskIcon: React.FC<{ className?: string }> = ({ className =
     <path d="M18 28C21 32 27 32 30 28" stroke="#171717" strokeWidth="3" strokeLinecap="round" />
   </svg>
 );
+

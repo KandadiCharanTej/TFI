@@ -66,3 +66,4 @@ export interface AuctionLot extends Movie {
   highestBidderName: string | null;
   status: 'upcoming' | 'bidding' | 'sold' | 'unsold';
 }
+

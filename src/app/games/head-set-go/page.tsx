@@ -1,335 +1,222 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { HEAD_SET_GO_DATA } from '@/data/content';
 import { HeadSetGoCard } from '@/types';
-import { NeoButton, NeoCard, NeoBadge } from '@/components/ui/NeoPrimitives';
-import { TeluguHeroIcon } from '@/components/ui/Illustrations';
-import { Timer, RotateCcw, Check, SkipForward, ArrowLeft, Trophy } from 'lucide-react';
+import { HeadSetGoForeheadIllustration, ForeheadPlayerIcon, DoodleStar } from '@/components/ui/EditorialArt';
+import { ArrowLeft, Clock, Check, X, RotateCcw, Trophy } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export default function HeadSetGoPage() {
   const [gameState, setGameState] = useState<'setup' | 'playing' | 'results'>('setup');
-  const [timerDuration, setTimerDuration] = useState<number>(60);
-  const [timeLeft, setTimeLeft] = useState<number>(60);
-  const [category, setCategory] = useState<'All' | 'Movie' | 'Dialogue' | 'Actor' | 'Character'>('All');
-  
+  const [timerDuration, setTimerDuration] = useState<number>(90); // 01:30 matching reference
+  const [timeLeft, setTimeLeft] = useState<number>(90);
+  const [roundNumber, setRoundNumber] = useState<number>(1);
+  const totalRounds = 5;
+
   const [deck, setDeck] = useState<HeadSetGoCard[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [score, setScore] = useState<number>(0);
   const [correctCards, setCorrectCards] = useState<HeadSetGoCard[]>([]);
   const [skippedCards, setSkippedCards] = useState<HeadSetGoCard[]>([]);
 
-  // Orientation tilt detection
-  const [tiltActive, setTiltActive] = useState<boolean>(false);
-  const lastBetaRef = useRef<number | null>(null);
-  const cooldownRef = useRef<boolean>(false);
-
-  const startGame = () => {
-    let filtered = [...HEAD_SET_GO_DATA];
-    if (category !== 'All') {
-      filtered = filtered.filter((c) => c.type === category);
-    }
-    // Shuffle
-    filtered = filtered.sort(() => Math.random() - 0.5);
-    setDeck(filtered);
+  const startRound = () => {
+    const shuffled = [...HEAD_SET_GO_DATA].sort(() => Math.random() - 0.5);
+    setDeck(shuffled);
     setCurrentIndex(0);
+    setScore(0);
+    setRoundNumber(1);
     setCorrectCards([]);
     setSkippedCards([]);
     setTimeLeft(timerDuration);
     setGameState('playing');
   };
 
-  // Timer countdown
   useEffect(() => {
     if (gameState !== 'playing') return;
     if (timeLeft <= 0) {
-      setGameState('results');
-      confetti({ particleCount: 80, spread: 70 });
+      finishGame();
       return;
     }
-    const interval = setInterval(() => {
+    const timer = setInterval(() => {
       setTimeLeft((prev) => prev - 1);
     }, 1000);
-    return () => clearInterval(interval);
+    return () => clearInterval(timer);
   }, [gameState, timeLeft]);
 
-  // Motion sensor handling for Forehead Tilt
-  useEffect(() => {
-    if (gameState !== 'playing' || !tiltActive) return;
-
-    const handleOrientation = (e: DeviceOrientationEvent) => {
-      if (cooldownRef.current) return;
-      const beta = e.beta; // In degree -180 to 180 (tilt front-to-back)
-      if (beta === null) return;
-
-      // Tilt down (towards forehead floor): beta > 70
-      // Tilt up (towards forehead sky): beta < 15
-      if (beta > 65) {
-        handleAnswer(true);
-        triggerCooldown();
-      } else if (beta < 20) {
-        handleAnswer(false);
-        triggerCooldown();
-      }
-    };
-
-    const triggerCooldown = () => {
-      cooldownRef.current = true;
-      setTimeout(() => {
-        cooldownRef.current = false;
-      }, 1500);
-    };
-
-    window.addEventListener('deviceorientation', handleOrientation);
-    return () => window.removeEventListener('deviceorientation', handleOrientation);
-  }, [gameState, tiltActive, currentIndex, deck]);
-
-  const handleAnswer = (isCorrect: boolean) => {
-    if (currentIndex >= deck.length) {
-      setGameState('results');
-      return;
-    }
+  const handleAction = (isCorrect: boolean) => {
     const currentCard = deck[currentIndex];
     if (isCorrect) {
+      setScore((s) => s + 1);
       setCorrectCards((prev) => [...prev, currentCard]);
     } else {
       setSkippedCards((prev) => [...prev, currentCard]);
     }
-    if (currentIndex + 1 >= deck.length) {
-      setGameState('results');
-      confetti({ particleCount: 100, spread: 80 });
+
+    if (roundNumber >= totalRounds || currentIndex + 1 >= deck.length) {
+      finishGame();
     } else {
-      setCurrentIndex((prev) => prev + 1);
+      setRoundNumber((r) => r + 1);
+      setCurrentIndex((i) => i + 1);
     }
   };
 
-  const requestTiltPermission = async () => {
-    if (typeof (DeviceOrientationEvent as unknown as { requestPermission?: () => Promise<string> }).requestPermission === 'function') {
-      try {
-        const response = await (DeviceOrientationEvent as unknown as { requestPermission: () => Promise<string> }).requestPermission();
-        if (response === 'granted') {
-          setTiltActive(true);
-        }
-      } catch (e) {
-        console.error('Sensor error', e);
-      }
-    } else {
-      setTiltActive(!tiltActive);
-    }
+  const finishGame = () => {
+    setGameState('results');
+    confetti({ particleCount: 90, spread: 70 });
   };
 
-  const currentCard = deck[currentIndex];
+  const formatTimer = (secs: number) => {
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
+
+  const currentCard = deck[currentIndex] || HEAD_SET_GO_DATA[0];
 
   return (
-    <div className="max-w-xl mx-auto space-y-4">
+    <div className="max-w-md mx-auto space-y-4 pb-12">
+      {/* SETUP SCREEN */}
       {gameState === 'setup' && (
-        <NeoCard bg="bg-[#83CBA2]" size="lg" className="space-y-6">
-          <div className="flex items-center justify-between">
-            <Link href="/games" className="inline-flex items-center gap-1 font-black text-xs hover:underline">
-              <ArrowLeft className="w-4 h-4" /> Back to Games
+        <div className="space-y-4 text-center">
+          <div className="flex items-center justify-between px-1">
+            <Link href="/games" className="p-1 hover:bg-[#FFCB45]/30 rounded-lg">
+              <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
             </Link>
-            <NeoBadge variant="yellow">SINGLE DEVICE</NeoBadge>
+            <h1 className="text-xl font-black text-[#171717]">Head Set Go</h1>
+            <div className="w-5" />
           </div>
 
-          <div className="text-center space-y-2">
-            <div className="flex justify-center">
-              <TeluguHeroIcon className="w-20 h-20" />
+          <div className="bg-white border-2 border-[#171717] rounded-3xl p-6 shadow-[3px_3px_0_#171717] space-y-4">
+            <div className="w-20 h-20 bg-[#B3D4FC] rounded-2xl border-2 border-[#171717] mx-auto flex items-center justify-center shadow-[2px_2px_0_#171717]">
+              <ForeheadPlayerIcon className="w-14 h-14" />
             </div>
-            <h1 className="text-3xl font-black text-[#171717]">HEAD SET GO!</h1>
-            <p className="text-sm font-extrabold text-[#171717]/80">
-              Hold the phone on your forehead. Friends shout clues to guess the Telugu cinema item!
-            </p>
-          </div>
 
-          {/* Category selection */}
-          <div className="space-y-2">
-            <label className="text-xs font-black uppercase tracking-wider block">Category</label>
-            <div className="grid grid-cols-3 gap-2">
-              {(['All', 'Movie', 'Dialogue', 'Actor', 'Character'] as const).map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setCategory(cat)}
-                  className={`py-2 px-3 rounded-xl border-2 border-[#171717] font-black text-xs transition-all ${
-                    category === cat
-                      ? 'bg-[#FFCB45] shadow-[2px_2px_0_#171717] -translate-y-0.5'
-                      : 'bg-white opacity-90'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
+            <div className="space-y-1">
+              <h2 className="text-2xl font-black text-[#171717]">Guess the Movie!</h2>
+              <p className="text-xs font-semibold text-neutral-600 max-w-xs mx-auto">
+                Hold phone on your forehead! Friends shout clues to make you guess before the clock runs out.
+              </p>
             </div>
-          </div>
 
-          {/* Timer selection */}
-          <div className="space-y-2">
-            <label className="text-xs font-black uppercase tracking-wider block">Timer Duration</label>
-            <div className="grid grid-cols-3 gap-2">
-              {[60, 90, 120].map((t) => (
-                <button
-                  key={t}
-                  onClick={() => setTimerDuration(t)}
-                  className={`py-2 px-3 rounded-xl border-2 border-[#171717] font-black text-xs transition-all ${
-                    timerDuration === t
-                      ? 'bg-[#FF704D] text-white shadow-[2px_2px_0_#171717] -translate-y-0.5'
-                      : 'bg-white text-black'
-                  }`}
-                >
-                  {t} Seconds
-                </button>
-              ))}
+            {/* Timer preset: 01:30 matching reference */}
+            <div className="pt-2">
+              <span className="text-xs font-black uppercase tracking-wider text-neutral-500 block mb-2">Round Timer</span>
+              <div className="grid grid-cols-3 gap-2">
+                {[60, 90, 120].map((t) => (
+                  <button
+                    key={t}
+                    onClick={() => setTimerDuration(t)}
+                    className={`py-2 rounded-xl border-2 border-[#171717] text-xs font-black transition-all ${
+                      timerDuration === t ? 'bg-[#FFCB45] shadow-[2px_2px_0_#171717]' : 'bg-white'
+                    }`}
+                  >
+                    {formatTimer(t)}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Tilt sensor toggle */}
-          <div className="p-3 bg-white rounded-xl border-2 border-[#171717] flex items-center justify-between shadow-[2px_2px_0_#171717]">
-            <div>
-              <div className="font-extrabold text-xs">Forehead Tilt Sensor</div>
-              <div className="text-[11px] text-neutral-600">Tilt down for correct, tilt up to skip</div>
-            </div>
             <button
-              onClick={requestTiltPermission}
-              className={`px-3 py-1 text-xs font-black rounded-lg border-2 border-[#171717] ${
-                tiltActive ? 'bg-[#83CBA2] text-black' : 'bg-neutral-200 text-neutral-600'
-              }`}
+              onClick={startRound}
+              className="w-full py-4 bg-[#FFCB45] border-2 border-[#171717] rounded-2xl font-black text-base shadow-[2.5px_2.5px_0_#171717] hover:bg-[#ffd45e] active:translate-x-0.5 active:translate-y-0.5 mt-2 cursor-pointer transition-all"
             >
-              {tiltActive ? 'ENABLED' : 'TOUCH ONLY'}
-            </button>
-          </div>
-
-          <NeoButton variant="primary" fullWidth size="lg" onClick={startGame}>
-            START GAME (START GUESSING!) 🎬
-          </NeoButton>
-        </NeoCard>
-      )}
-
-      {gameState === 'playing' && currentCard && (
-        <div className="min-h-[75vh] flex flex-col justify-between space-y-4">
-          {/* Top Bar with Timer */}
-          <div className="flex items-center justify-between bg-white p-3 rounded-xl border-3 border-[#171717] shadow-[3px_3px_0_#171717]">
-            <div className="flex items-center gap-2">
-              <Timer className="w-5 h-5 text-[#FF704D]" />
-              <span className={`text-2xl font-black ${timeLeft <= 10 ? 'text-red-600 animate-pulse' : 'text-[#171717]'}`}>
-                {timeLeft}s
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-black bg-[#83CBA2] border-2 border-[#171717] px-2 py-0.5 rounded">
-                ✓ {correctCards.length}
-              </span>
-              <span className="text-xs font-black bg-[#FF704D] text-white border-2 border-[#171717] px-2 py-0.5 rounded">
-                ✕ {skippedCards.length}
-              </span>
-            </div>
-          </div>
-
-          {/* Big Forehead Display Card */}
-          <div className="flex-1 flex flex-col items-center justify-center p-6 bg-[#FFF8E9] border-4 border-[#171717] rounded-3xl shadow-[6px_6px_0_#171717] text-center my-auto min-h-[360px]">
-            <NeoBadge variant="coral" className="mb-3">
-              {currentCard.type} • {currentCard.era}
-            </NeoBadge>
-
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-[#171717] tracking-tight leading-tight mb-2">
-              {currentCard.telugu}
-            </h2>
-            <p className="text-xl sm:text-2xl font-extrabold text-[#4385EA] mb-6">
-              {currentCard.english}
-            </p>
-
-            <div className="flex flex-wrap justify-center gap-2 max-w-md">
-              {currentCard.clues.map((clue, i) => (
-                <span
-                  key={i}
-                  className="bg-white border-2 border-[#171717] text-xs font-black px-3 py-1 rounded-full shadow-[2px_2px_0_#171717]"
-                >
-                  💡 {clue}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Touch Fallback Controls */}
-          <div className="grid grid-cols-2 gap-4">
-            <button
-              onClick={() => handleAnswer(false)}
-              className="py-4 bg-[#FF704D] text-white border-3 border-[#171717] rounded-2xl font-black text-lg shadow-[4px_4px_0_#171717] active:translate-y-1 flex items-center justify-center gap-2"
-            >
-              <SkipForward className="w-6 h-6" />
-              <span>SKIP (పాస్)</span>
-            </button>
-            <button
-              onClick={() => handleAnswer(true)}
-              className="py-4 bg-[#83CBA2] text-[#171717] border-3 border-[#171717] rounded-2xl font-black text-lg shadow-[4px_4px_0_#171717] active:translate-y-1 flex items-center justify-center gap-2"
-            >
-              <Check className="w-6 h-6 stroke-[3]" />
-              <span>CORRECT (రైట్)</span>
+              Start Game 🎬
             </button>
           </div>
         </div>
       )}
 
-      {gameState === 'results' && (
-        <NeoCard bg="bg-[#FFF8E9]" size="lg" className="space-y-6">
-          <div className="text-center space-y-2">
-            <div className="flex justify-center">
-              <Trophy className="w-16 h-16 text-[#FFCB45]" />
+      {/* GAMEPLAY SCREEN MATCHING REFERENCE SCREEN 5 */}
+      {gameState === 'playing' && (
+        <div className="space-y-4">
+          {/* Top Bar: Back arrow, "Head Set Go", yellow pill timer */}
+          <div className="flex items-center justify-between px-1">
+            <button onClick={() => setGameState('setup')} className="p-1 hover:bg-[#FFCB45]/30 rounded-lg">
+              <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
+            </button>
+            <h1 className="text-lg font-black text-[#171717]">Head Set Go</h1>
+            
+            {/* Yellow pill timer matching reference screen 5 */}
+            <div className="flex items-center gap-1 bg-[#FFCB45] px-3 py-1 rounded-full border-2 border-[#171717] shadow-[1.5px_1.5px_0_#171717] text-xs font-black">
+              <Clock className="w-3.5 h-3.5 stroke-[3]" />
+              <span>{formatTimer(timeLeft)}</span>
             </div>
-            <h2 className="text-3xl font-black text-[#171717]">ROUND FINISHED!</h2>
-            <p className="text-sm font-bold text-neutral-600">
-              Great party round! Here is how you performed.
+          </div>
+
+          {/* Forehead Phone Frame with Hands Illustration */}
+          <HeadSetGoForeheadIllustration movieName={currentCard.english} />
+
+          {/* Prompt line matching reference: "Guess the Movie!" with doodles */}
+          <div className="flex items-center justify-center gap-2 text-center py-1">
+            <DoodleStar className="w-3.5 h-3.5 text-[#171717]" />
+            <span className="text-sm font-black text-[#171717] tracking-wide">Guess the Movie!</span>
+            <DoodleStar className="w-3.5 h-3.5 text-[#171717]" />
+          </div>
+
+          {/* Clues for Friends */}
+          <div className="bg-white/70 border border-[#171717] rounded-xl p-2.5 text-center text-xs font-bold text-neutral-700">
+            Clues: {currentCard.clues.slice(0, 3).join(' • ')}
+          </div>
+
+          {/* Big Correct & Skip buttons matching reference screen 5 */}
+          <div className="grid grid-cols-2 gap-3 pt-2">
+            {/* Green Correct Button */}
+            <button
+              onClick={() => handleAction(true)}
+              className="py-4 bg-[#88D49E] border-2 border-[#171717] rounded-2xl font-black text-sm text-[#171717] shadow-[2.5px_2.5px_0_#171717] active:translate-x-0.5 active:translate-y-0.5 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all hover:bg-[#77c78e]"
+            >
+              <Check className="w-6 h-6 stroke-[3]" />
+              <span>Correct</span>
+            </button>
+
+            {/* Pink Skip Button */}
+            <button
+              onClick={() => handleAction(false)}
+              className="py-4 bg-[#FFA6BA] border-2 border-[#171717] rounded-2xl font-black text-sm text-[#171717] shadow-[2.5px_2.5px_0_#171717] active:translate-x-0.5 active:translate-y-0.5 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all hover:bg-[#ff8da6]"
+            >
+              <X className="w-6 h-6 stroke-[3]" />
+              <span>Skip</span>
+            </button>
+          </div>
+
+          {/* Footer Stats matching reference screen 5: Score: X | Round: 1/5 */}
+          <div className="flex items-center justify-between px-2 pt-2 text-xs font-black text-[#171717]">
+            <span>Score: {score}</span>
+            <span>Round: {roundNumber}/{totalRounds}</span>
+          </div>
+        </div>
+      )}
+
+      {/* RESULTS SCREEN */}
+      {gameState === 'results' && (
+        <div className="bg-white border-2 border-[#171717] rounded-3xl p-6 shadow-[3px_3px_0_#171717] space-y-4 text-center">
+          <div className="w-16 h-16 bg-[#FFCB45] rounded-2xl border-2 border-[#171717] mx-auto flex items-center justify-center shadow-[2px_2px_0_#171717]">
+            <Trophy className="w-10 h-10 text-[#171717]" />
+          </div>
+          <div className="space-y-1">
+            <h2 className="text-2xl font-black text-[#171717]">Round Finished!</h2>
+            <p className="text-xs font-bold text-neutral-600">
+              You scored <span className="text-[#FF704D] font-black">{score}</span> out of {totalRounds}
             </p>
           </div>
 
-          {/* Score stats */}
-          <div className="grid grid-cols-3 gap-3 text-center">
-            <div className="p-3 bg-[#83CBA2] rounded-xl border-2 border-[#171717] shadow-[2px_2px_0_#171717]">
-              <div className="text-2xl font-black">{correctCards.length}</div>
-              <div className="text-[11px] font-extrabold uppercase">Correct</div>
-            </div>
-            <div className="p-3 bg-[#FF704D] text-white rounded-xl border-2 border-[#171717] shadow-[2px_2px_0_#171717]">
-              <div className="text-2xl font-black">{skippedCards.length}</div>
-              <div className="text-[11px] font-extrabold uppercase">Skipped</div>
-            </div>
-            <div className="p-3 bg-[#FFCB45] rounded-xl border-2 border-[#171717] shadow-[2px_2px_0_#171717]">
-              <div className="text-2xl font-black">
-                {correctCards.length + skippedCards.length > 0
-                  ? Math.round((correctCards.length / (correctCards.length + skippedCards.length)) * 100)
-                  : 0}%
-              </div>
-              <div className="text-[11px] font-extrabold uppercase">Accuracy</div>
-            </div>
-          </div>
-
-          {/* Card Review */}
-          <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
-            <div className="text-xs font-black uppercase">Card Breakdown:</div>
-            {correctCards.map((c) => (
-              <div key={c.id} className="flex items-center justify-between p-2 bg-green-100 border border-[#171717] rounded-lg text-xs font-bold">
-                <span>✓ {c.telugu} ({c.english})</span>
-                <span className="text-green-800 font-extrabold">Correct</span>
-              </div>
-            ))}
-            {skippedCards.map((c) => (
-              <div key={c.id} className="flex items-center justify-between p-2 bg-red-100 border border-[#171717] rounded-lg text-xs font-bold">
-                <span>✕ {c.telugu} ({c.english})</span>
-                <span className="text-red-700 font-extrabold">Skipped</span>
-              </div>
-            ))}
-          </div>
-
           <div className="grid grid-cols-2 gap-3 pt-2">
-            <NeoButton variant="primary" fullWidth size="md" onClick={startGame}>
+            <button
+              onClick={startRound}
+              className="py-3 bg-[#FFCB45] border-2 border-[#171717] rounded-xl font-black text-xs shadow-[2px_2px_0_#171717] flex items-center justify-center gap-1.5"
+            >
               <RotateCcw className="w-4 h-4" />
-              <span>PLAY AGAIN</span>
-            </NeoButton>
-            <Link href="/games">
-              <NeoButton variant="white" fullWidth size="md">
-                BACK TO GAMES
-              </NeoButton>
+              <span>Play Again</span>
+            </button>
+            <Link href="/games" className="block">
+              <button className="w-full py-3 bg-[#FFF8E9] border-2 border-[#171717] rounded-xl font-black text-xs shadow-[2px_2px_0_#171717]">
+                Back to Games
+              </button>
             </Link>
           </div>
-        </NeoCard>
+        </div>
       )}
     </div>
   );

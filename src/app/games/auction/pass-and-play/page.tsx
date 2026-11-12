@@ -1,21 +1,20 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { TELUGU_MOVIES } from '@/data/content';
 import { AuctionPlayer, AuctionLot, calculatePlayerCollectionScore, calculateMovieScore } from '@/lib/auctionEngine';
-import { NeoButton, NeoCard, NeoBadge } from '@/components/ui/NeoPrimitives';
-import { AuctionGavelIcon } from '@/components/ui/Illustrations';
-import { ArrowLeft, Users, Shield, Trophy, RotateCcw, Check, Eye } from 'lucide-react';
+import { TeluguHeroSplash, WoodenGavelIllustration, DoodleStar } from '@/components/ui/EditorialArt';
+import { ArrowLeft, Clock, Users, Trophy, RotateCcw, Eye, Shield, Check, Plus } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export default function SingleDeviceAuctionPage() {
-  const [stage, setStage] = useState<'setup' | 'lot-intro' | 'pass-prompt' | 'private-bid' | 'lot-reveal' | 'results'>('setup');
+  const [stage, setStage] = useState<'setup' | 'lot-card' | 'pass-prompt' | 'private-bid' | 'lot-reveal' | 'results'>('setup');
   
   // Setup inputs
-  const [playerNamesInput, setPlayerNamesInput] = useState<string>('Tej, Henry, Charitra, Kalyan');
+  const [playerNamesInput, setPlayerNamesInput] = useState<string>('Charan, Henry, Kalyan');
   const [budgetPreset, setBudgetPreset] = useState<number>(100);
-  const [lotCount, setLotCount] = useState<number>(6);
+  const [lotCount, setLotCount] = useState<number>(5);
 
   // Active game state
   const [players, setPlayers] = useState<AuctionPlayer[]>([]);
@@ -23,7 +22,7 @@ export default function SingleDeviceAuctionPage() {
   const [currentLotIndex, setCurrentLotIndex] = useState<number>(0);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState<number>(0);
   
-  // Blind bids for current lot: map of playerId -> bidAmount (0 = pass)
+  // Bids map for current lot
   const [currentLotBids, setCurrentLotBids] = useState<{ [playerId: string]: number }>({});
   const [playerBidInput, setPlayerBidInput] = useState<number>(0);
 
@@ -47,9 +46,8 @@ export default function SingleDeviceAuctionPage() {
       totalScore: 0,
     }));
 
-    // Pick random lots from TELUGU_MOVIES
-    const shuffledMovies = [...TELUGU_MOVIES].sort(() => Math.random() - 0.5).slice(0, lotCount);
-    const auctionLots: AuctionLot[] = shuffledMovies.map((movie, index) => ({
+    const shuffled = [...TELUGU_MOVIES].sort(() => Math.random() - 0.5).slice(0, lotCount);
+    const auctionLots: AuctionLot[] = shuffled.map((movie, index) => ({
       ...movie,
       lotNumber: index + 1,
       currentBid: 0,
@@ -63,29 +61,29 @@ export default function SingleDeviceAuctionPage() {
     setCurrentLotIndex(0);
     setCurrentPlayerIndex(0);
     setCurrentLotBids({});
-    setStage('lot-intro');
+    setStage('lot-card');
   };
 
-  const startBiddingForLot = () => {
-    setCurrentPlayerIndex(0);
-    setCurrentLotBids({});
-    setStage('pass-prompt');
+  const currentLot = lots[currentLotIndex] || {
+    ...TELUGU_MOVIES[0],
+    lotNumber: 1,
+    currentBid: 20,
+    highestBidderId: null,
+    highestBidderName: null,
+    status: 'upcoming' as const,
   };
 
-  const currentLot = lots[currentLotIndex];
   const activePlayer = players[currentPlayerIndex];
 
   const handlePrivateBidSubmit = (bid: number) => {
     const updatedBids = { ...currentLotBids, [activePlayer.id]: bid };
     setCurrentLotBids(updatedBids);
 
-    // If more players remain to bid
     if (currentPlayerIndex + 1 < players.length) {
       setCurrentPlayerIndex((prev) => prev + 1);
       setPlayerBidInput(0);
       setStage('pass-prompt');
     } else {
-      // All players have submitted secret bids -> Resolve lot!
       resolveLot(updatedBids);
     }
   };
@@ -113,7 +111,6 @@ export default function SingleDeviceAuctionPage() {
         status: 'sold',
       };
 
-      // Deduct budget & award movie
       setPlayers((prev) =>
         prev.map((p) => {
           if (p.id === winningPlayerId) {
@@ -148,7 +145,7 @@ export default function SingleDeviceAuctionPage() {
   const handleNextLot = () => {
     if (currentLotIndex + 1 < lots.length) {
       setCurrentLotIndex((prev) => prev + 1);
-      setStage('lot-intro');
+      setStage('lot-card');
     } else {
       setStage('results');
       confetti({ particleCount: 120, spread: 80 });
@@ -156,28 +153,30 @@ export default function SingleDeviceAuctionPage() {
   };
 
   return (
-    <div className="max-w-xl mx-auto space-y-4">
+    <div className="max-w-md mx-auto space-y-4 pb-12">
       {/* 1. SETUP */}
       {stage === 'setup' && (
-        <NeoCard bg="bg-[#FFCB45]" size="lg" className="space-y-6">
+        <div className="bg-white border-2 border-[#171717] rounded-3xl p-6 shadow-[3px_3px_0_#171717] space-y-4 text-center">
           <div className="flex items-center justify-between">
-            <Link href="/games/auction" className="inline-flex items-center gap-1 font-black text-xs hover:underline">
-              <ArrowLeft className="w-4 h-4" /> Back to Auction Modes
+            <Link href="/games/auction" className="p-1 hover:bg-[#FFCB45]/30 rounded-lg">
+              <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
             </Link>
-            <NeoBadge variant="coral">PASS & PLAY</NeoBadge>
+            <h1 className="text-xl font-black text-[#171717]">Pass &amp; Play Auction</h1>
+            <div className="w-5" />
           </div>
 
-          <div className="text-center space-y-2">
-            <div className="flex justify-center">
-              <AuctionGavelIcon className="w-20 h-20" />
-            </div>
-            <h1 className="text-3xl font-black text-[#171717]">PASS & PLAY AUCTION</h1>
-            <p className="text-sm font-extrabold text-[#171717]/80">
-              One device for all friends. Place blind bids in secret, then reveal the winner!
+          <div className="w-20 h-20 bg-[#D2C2F8] rounded-2xl border-2 border-[#171717] mx-auto flex items-center justify-center shadow-[2px_2px_0_#171717]">
+            <WoodenGavelIllustration className="w-14 h-14" />
+          </div>
+
+          <div className="space-y-1">
+            <h2 className="text-2xl font-black text-[#171717]">Single-Device Auction</h2>
+            <p className="text-xs font-semibold text-neutral-600 max-w-xs mx-auto">
+              Pass one phone around the circle! Friends place secret blind bids, and the highest bidder claims the blockbuster.
             </p>
           </div>
 
-          <div className="bg-white p-4 rounded-2xl border-3 border-[#171717] space-y-4">
+          <div className="space-y-3 text-left pt-2">
             <div>
               <label className="text-xs font-black uppercase text-neutral-600 block mb-1">
                 Player Names (comma separated)
@@ -186,16 +185,16 @@ export default function SingleDeviceAuctionPage() {
                 type="text"
                 value={playerNamesInput}
                 onChange={(e) => setPlayerNamesInput(e.target.value)}
-                className="w-full px-3 py-2 border-2 border-[#171717] rounded-xl font-bold text-sm shadow-[2px_2px_0_#171717]"
+                className="w-full px-3 py-2 border-2 border-[#171717] rounded-xl font-bold text-xs shadow-[2px_2px_0_#171717]"
               />
             </div>
 
             <div>
               <label className="text-xs font-black uppercase text-neutral-600 block mb-1">
-                Virtual Budget per Player
+                Purse Budget per Player
               </label>
-              <div className="grid grid-cols-4 gap-2">
-                {[50, 100, 150, 200].map((b) => (
+              <div className="grid grid-cols-3 gap-2">
+                {[50, 100, 150].map((b) => (
                   <button
                     key={b}
                     onClick={() => setBudgetPreset(b)}
@@ -208,317 +207,264 @@ export default function SingleDeviceAuctionPage() {
                 ))}
               </div>
             </div>
-
-            <div>
-              <label className="text-xs font-black uppercase text-neutral-600 block mb-1">
-                Number of Movie Lots to Auction
-              </label>
-              <div className="grid grid-cols-3 gap-2">
-                {[4, 6, 8].map((count) => (
-                  <button
-                    key={count}
-                    onClick={() => setLotCount(count)}
-                    className={`py-2 rounded-xl border-2 border-[#171717] font-black text-xs ${
-                      lotCount === count ? 'bg-[#83CBA2]' : 'bg-neutral-100'
-                    }`}
-                  >
-                    {count} Movies
-                  </button>
-                ))}
-              </div>
-            </div>
           </div>
 
-          <NeoButton variant="coral" fullWidth size="lg" onClick={initAuction}>
-            START THE AUCTION! 🔨
-          </NeoButton>
-        </NeoCard>
+          <button
+            onClick={initAuction}
+            className="w-full py-4 bg-[#FFCB45] border-2 border-[#171717] rounded-2xl font-black text-base shadow-[2.5px_2.5px_0_#171717] hover:bg-[#ffd45e] active:translate-x-0.5 active:translate-y-0.5 mt-2 cursor-pointer transition-all"
+          >
+            Start Auction 🔨
+          </button>
+        </div>
       )}
 
-      {/* 2. LOT INTRO */}
-      {stage === 'lot-intro' && currentLot && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between bg-white p-3 rounded-xl border-3 border-[#171717] shadow-[3px_3px_0_#171717]">
-            <span className="text-xs font-black bg-[#FF704D] text-white px-2.5 py-1 rounded-lg">
-              Lot #{currentLot.lotNumber} of {lots.length}
-            </span>
-            <span className="text-xs font-bold text-neutral-600">
-              Base Price: ₹{currentLot.basePriceCr} Cr
-            </span>
+      {/* 2. LOT CARD MATCHING REFERENCE SCREEN 9 */}
+      {stage === 'lot-card' && (
+        <div className="space-y-3">
+          {/* Top Bar: Back arrow, "TFI Box Office Auction" */}
+          <div className="flex items-center justify-between px-1">
+            <button onClick={() => setStage('setup')} className="p-1 hover:bg-[#FFCB45]/30 rounded-lg">
+              <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
+            </button>
+            <h1 className="text-base font-black text-[#171717]">TFI Box Office Auction</h1>
+            <div className="w-5" />
           </div>
 
-          <NeoCard bg="bg-[#FFF8E9]" size="lg" className="space-y-4">
-            <div className="text-center space-y-1">
-              <NeoBadge variant="yellow">{currentLot.category} • {currentLot.ratingTier}</NeoBadge>
-              <h2 className="text-3xl sm:text-4xl font-black text-[#171717]">
-                {currentLot.titleTelugu}
+          {/* Mode Pill matching reference screen 9: [Online Mode • Room: TFI123] */}
+          <div className="flex justify-center">
+            <div className="px-4 py-1 bg-[#D7E8FC] border-2 border-[#171717] rounded-full text-xs font-black text-[#171717] shadow-[1.5px_1.5px_0_#171717]">
+              Pass &amp; Play • Lot #{currentLot.lotNumber} of {lots.length}
+            </div>
+          </div>
+
+          {/* Big Featured Movie Box with Hero Art & Crowd sketch matching reference screen 9 */}
+          <div className="bg-white border-2 border-[#171717] rounded-3xl p-4 shadow-[3px_3px_0_#171717] text-center space-y-2 overflow-hidden relative">
+            <div className="flex justify-center -my-2">
+              <TeluguHeroSplash className="w-36 h-36" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-black text-[#171717] leading-tight">
+                {currentLot.titleEnglish}
               </h2>
-              <p className="text-xl font-extrabold text-[#4385EA]">
-                {currentLot.titleEnglish} ({currentLot.year})
+              <p className="text-xs font-bold text-neutral-600">
+                Base Price: ₹{currentLot.basePriceCr} Cr
               </p>
             </div>
+          </div>
 
-            {/* Movie Stats */}
-            <div className="bg-white p-4 rounded-xl border-2 border-[#171717] space-y-2">
-              <div className="grid grid-cols-2 gap-2 text-xs font-bold">
-                <div>Director: <span className="text-black font-black">{currentLot.director}</span></div>
-                <div>Hero: <span className="text-black font-black">{currentLot.hero}</span></div>
-                <div>Music: <span className="text-black font-black">{currentLot.musicDirector}</span></div>
-                <div>Starting Bid: <span className="text-[#FF704D] font-black">₹{currentLot.basePriceCr} Cr</span></div>
-              </div>
-              <div className="text-xs text-neutral-600 italic pt-1 border-t border-neutral-200">
-                &ldquo;{currentLot.trivia}&rdquo;
-              </div>
+          {/* Budget & Highest Bid Cards matching reference screen 9 */}
+          <div className="grid grid-cols-2 gap-3">
+            {/* Left: Your Budget (Purple card: ₹ 100 Cr) */}
+            <div className="p-3.5 bg-[#D2C2F8] border-2 border-[#171717] rounded-2xl shadow-[2px_2px_0_#171717] text-center">
+              <span className="text-xs font-bold text-[#171717] block">Your Budget</span>
+              <span className="text-xl font-black text-[#171717]">₹ {budgetPreset} Cr</span>
             </div>
 
-            {/* Value Potential */}
-            <div className="grid grid-cols-3 gap-2 text-center text-xs font-black">
-              <div className="bg-[#83CBA2] p-2 rounded-lg border border-[#171717]">
-                BO: {currentLot.boxOfficeScore}/100
-              </div>
-              <div className="bg-[#FFCB45] p-2 rounded-lg border border-[#171717]">
-                Audience: {currentLot.audienceScore}/100
-              </div>
-              <div className="bg-[#CBB8F5] p-2 rounded-lg border border-[#171717]">
-                Cult: {currentLot.cultScore}/100
-              </div>
+            {/* Right: Highest Bid (Green card: ₹ 20 Cr) */}
+            <div className="p-3.5 bg-[#88D49E] border-2 border-[#171717] rounded-2xl shadow-[2px_2px_0_#171717] text-center">
+              <span className="text-xs font-bold text-[#171717] block">Base / Top Bid</span>
+              <span className="text-xl font-black text-[#171717]">₹ {currentLot.basePriceCr} Cr</span>
             </div>
+          </div>
 
-            <NeoButton variant="primary" fullWidth size="lg" onClick={startBiddingForLot}>
-              BEGIN BLIND BIDDING 🗳️
-            </NeoButton>
-          </NeoCard>
+          {/* Center Timer Pill matching reference screen 9: [⏱️ 00:12] */}
+          <div className="flex justify-center pt-1">
+            <div className="flex items-center gap-1.5 bg-[#FFCB45] px-4 py-1.5 rounded-full border-2 border-[#171717] shadow-[1.5px_1.5px_0_#171717] text-xs font-black">
+              <Clock className="w-3.5 h-3.5 stroke-[3]" />
+              <span>00:15</span>
+            </div>
+          </div>
+
+          {/* Start Bidding CTA */}
+          <button
+            onClick={() => {
+              setCurrentPlayerIndex(0);
+              setCurrentLotBids({});
+              setStage('pass-prompt');
+            }}
+            className="w-full py-4 bg-[#FFCB45] border-2 border-[#171717] rounded-2xl font-black text-lg text-[#171717] shadow-[2.5px_2.5px_0_#171717] hover:bg-[#ffd45e] active:translate-x-0.5 active:translate-y-0.5 uppercase tracking-wide cursor-pointer transition-all"
+          >
+            BID NOW
+          </button>
         </div>
       )}
 
       {/* 3. PASS PROMPT PRIVACY SCREEN */}
       {stage === 'pass-prompt' && activePlayer && (
-        <NeoCard bg="bg-[#171717]" size="lg" className="text-center py-12 space-y-6 text-white">
-          <div className="flex justify-center">
-            <Shield className="w-16 h-16 text-[#FFCB45]" />
-          </div>
-          <div className="space-y-2">
-            <NeoBadge variant="coral">CONFIDENTIAL BIDDING</NeoBadge>
-            <h2 className="text-3xl font-black">
-              Hand Phone to: <br />
-              <span className="text-4xl text-[#FFCB45]">{activePlayer.name}</span>
+        <div className="bg-[#171717] text-white border-2 border-[#171717] rounded-3xl p-8 shadow-[3.5px_3.5px_0_#171717] text-center space-y-4">
+          <Shield className="w-16 h-16 text-[#FFCB45] mx-auto" />
+          <div className="space-y-1">
+            <span className="text-xs font-black uppercase text-[#FFA6BA] tracking-wider">Secret Turn</span>
+            <h2 className="text-2xl font-black">
+              Pass phone to <br /> <span className="text-[#FFCB45] text-3xl">{activePlayer.name}</span>
             </h2>
-            <p className="text-xs font-bold text-neutral-300 max-w-sm mx-auto">
-              Other players, please look away! {activePlayer.name} will enter their secret bid.
+            <p className="text-xs text-neutral-400 max-w-xs mx-auto">
+              Other players look away! Enter your private blind bid on the next screen.
             </p>
           </div>
 
-          <div className="pt-4">
-            <NeoButton
-              variant="primary"
-              size="lg"
-              fullWidth
-              onClick={() => {
-                setPlayerBidInput(currentLot.basePriceCr);
-                setStage('private-bid');
-              }}
-            >
-              <Eye className="w-5 h-5" />
-              <span>I AM {activePlayer.name.toUpperCase()} (ENTER BID)</span>
-            </NeoButton>
-          </div>
-        </NeoCard>
+          <button
+            onClick={() => {
+              setPlayerBidInput(currentLot.basePriceCr);
+              setStage('private-bid');
+            }}
+            className="w-full py-4 bg-[#FFCB45] border-2 border-[#171717] rounded-2xl font-black text-sm text-[#171717] shadow-[2.5px_2.5px_0_#171717] active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer transition-all"
+          >
+            <Eye className="w-4 h-4 stroke-[3]" />
+            <span>I Am {activePlayer.name} (Enter Bid)</span>
+          </button>
+        </div>
       )}
 
-      {/* 4. PRIVATE BID SCREEN */}
-      {stage === 'private-bid' && activePlayer && currentLot && (
-        <NeoCard bg="bg-white" size="lg" className="space-y-5">
-          <div className="flex items-center justify-between border-b pb-3">
+      {/* 4. PRIVATE BID ENTRY */}
+      {stage === 'private-bid' && activePlayer && (
+        <div className="bg-white border-2 border-[#171717] rounded-3xl p-6 shadow-[3px_3px_0_#171717] space-y-4">
+          <div className="flex items-center justify-between border-b pb-2">
             <div>
-              <span className="text-xs font-black text-neutral-500 uppercase">Current Bidder</span>
-              <h3 className="text-xl font-black text-[#171717]">{activePlayer.name}</h3>
+              <span className="text-[11px] font-black uppercase text-neutral-500">Player</span>
+              <div className="text-lg font-black">{activePlayer.name}</div>
             </div>
             <div className="text-right">
-              <span className="text-xs font-black text-neutral-500 uppercase">Remaining Purse</span>
-              <div className="text-xl font-black text-[#83CBA2] text-right">
-                ₹{activePlayer.remainingBudget} Cr
-              </div>
+              <span className="text-[11px] font-black uppercase text-neutral-500">Purse Remaining</span>
+              <div className="text-lg font-black text-[#88D49E]">₹{activePlayer.remainingBudget} Cr</div>
             </div>
           </div>
 
-          <div className="p-3 bg-[#FFF8E9] rounded-xl border-2 border-[#171717] text-center">
-            <div className="text-xs font-bold text-neutral-600">Bidding on:</div>
-            <div className="text-lg font-black text-[#171717]">
-              {currentLot.titleTelugu} ({currentLot.titleEnglish})
-            </div>
-            <div className="text-xs font-black text-[#FF704D] mt-0.5">
-              Base Price: ₹{currentLot.basePriceCr} Cr
-            </div>
+          <div className="p-3 bg-[#FFF8E9] border-2 border-[#171717] rounded-2xl text-center">
+            <span className="text-xs font-bold text-neutral-600">Lot #{currentLot.lotNumber}:</span>
+            <div className="text-lg font-black text-[#171717]">{currentLot.titleEnglish}</div>
+            <div className="text-xs font-black text-[#FF704D]">Base Price: ₹{currentLot.basePriceCr} Cr</div>
           </div>
 
-          {/* Bid Selector */}
+          {/* Bid Selector with buttons matching reference: +₹5 Cr, +₹10 Cr, +₹20 Cr */}
           <div className="space-y-2">
-            <label className="text-xs font-black uppercase text-neutral-600 block">
-              Enter Your Secret Bid (in ₹ Crores)
-            </label>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setPlayerBidInput((prev) => Math.max(currentLot.basePriceCr, prev - 2))}
-                className="w-12 h-12 bg-neutral-100 border-2 border-[#171717] rounded-xl font-black text-lg"
-              >
-                -2
-              </button>
-              <input
-                type="number"
-                value={playerBidInput}
-                onChange={(e) => setPlayerBidInput(Number(e.target.value))}
-                min={currentLot.basePriceCr}
-                max={activePlayer.remainingBudget}
-                className="flex-1 py-3 px-4 text-center font-black text-2xl border-2 border-[#171717] rounded-xl"
-              />
-              <button
-                onClick={() => setPlayerBidInput((prev) => Math.min(activePlayer.remainingBudget, prev + 2))}
-                className="w-12 h-12 bg-[#FFCB45] border-2 border-[#171717] rounded-xl font-black text-lg"
-              >
-                +2
-              </button>
+            <span className="text-xs font-black uppercase text-neutral-600 block text-center">Your Bid Amount</span>
+            <div className="text-3xl font-black text-center text-[#FF704D] py-2">
+              ₹ {playerBidInput} Cr
             </div>
 
-            {playerBidInput > activePlayer.remainingBudget && (
-              <p className="text-xs font-bold text-red-600">
-                Bid exceeds your available budget of ₹{activePlayer.remainingBudget} Cr!
-              </p>
-            )}
+            <div className="grid grid-cols-3 gap-2">
+              {[5, 10, 20].map((inc) => (
+                <button
+                  key={inc}
+                  onClick={() => setPlayerBidInput((prev) => Math.min(activePlayer.remainingBudget, prev + inc))}
+                  className="py-2.5 bg-white border-2 border-[#171717] rounded-xl font-black text-xs shadow-[1.5px_1.5px_0_#171717] active:translate-y-0.5"
+                >
+                  +₹{inc} Cr
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3 pt-2">
             <button
               onClick={() => handlePrivateBidSubmit(0)}
-              className="py-3.5 bg-neutral-200 border-2 border-[#171717] rounded-xl font-black text-xs hover:bg-neutral-300"
+              className="py-3 bg-neutral-100 border-2 border-[#171717] rounded-xl font-black text-xs hover:bg-neutral-200"
             >
-              PASS (NO BID)
+              Pass (No Bid)
             </button>
             <button
               disabled={playerBidInput > activePlayer.remainingBudget || playerBidInput < currentLot.basePriceCr}
               onClick={() => handlePrivateBidSubmit(playerBidInput)}
-              className="py-3.5 bg-[#FF704D] text-white border-2 border-[#171717] rounded-xl font-black text-sm shadow-[2px_2px_0_#171717] disabled:opacity-50"
+              className="py-3 bg-[#FFCB45] border-2 border-[#171717] rounded-xl font-black text-xs shadow-[2px_2px_0_#171717] disabled:opacity-50"
             >
-              CONFIRM BID (₹{playerBidInput} Cr)
+              Submit Bid 🔨
             </button>
           </div>
-        </NeoCard>
+        </div>
       )}
 
       {/* 5. LOT REVEAL */}
-      {stage === 'lot-reveal' && currentLot && (
-        <NeoCard bg="bg-[#FFF8E9]" size="lg" className="space-y-5 text-center">
-          <NeoBadge variant="coral">AUCTION REVEAL</NeoBadge>
+      {stage === 'lot-reveal' && (
+        <div className="bg-white border-2 border-[#171717] rounded-3xl p-6 shadow-[3px_3px_0_#171717] space-y-4 text-center">
+          <span className="text-xs font-black px-3 py-1 bg-[#FFCB45] border-2 border-[#171717] rounded-full inline-block">
+            Auction Result
+          </span>
 
           <div className="space-y-1">
-            <h2 className="text-2xl sm:text-3xl font-black text-[#171717]">
-              {currentLot.titleTelugu} ({currentLot.titleEnglish})
-            </h2>
-            <div className="text-sm font-bold">
-              {currentLot.status === 'sold' ? (
-                <span className="text-green-700 font-black text-lg">
-                  🎉 SOLD to {currentLot.highestBidderName} for ₹{currentLot.currentBid} Cr!
-                </span>
-              ) : (
-                <span className="text-red-600 font-black text-lg">
-                  ❌ UNSOLD (No bids met starting price)
-                </span>
-              )}
-            </div>
+            <h2 className="text-2xl font-black text-[#171717]">{currentLot.titleEnglish}</h2>
+            {currentLot.status === 'sold' ? (
+              <p className="text-sm font-black text-green-700">
+                🎉 Sold to {currentLot.highestBidderName} for ₹{currentLot.currentBid} Cr!
+              </p>
+            ) : (
+              <p className="text-sm font-black text-red-600">
+                ❌ Unsold (No bids met starting price)
+              </p>
+            )}
           </div>
 
           {/* Reveal all submitted bids */}
-          <div className="bg-white p-3 rounded-xl border-2 border-[#171717] text-left space-y-2">
-            <div className="text-xs font-black uppercase text-neutral-500">All Submitted Bids:</div>
+          <div className="bg-[#FFF8E9] p-3 rounded-2xl border-2 border-[#171717] text-left space-y-1.5">
+            <span className="text-[11px] font-black uppercase text-neutral-500 block mb-1">Submitted Bids:</span>
             {players.map((p) => {
               const b = currentLotBids[p.id] || 0;
               const isWinner = p.id === currentLot.highestBidderId;
               return (
-                <div
-                  key={p.id}
-                  className={`flex items-center justify-between p-2 rounded-lg text-xs font-bold border ${
-                    isWinner ? 'bg-[#83CBA2] border-green-800' : 'bg-neutral-50 border-neutral-200'
-                  }`}
-                >
-                  <span className="font-extrabold">{p.name}</span>
-                  <span>{b > 0 ? `₹${b} Cr ${isWinner ? '👑 WINNER' : ''}` : 'Passed'}</span>
+                <div key={p.id} className="flex justify-between text-xs font-bold">
+                  <span>{p.name}:</span>
+                  <span className={isWinner ? 'font-black text-green-800' : ''}>
+                    {b > 0 ? `₹${b} Cr ${isWinner ? '👑 Won' : ''}` : 'Passed'}
+                  </span>
                 </div>
               );
             })}
           </div>
 
-          <NeoButton variant="primary" fullWidth size="lg" onClick={handleNextLot}>
-            {currentLotIndex + 1 < lots.length ? 'NEXT MOVIE LOT ➡️' : 'VIEW FINAL LEADERBOARD 🏆'}
-          </NeoButton>
-        </NeoCard>
+          <button
+            onClick={handleNextLot}
+            className="w-full py-4 bg-[#FFCB45] border-2 border-[#171717] rounded-2xl font-black text-sm text-[#171717] shadow-[2.5px_2.5px_0_#171717] hover:bg-[#ffd45e] active:translate-x-0.5 active:translate-y-0.5 mt-2"
+          >
+            {currentLotIndex + 1 < lots.length ? 'Next Movie Lot ➡️' : 'See Final Standings 🏆'}
+          </button>
+        </div>
       )}
 
       {/* 6. FINAL RESULTS */}
       {stage === 'results' && (
-        <NeoCard bg="bg-[#FFF8E9]" size="lg" className="space-y-6">
-          <div className="text-center space-y-2">
-            <div className="flex justify-center">
-              <Trophy className="w-20 h-20 text-[#FFCB45]" />
-            </div>
-            <h2 className="text-3xl font-black text-[#171717]">AUCTION CONCLUDED!</h2>
-            <p className="text-sm font-bold text-neutral-600">
-              The grand Telugu Box Office Producer Championship standings:
-            </p>
+        <div className="bg-white border-2 border-[#171717] rounded-3xl p-6 shadow-[3px_3px_0_#171717] space-y-4 text-center">
+          <div className="w-16 h-16 bg-[#FFCB45] rounded-2xl border-2 border-[#171717] mx-auto flex items-center justify-center shadow-[2px_2px_0_#171717]">
+            <Trophy className="w-10 h-10 text-[#171717]" />
+          </div>
+          <div className="space-y-1">
+            <h2 className="text-2xl font-black text-[#171717]">Auction Champion!</h2>
+            <p className="text-xs font-bold text-neutral-600">Final Producer Leaderboard</p>
           </div>
 
-          {/* Leaderboard sorted by totalScore */}
-          <div className="space-y-3">
+          <div className="space-y-2 text-left">
             {[...players]
               .sort((a, b) => b.totalScore - a.totalScore)
-              .map((player, rank) => {
-                const totalSpent = player.initialBudget - player.remainingBudget;
-                return (
-                  <div
-                    key={player.id}
-                    className={`p-4 rounded-2xl border-3 border-[#171717] shadow-[3px_3px_0_#171717] ${
-                      rank === 0 ? 'bg-[#FFCB45]' : 'bg-white'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-black w-6 h-6 rounded-full bg-[#171717] text-white flex items-center justify-center">
-                          {rank + 1}
-                        </span>
-                        <span className="text-lg font-black">{player.name}</span>
-                        {rank === 0 && <span className="text-xs bg-[#FF704D] text-white px-2 py-0.5 rounded font-black">CHAMPION 👑</span>}
-                      </div>
-                      <div className="text-xl font-black text-[#171717]">
-                        {player.totalScore} Pts
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-2 text-[11px] font-bold text-neutral-700 bg-black/5 p-2 rounded-lg">
-                      <div>Movies: {player.acquiredLots.length}</div>
-                      <div>Spent: ₹{totalSpent} Cr</div>
-                      <div>Purse Left: ₹{player.remainingBudget} Cr</div>
-                    </div>
-
-                    {player.acquiredLots.length > 0 && (
-                      <div className="mt-2 text-xs font-semibold text-neutral-600">
-                        Acquired: {player.acquiredLots.map((l) => l.titleEnglish).join(', ')}
-                      </div>
-                    )}
+              .map((p, idx) => (
+                <div key={p.id} className="p-3 bg-[#FFF8E9] border-2 border-[#171717] rounded-xl flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="w-5 h-5 bg-[#171717] text-white rounded-full text-xs font-black flex items-center justify-center">
+                      {idx + 1}
+                    </span>
+                    <span className="font-black text-sm">{p.name}</span>
                   </div>
-                );
-              })}
+                  <div className="text-right">
+                    <span className="font-black text-sm">{p.totalScore} Pts</span>
+                    <span className="text-[10px] text-neutral-500 block">Movies: {p.acquiredLots.length}</span>
+                  </div>
+                </div>
+              ))}
           </div>
 
-          <div className="grid grid-cols-2 gap-3 pt-4">
-            <NeoButton variant="coral" fullWidth size="md" onClick={initAuction}>
+          <div className="grid grid-cols-2 gap-3 pt-2">
+            <button
+              onClick={initAuction}
+              className="py-3 bg-[#FFCB45] border-2 border-[#171717] rounded-xl font-black text-xs shadow-[2px_2px_0_#171717] flex items-center justify-center gap-1.5"
+            >
               <RotateCcw className="w-4 h-4" />
-              <span>NEW AUCTION</span>
-            </NeoButton>
-            <Link href="/games">
-              <NeoButton variant="white" fullWidth size="md">
-                BACK TO GAMES
-              </NeoButton>
+              <span>New Auction</span>
+            </button>
+            <Link href="/games" className="block">
+              <button className="w-full py-3 bg-[#FFF8E9] border-2 border-[#171717] rounded-xl font-black text-xs shadow-[2px_2px_0_#171717]">
+                Back to Games
+              </button>
             </Link>
           </div>
-        </NeoCard>
+        </div>
       )}
     </div>
   );

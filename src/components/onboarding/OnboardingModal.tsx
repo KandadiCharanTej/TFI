@@ -2,144 +2,161 @@
 
 import React, { useState } from 'react';
 import { useUserStore } from '@/store/useUserStore';
-import { NeoButton, NeoCard } from '@/components/ui/NeoPrimitives';
-import { TeluguHeroIcon, CinemaClapperIcon } from '@/components/ui/Illustrations';
-import { Sparkles, ArrowRight, Languages } from 'lucide-react';
+import { ClapperboardDoodle, FilmReelIcon, TeluguHeroSplash, DoodleStar, CharminarSketch } from '@/components/ui/EditorialArt';
+import { ArrowRight, Sparkles } from 'lucide-react';
 
 export const OnboardingModal: React.FC = () => {
   const { preferences, setDisplayName, setLanguageMode, completeOnboarding } = useUserStore();
   const [step, setStep] = useState<number>(1);
   const [nameInput, setNameInput] = useState<string>(preferences.displayName);
-  const [langPreference, setLangPreference] = useState<'telugu' | 'both'>('both');
+  const [selectedLang, setSelectedLang] = useState<'telugu' | 'both'>('both');
 
   if (preferences.hasCompletedOnboarding) {
     return null;
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#171717]/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="max-w-md w-full">
+    <div className="fixed inset-0 z-50 bg-[#171717]/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+      {/* Mobile container framing matching reference image 1 & 2 */}
+      <div className="max-w-[380px] w-full bg-[#FFF8E9] border-3 border-[#171717] rounded-[2.25rem] shadow-[6px_6px_0_#171717] overflow-hidden p-6 relative">
+        {/* Decorative corner stars */}
+        <DoodleStar className="absolute top-4 left-4 w-4 h-4 text-[#FFCB45]" />
+        <DoodleStar className="absolute top-6 right-5 w-5 h-5 text-[#FFCB45]" />
+
+        {/* SCREEN 1: SPLASH MATCHING REFERENCE IMAGE 1 */}
         {step === 1 && (
-          <NeoCard bg="bg-[#FFF8E9]" size="lg" className="text-center">
-            <div className="flex justify-center mb-4">
-              <TeluguHeroIcon className="w-20 h-20" />
+          <div className="flex flex-col items-center text-center space-y-4">
+            <div className="flex items-center gap-1 mt-2">
+              <ClapperboardDoodle className="w-10 h-10 -rotate-12" />
             </div>
-            <h1 className="text-3xl font-black text-[#171717] tracking-tight">
-              TFI & PITCH
-            </h1>
-            <p className="text-sm font-bold text-[#FF704D] mt-1 uppercase tracking-wider">
+
+            {/* Title with yellow highlighter blob effect */}
+            <div className="relative inline-block my-1">
+              <div className="absolute inset-0 bg-[#FFCB45] -rotate-2 rounded-2xl scale-110 -z-0" />
+              <h1 className="relative z-10 text-4xl sm:text-5xl font-black text-[#171717] tracking-tight px-3 py-1">
+                TFI &amp; <br /> Pitch
+              </h1>
+            </div>
+
+            <p className="text-xs sm:text-sm font-black text-[#171717] uppercase tracking-wider">
               Cinema. Friends. Fun.
             </p>
-            <p className="text-sm font-medium text-neutral-700 mt-3">
-              The ultimate Telugu cinema party games platform! Guess movies, translate crazy titles, act out charades & battle in Box Office auctions.
-            </p>
-            <div className="mt-6 flex flex-col gap-2">
-              <NeoButton
-                variant="primary"
-                fullWidth
-                size="lg"
+
+            {/* Illustrated mass hero with sunglasses in red shirt & Charminar behind */}
+            <div className="my-1 py-1">
+              <TeluguHeroSplash className="w-44 h-44 drop-shadow-sm" />
+            </div>
+
+            {/* CTA Button matching reference: yellow with arrow */}
+            <div className="w-full pt-1 space-y-2">
+              <button
                 onClick={() => setStep(2)}
+                className="w-full py-3.5 bg-[#FFCB45] border-2 border-[#171717] rounded-2xl font-black text-sm text-[#171717] shadow-[2.5px_2.5px_0_#171717] hover:bg-[#ffd45e] active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer transition-all"
               >
-                <span>GET STARTED</span>
-                <ArrowRight className="w-5 h-5" />
-              </NeoButton>
+                <span>Get Started</span>
+                <ArrowRight className="w-4 h-4 stroke-[3]" />
+              </button>
+
               <button
                 onClick={completeOnboarding}
-                className="text-xs font-bold text-neutral-600 hover:text-black py-2 underline"
+                className="text-xs font-bold text-neutral-600 hover:text-black py-1"
               >
-                Skip as Guest
+                Skip intro &amp; play as guest
               </button>
             </div>
-          </NeoCard>
+          </div>
         )}
 
+        {/* SCREEN 2: PREFERENCE CARDS MATCHING REFERENCE IMAGE 2 */}
         {step === 2 && (
-          <NeoCard bg="bg-white" size="lg">
-            <div className="flex items-center gap-2 mb-2">
-              <Languages className="w-6 h-6 text-[#4385EA]" />
-              <h2 className="text-xl font-black">Choose Language Mode</h2>
-            </div>
-            <p className="text-xs text-neutral-600 mb-4">
-              How would you like Telugu cinema clues and titles to be shown?
-            </p>
+          <div className="flex flex-col items-center text-center space-y-4">
+            <h2 className="text-2xl sm:text-3xl font-black text-[#171717] leading-tight px-2">
+              What do you <br /> love more?
+            </h2>
 
-            <div className="space-y-3 mb-6">
-              <div
-                onClick={() => setLangPreference('both')}
-                className={`p-3 rounded-xl border-3 border-[#171717] cursor-pointer transition-all ${
-                  langPreference === 'both'
-                    ? 'bg-[#FFCB45] shadow-[3px_3px_0_#171717] -translate-y-0.5'
-                    : 'bg-[#FFF8E9] opacity-80'
-                }`}
-              >
-                <div className="font-extrabold text-sm">Telugu + English Transliteration</div>
-                <div className="text-xs text-neutral-700 mt-0.5">
-                  e.g., పోకిరి (Pokiri) — Great for all friends!
-                </div>
-              </div>
-
-              <div
-                onClick={() => setLangPreference('telugu')}
-                className={`p-3 rounded-xl border-3 border-[#171717] cursor-pointer transition-all ${
-                  langPreference === 'telugu'
-                    ? 'bg-[#FFCB45] shadow-[3px_3px_0_#171717] -translate-y-0.5'
-                    : 'bg-[#FFF8E9] opacity-80'
-                }`}
-              >
-                <div className="font-extrabold text-sm">Pure Telugu Script Only</div>
-                <div className="text-xs text-neutral-700 mt-0.5">
-                  e.g., పోకిరి — For hardcore Tollywood pandits!
-                </div>
-              </div>
-            </div>
-
-            <NeoButton
-              variant="coral"
-              fullWidth
-              size="md"
-              onClick={() => {
-                setLanguageMode(langPreference);
-                setStep(3);
-              }}
+            {/* Pink Card Option: Telugu Cinema */}
+            <div
+              onClick={() => setSelectedLang('telugu')}
+              className={`w-full p-6 rounded-2xl border-2 border-[#171717] cursor-pointer transition-all flex flex-col items-center justify-center space-y-3 ${
+                selectedLang === 'telugu'
+                  ? 'bg-[#FFA6BA] shadow-[3.5px_3.5px_0_#171717] -translate-y-0.5'
+                  : 'bg-[#FFA6BA]/65 hover:bg-[#FFA6BA]/85 shadow-[2px_2px_0_#171717]'
+              }`}
             >
-              Next Step
-            </NeoButton>
-          </NeoCard>
+              <FilmReelIcon className="w-12 h-12" />
+              <div className="text-lg font-black text-[#171717] leading-tight">
+                Telugu <br /> Cinema
+              </div>
+            </div>
+
+            {/* Blue Card Option: Telugu Cinema + English Transliteration */}
+            <div
+              onClick={() => setSelectedLang('both')}
+              className={`w-full p-5 rounded-2xl border-2 border-[#171717] cursor-pointer transition-all flex flex-col items-center justify-center ${
+                selectedLang === 'both'
+                  ? 'bg-[#B3D4FC] shadow-[3.5px_3.5px_0_#171717] -translate-y-0.5'
+                  : 'bg-[#B3D4FC]/65 hover:bg-[#B3D4FC]/85 shadow-[2px_2px_0_#171717]'
+              }`}
+            >
+              <div className="text-base font-black text-[#171717] leading-snug">
+                Telugu Cinema <br /> + English <br /> Transliteration!
+              </div>
+            </div>
+
+            {/* Next Button */}
+            <div className="w-full pt-2">
+              <button
+                onClick={() => {
+                  setLanguageMode(selectedLang);
+                  setStep(3);
+                }}
+                className="w-full py-3.5 bg-[#FFCB45] border-2 border-[#171717] rounded-2xl font-black text-sm text-[#171717] shadow-[2.5px_2.5px_0_#171717] hover:bg-[#ffd45e] active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer transition-all"
+              >
+                <span>Next</span>
+                <ArrowRight className="w-4 h-4 stroke-[3]" />
+              </button>
+            </div>
+
+            {/* Charminar skyline sketch at bottom */}
+            <CharminarSketch className="w-full h-10 opacity-30 mt-2" />
+          </div>
         )}
 
+        {/* SCREEN 3: NAME SELECTION */}
         {step === 3 && (
-          <NeoCard bg="bg-[#FFF8E9]" size="lg">
-            <div className="flex items-center gap-2 mb-2">
-              <Sparkles className="w-6 h-6 text-[#FFCB45]" />
-              <h2 className="text-xl font-black">Choose Your Display Name</h2>
+          <div className="flex flex-col items-center text-center space-y-4">
+            <div className="p-3 bg-[#FFCB45] rounded-full border-2 border-[#171717]">
+              <Sparkles className="w-8 h-8 text-[#171717]" />
             </div>
-            <p className="text-xs text-neutral-600 mb-4">
-              Enter your party nickname or Tollywood persona.
+
+            <h2 className="text-2xl font-black text-[#171717]">
+              Your Player Name
+            </h2>
+            <p className="text-xs font-semibold text-neutral-600">
+              Enter your cinema nickname for party games &amp; auction leaderboards!
             </p>
 
-            <div className="mb-4">
+            <div className="w-full pt-2">
               <input
                 type="text"
                 value={nameInput}
                 onChange={(e) => setNameInput(e.target.value)}
-                placeholder="e.g. Vintage_Chiru, Pokiri_Pandu"
+                placeholder="e.g. Charan, Pokiri_Pandu"
                 maxLength={20}
-                className="w-full px-4 py-3 bg-white border-3 border-[#171717] rounded-xl font-bold text-base shadow-[3px_3px_0_#171717] focus:outline-none focus:bg-[#FFF8E9]"
+                className="w-full px-4 py-3 bg-white border-2 border-[#171717] rounded-2xl font-black text-center text-base shadow-[2.5px_2.5px_0_#171717] focus:outline-none"
               />
             </div>
 
-            <NeoButton
-              variant="green"
-              fullWidth
-              size="lg"
+            <button
               onClick={() => {
-                setDisplayName(nameInput.trim() || 'MegaFan_99');
+                setDisplayName(nameInput.trim() || 'Charan');
                 completeOnboarding();
               }}
+              className="w-full py-3.5 bg-[#88D49E] border-2 border-[#171717] rounded-2xl font-black text-sm text-[#171717] shadow-[2.5px_2.5px_0_#171717] hover:bg-[#72c289] active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer transition-all mt-3"
             >
-              Let&apos;s Play! 🎬
-            </NeoButton>
-          </NeoCard>
+              <span>Let&apos;s Play! 🍿</span>
+            </button>
+          </div>
         )}
       </div>
     </div>
