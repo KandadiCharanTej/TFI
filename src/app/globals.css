@@ -1,132 +1,61 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --ivory: #FFF8E9;
-  --cream-card: #FDFBF4;
-  --yellow: #FFCB45;
-  --yellow-light: #FFE082;
-  --pink-card: #FFA6BA;
-  --pink-soft: #FFD1DC;
-  --blue-card: #B3D4FC;
-  --blue-soft: #D7E8FC;
-  --coral: #FF704D;
-  --coral-light: #FF9E80;
-  --green: #88D49E;
-  --lavender: #CBB8F5;
-  --black: #171717;
-  --white: #FFFFFF;
+  --bg-concrete: #EAE6DF;
+  --surface-sticker: #FFFFFF;
+  --surface-inner: #F4F1EA;
+  --ink-black: #141313;
+  --accent-yellow: #F6BE18;
+  --accent-magenta: #EC1276;
+  --state-win-green: #00C853;
+  --state-room-cyan: #00E5FF;
 }
 
-@layer base {
-  body {
-    background-color: var(--ivory);
-    color: var(--black);
-    font-family: var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-  }
+* {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Soft Neo-Brutalist & Editorial Tokens matching reference image */
-.nb-card {
-  background-color: #FFFFFF;
-  border: 2px solid #171717;
-  border-radius: 1.25rem;
-  box-shadow: 2.5px 2.5px 0px #171717;
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-concrete);
+  background-image:
+    radial-gradient(#141313 0.75px, transparent 0.75px),
+    radial-gradient(#141313 0.5px, #EAE6DF 0.5px);
+  background-size: 36px 36px;
+  background-position: 0 0, 18px 18px;
+  color: var(--ink-black);
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
 }
 
-.nb-card-pink {
-  background-color: #FFA6BA;
-  border: 2px solid #171717;
-  border-radius: 1.25rem;
-  box-shadow: 2.5px 2.5px 0px #171717;
-}
-
-.nb-card-blue {
-  background-color: #B3D4FC;
-  border: 2px solid #171717;
-  border-radius: 1.25rem;
-  box-shadow: 2.5px 2.5px 0px #171717;
-}
-
-.nb-card-yellow {
-  background-color: #FFCB45;
-  border: 2px solid #171717;
-  border-radius: 1.25rem;
-  box-shadow: 2.5px 2.5px 0px #171717;
-}
-
-.nb-card-orange {
-  background-color: #FF9E80;
-  border: 2px solid #171717;
-  border-radius: 1.25rem;
-  box-shadow: 2.5px 2.5px 0px #171717;
-}
-
-.nb-card-purple {
-  background-color: #D2C2F8;
-  border: 2px solid #171717;
-  border-radius: 1.25rem;
-  box-shadow: 2.5px 2.5px 0px #171717;
-}
-
-.nb-btn {
-  border: 2px solid #171717;
+/* Die-cut sticker card standard class */
+.diecut-sticker-card {
+  background: #FFFFFF;
+  border: 3px solid #141313;
+  box-shadow:
+    0 0 0 5px #FFFFFF,
+    0 0 0 7px #141313,
+    6px 8px 0 5px rgba(20, 19, 19, 0.18);
   border-radius: 1rem;
-  font-weight: 800;
-  box-shadow: 2.5px 2.5px 0px #171717;
-  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  cursor: pointer;
 }
 
-.nb-btn:hover {
+/* Acamp button standard class */
+.acamp-btn {
+  border: 2.5px solid #141313;
+  box-shadow: 4px 4px 0px #141313;
+  transition: all 0.1s ease;
+}
+
+.acamp-btn:hover {
   transform: translate(-1px, -1px);
-  box-shadow: 3.5px 3.5px 0px #171717;
+  box-shadow: 5px 5px 0px #141313;
 }
 
-.nb-btn:active {
+.acamp-btn:active {
   transform: translate(2px, 2px);
-  box-shadow: 0.5px 0.5px 0px #171717;
-}
-
-.nb-btn-yellow {
-  background-color: #FFCB45;
-  color: #171717;
-}
-.nb-btn-yellow:hover {
-  background-color: #ffd45e;
-}
-
-.nb-btn-green {
-  background-color: #88D49E;
-  color: #171717;
-}
-
-.nb-btn-pink {
-  background-color: #FFA6BA;
-  color: #171717;
-}
-
-.nb-pill {
-  border: 2px solid #171717;
-  border-radius: 9999px;
-  font-weight: 800;
-  box-shadow: 1.5px 1.5px 0px #171717;
-}
-
-/* Custom scrollbars */
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-::-webkit-scrollbar-track {
-  background: #FFF8E9;
-}
-::-webkit-scrollbar-thumb {
-  background: #171717;
-  border-radius: 9999px;
+  box-shadow: 1px 1px 0px #141313;
 }

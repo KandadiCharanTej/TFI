@@ -1,223 +1,473 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { HEAD_SET_GO_DATA } from '@/data/content';
-import { HeadSetGoCard } from '@/types';
-import { HeadSetGoForeheadIllustration, ForeheadPlayerIcon, DoodleStar } from '@/components/ui/EditorialArt';
-import { ArrowLeft, Clock, Check, X, RotateCcw, Trophy } from 'lucide-react';
-import confetti from 'canvas-confetti';
+import { DieCutCard } from '@/components/DieCutCard';
+import { AcampButton } from '@/components/AcampButton';
+import { ResultConfetti } from '@/components/ResultConfetti';
+import { TELUGU_CINEMA_DATABASE, getHeadSetGoDeck } from '@/data/teluguCinemaDatabase';
+import { TeluguMovie } from '@/types';
+import { soundManager, triggerHaptic } from '@/utils/audio';
+import { Play, RotateCcw, Check, X, Pause, PlayCircle, Eye, ArrowLeft, Volume2 } from 'lucide-react';
+import clsx from 'clsx';
+
+type GameState = 'setup' | 'countdown' | 'playing' | 'paused' | 'results';
 
 export default function HeadSetGoPage() {
-  const [gameState, setGameState] = useState<'setup' | 'playing' | 'results'>('setup');
-  const [timerDuration, setTimerDuration] = useState<number>(90); // 01:30 matching reference
-  const [timeLeft, setTimeLeft] = useState<number>(90);
-  const [roundNumber, setRoundNumber] = useState<number>(1);
-  const totalRounds = 5;
+  // Setup state
+  const [category, setCategory] = useState<string>('all');
+  const [duration, setDuration] = useState<number>(60);
+  const [gameState, setGameState] = useState<GameState>('setup');
 
-  const [deck, setDeck] = useState<HeadSetGoCard[]>([]);
+  // Active game state
+  const [deck, setDeck] = useState<TeluguMovie[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [score, setScore] = useState<number>(0);
-  const [correctCards, setCorrectCards] = useState<HeadSetGoCard[]>([]);
-  const [skippedCards, setSkippedCards] = useState<HeadSetGoCard[]>([]);
+  const [timeLeft, setTimeLeft] = useState<number>(60);
+  const [prepCountdown, setPrepCountdown] = useState<number>(5);
 
-  const startRound = () => {
-    const shuffled = [...HEAD_SET_GO_DATA].sort(() => Math.random() - 0.5);
+  // Score tracking
+  const [correctCards, setCorrectCards] = useState<TeluguMovie[]>([]);
+  const [skippedCards, setSkippedCards] = useState<TeluguMovie[]>([]);
+
+  // Feedback flash state
+  const [feedback, setFeedback] = useState<'correct' | 'skip' | null>(null);
+
+  // Wake lock ref
+  const wakeLockRef = useRef<any>(null);
+
+  // Acquire Wake Lock
+  const requestWakeLock = async () => {
+    if (typeof window !== 'undefined' && 'wakeLock' in navigator) {
+      try {
+        wakeLockRef.current = await (navigator as any).wakeLock.request('screen');
+      } catch {}
+    }
+  };
+
+  const releaseWakeLock = () => {
+    if (wakeLockRef.current) {
+      try {
+        wakeLockRef.current.release();
+        wakeLockRef.current = null;
+      } catch {}
+    }
+  };
+
+  // Start game flow
+  const handleStartGame = () => {
+    soundManager.playClick();
+    const filtered = getHeadSetGoDeck(category);
+    const shuffled = [...filtered].sort(() => 0.5 - Math.random());
     setDeck(shuffled);
     setCurrentIndex(0);
-    setScore(0);
-    setRoundNumber(1);
     setCorrectCards([]);
     setSkippedCards([]);
-    setTimeLeft(timerDuration);
-    setGameState('playing');
+    setTimeLeft(duration);
+    setPrepCountdown(5);
+    setGameState('countdown');
+    requestWakeLock();
   };
 
+  // Preparation Countdown (5 to 1)
+  useEffect(() => {
+    if (gameState !== 'countdown') return;
+
+    if (prepCountdown > 0) {
+      soundManager.playTick(true);
+      const timer = setTimeout(() => {
+        setPrepCountdown(prev => prev - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else {
+      soundManager.playFanfare();
+      setGameState('playing');
+    }
+  }, [gameState, prepCountdown]);
+
+  // Main Playing Timer
   useEffect(() => {
     if (gameState !== 'playing') return;
+
     if (timeLeft <= 0) {
-      finishGame();
+      handleGameOver();
       return;
     }
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
+
+    const interval = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 6 && prev > 1) {
+          soundManager.playTick(true);
+        }
+        return prev - 1;
+      });
     }, 1000);
-    return () => clearInterval(timer);
+
+    return () => clearInterval(interval);
   }, [gameState, timeLeft]);
 
-  const handleAction = (isCorrect: boolean) => {
+  // Gyroscope / Device Orientation Handling (Tilt down = Correct, Tilt up = Skip)
+  useEffect(() => {
+    if (gameState !== 'playing') return;
+
+    let lastTiltTime = 0;
+    const handleOrientation = (e: DeviceOrientationEvent) => {
+      const now = Date.now();
+      if (now - lastTiltTime < 1200) return; // Debounce 1.2s
+
+      const beta = e.beta; // Tilt front/back [-180, 180]
+      if (beta === null) return;
+
+      // When phone is on forehead in landscape:
+      // Tilting head down tilts phone screen downwards
+      if (beta > 65) {
+        lastTiltTime = now;
+        handleAction('correct');
+      } else if (beta < -30) {
+        lastTiltTime = now;
+        handleAction('skip');
+      }
+    };
+
+    if (typeof window !== 'undefined' && window.DeviceOrientationEvent) {
+      window.addEventListener('deviceorientation', handleOrientation);
+    }
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('deviceorientation', handleOrientation);
+      }
+    };
+  }, [gameState, currentIndex, deck]);
+
+  // Action handlers
+  const handleAction = (type: 'correct' | 'skip') => {
+    if (gameState !== 'playing' || currentIndex >= deck.length) return;
+
     const currentCard = deck[currentIndex];
-    if (isCorrect) {
-      setScore((s) => s + 1);
-      setCorrectCards((prev) => [...prev, currentCard]);
+
+    if (type === 'correct') {
+      soundManager.playCorrect();
+      triggerHaptic(50);
+      setCorrectCards(prev => [...prev, currentCard]);
+      setFeedback('correct');
     } else {
-      setSkippedCards((prev) => [...prev, currentCard]);
+      soundManager.playPass();
+      triggerHaptic(30);
+      setSkippedCards(prev => [...prev, currentCard]);
+      setFeedback('skip');
     }
 
-    if (roundNumber >= totalRounds || currentIndex + 1 >= deck.length) {
-      finishGame();
-    } else {
-      setRoundNumber((r) => r + 1);
-      setCurrentIndex((i) => i + 1);
-    }
+    setTimeout(() => {
+      setFeedback(null);
+      if (currentIndex + 1 >= deck.length) {
+        handleGameOver();
+      } else {
+        setCurrentIndex(prev => prev + 1);
+      }
+    }, 200);
   };
 
-  const finishGame = () => {
+  const handleGameOver = () => {
+    releaseWakeLock();
+    soundManager.playFanfare();
     setGameState('results');
-    confetti({ particleCount: 90, spread: 70 });
   };
 
-  const formatTimer = (secs: number) => {
-    const m = Math.floor(secs / 60);
-    const s = secs % 60;
-    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-  };
-
-  const currentCard = deck[currentIndex] || HEAD_SET_GO_DATA[0];
+  const currentMovie = deck[currentIndex];
 
   return (
-    <div className="max-w-md mx-auto space-y-4 pb-12">
-      {/* SETUP SCREEN */}
+    <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 py-6">
+      
+      {/* =========================================================================
+          SETUP SCREEN
+          ========================================================================= */}
       {gameState === 'setup' && (
-        <div className="space-y-4 text-center">
-          <div className="flex items-center justify-between px-1">
-            <Link href="/games" className="p-1 hover:bg-[#FFCB45]/30 rounded-lg">
-              <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
+        <div className="max-w-2xl mx-auto space-y-6">
+          <div className="flex items-center gap-2">
+            <Link href="/games" className="text-xs font-black uppercase bg-white border border-[#141313] px-2.5 py-1 rounded-lg">
+              ← Back to Games
             </Link>
-            <h1 className="text-xl font-black text-[#171717]">Head Set Go</h1>
-            <div className="w-5" />
           </div>
 
-          <div className="bg-white border-2 border-[#171717] rounded-3xl p-6 shadow-[3px_3px_0_#171717] space-y-4">
-            <div className="w-20 h-20 bg-[#B3D4FC] rounded-2xl border-2 border-[#171717] mx-auto flex items-center justify-center shadow-[2px_2px_0_#171717]">
-              <ForeheadPlayerIcon className="w-14 h-14" />
-            </div>
+          <div className="text-center space-y-1">
+            <span className="bg-[#F6BE18] text-[#141313] font-black text-xs uppercase px-3 py-1 rounded-md border border-[#141313]">
+              GAME 01 • SINGLE-DEVICE FOREHEAD
+            </span>
+            <h1 className="font-block text-5xl sm:text-6xl uppercase text-[#141313] tracking-tight">
+              HEAD SET GO!
+            </h1>
+            <p className="text-sm font-bold text-[#141313]/80">
+              Hold the phone horizontally on your forehead. Friends shout clues—guess as many as you can before the timer runs out!
+            </p>
+          </div>
 
-            <div className="space-y-1">
-              <h2 className="text-2xl font-black text-[#171717]">Guess the Movie!</h2>
-              <p className="text-xs font-semibold text-neutral-600 max-w-xs mx-auto">
-                Hold phone on your forehead! Friends shout clues to make you guess before the clock runs out.
-              </p>
-            </div>
-
-            {/* Timer preset: 01:30 matching reference */}
-            <div className="pt-2">
-              <span className="text-xs font-black uppercase tracking-wider text-neutral-500 block mb-2">Round Timer</span>
-              <div className="grid grid-cols-3 gap-2">
-                {[60, 90, 120].map((t) => (
+          <DieCutCard className="p-6 space-y-6">
+            
+            {/* Category selection */}
+            <div>
+              <label className="block font-black text-xs uppercase tracking-wider mb-2 text-[#141313]">
+                1. Select Category:
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {[
+                  { id: 'all', label: '🎬 All Cinema Mix' },
+                  { id: 'heroes', label: '🔥 Heroes & Stars' },
+                  { id: 'characters', label: '🎭 Cult Characters' },
+                  { id: 'dialogues', label: '🗣️ Famous Dialogues' },
+                  { id: 'brahmi', label: '👑 Brahmi Universe' },
+                ].map(cat => (
                   <button
-                    key={t}
-                    onClick={() => setTimerDuration(t)}
-                    className={`py-2 rounded-xl border-2 border-[#171717] text-xs font-black transition-all ${
-                      timerDuration === t ? 'bg-[#FFCB45] shadow-[2px_2px_0_#171717]' : 'bg-white'
-                    }`}
+                    key={cat.id}
+                    onClick={() => {
+                      soundManager.playClick();
+                      setCategory(cat.id);
+                    }}
+                    className={clsx(
+                      'border-[2px] border-[#141313] p-2.5 rounded-xl font-bold text-xs text-left cursor-pointer transition-all',
+                      category === cat.id
+                        ? 'bg-[#F6BE18] text-[#141313] shadow-[3px_3px_0_#141313]'
+                        : 'bg-white text-[#141313] hover:bg-[#F4F1EA]'
+                    )}
                   >
-                    {formatTimer(t)}
+                    {cat.label}
                   </button>
                 ))}
               </div>
             </div>
 
-            <button
-              onClick={startRound}
-              className="w-full py-4 bg-[#FFCB45] border-2 border-[#171717] rounded-2xl font-black text-base shadow-[2.5px_2.5px_0_#171717] hover:bg-[#ffd45e] active:translate-x-0.5 active:translate-y-0.5 mt-2 cursor-pointer transition-all"
-            >
-              Start Game 🎬
-            </button>
-          </div>
+            {/* Timer Selection */}
+            <div>
+              <label className="block font-black text-xs uppercase tracking-wider mb-2 text-[#141313]">
+                2. Round Duration:
+              </label>
+              <div className="grid grid-cols-4 gap-2">
+                {[
+                  { sec: 60, label: '60s' },
+                  { sec: 90, label: '90s' },
+                  { sec: 120, label: '120s' },
+                  { sec: 180, label: '180s' },
+                ].map(t => (
+                  <button
+                    key={t.sec}
+                    onClick={() => {
+                      soundManager.playClick();
+                      setDuration(t.sec);
+                    }}
+                    className={clsx(
+                      'border-[2px] border-[#141313] py-2 rounded-xl font-mono font-bold text-sm text-center cursor-pointer transition-all',
+                      duration === t.sec
+                        ? 'bg-[#EC1276] text-white shadow-[3px_3px_0_#141313]'
+                        : 'bg-white text-[#141313] hover:bg-[#F4F1EA]'
+                    )}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* How to play card */}
+            <div className="bg-[#F4F1EA] border-2 border-[#141313] rounded-xl p-4 text-xs font-semibold space-y-1.5">
+              <div className="font-black uppercase text-[#EC1276]">HOW TO PLAY ON PHONE:</div>
+              <div>• Tap <strong className="text-[#00C853]">Right Half</strong> of screen for Correct (+1 point).</div>
+              <div>• Tap <strong className="text-[#EC1276]">Left Half</strong> of screen to Skip / Pass.</div>
+              <div>• Optional: Tilt head down for Correct, tilt head up to Pass (Gyroscope auto-enabled).</div>
+            </div>
+
+            <AcampButton onClick={handleStartGame} variant="yellow" size="lg" fullWidth>
+              ⚡ Ready! Place on Forehead
+            </AcampButton>
+
+          </DieCutCard>
         </div>
       )}
 
-      {/* GAMEPLAY SCREEN MATCHING REFERENCE SCREEN 5 */}
-      {gameState === 'playing' && (
-        <div className="space-y-4">
-          {/* Top Bar: Back arrow, "Head Set Go", yellow pill timer */}
-          <div className="flex items-center justify-between px-1">
-            <button onClick={() => setGameState('setup')} className="p-1 hover:bg-[#FFCB45]/30 rounded-lg">
-              <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
-            </button>
-            <h1 className="text-lg font-black text-[#171717]">Head Set Go</h1>
-            
-            {/* Yellow pill timer matching reference screen 5 */}
-            <div className="flex items-center gap-1 bg-[#FFCB45] px-3 py-1 rounded-full border-2 border-[#171717] shadow-[1.5px_1.5px_0_#171717] text-xs font-black">
-              <Clock className="w-3.5 h-3.5 stroke-[3]" />
-              <span>{formatTimer(timeLeft)}</span>
+
+      {/* =========================================================================
+          PREPARATION COUNTDOWN SCREEN (5 SECONDS)
+          ========================================================================= */}
+      {gameState === 'countdown' && (
+        <div className="min-h-[70vh] flex flex-col items-center justify-center text-center space-y-6">
+          <div className="bg-[#141313] text-[#F6BE18] font-black text-sm uppercase px-6 py-2 rounded-full border-2 border-[#141313] shadow-[4px_4px_0_#141313]">
+            PLACE PHONE ON FOREHEAD HORIZONTALLY!
+          </div>
+
+          <div className="w-36 h-36 rounded-full bg-[#EC1276] border-[6px] border-[#141313] flex items-center justify-center font-block text-8xl text-white shadow-[0_0_0_8px_#FFFFFF,0_0_0_12px_#141313,8px_10px_0_#141313] animate-bounce">
+            {prepCountdown}
+          </div>
+
+          <p className="font-block text-2xl uppercase tracking-wider text-[#141313]">
+            FRIENDS GET READY TO GIVE CLUES!
+          </p>
+        </div>
+      )}
+
+
+      {/* =========================================================================
+          LANDSCAPE GAMEPLAY SCREEN (LARGE READABLE TEXT + TOUCH CONTROLS)
+          ========================================================================= */}
+      {gameState === 'playing' && currentMovie && (
+        <div
+          className={clsx(
+            'relative w-full min-h-[75vh] rounded-3xl border-[5px] border-[#141313] overflow-hidden select-none transition-colors duration-200',
+            feedback === 'correct' && 'bg-[#00C853]',
+            feedback === 'skip' && 'bg-[#EC1276]',
+            !feedback && 'bg-white shadow-[0_0_0_6px_#FFFFFF,0_0_0_10px_#141313,8px_12px_0_#141313]'
+          )}
+        >
+          {/* Top HUD: Timer & Score */}
+          <div className="absolute top-4 left-6 right-6 flex items-center justify-between z-20 pointer-events-none">
+            <div className="bg-[#141313] text-white px-4 py-1.5 rounded-xl border-2 border-[#141313] font-mono font-bold text-lg">
+              ⏱ {String(Math.floor(timeLeft / 60)).padStart(2, '0')}:{String(timeLeft % 60).padStart(2, '0')}
+            </div>
+
+            <div className="flex items-center gap-3">
+              <span className="bg-[#00C853] text-white px-3 py-1 rounded-lg border-2 border-[#141313] font-black text-sm">
+                ✓ {correctCards.length}
+              </span>
+              <span className="bg-[#EC1276] text-white px-3 py-1 rounded-lg border-2 border-[#141313] font-black text-sm">
+                ✕ {skippedCards.length}
+              </span>
             </div>
           </div>
 
-          {/* Forehead Phone Frame with Hands Illustration */}
-          <HeadSetGoForeheadIllustration movieName={currentCard.english} />
+          {/* Center Card Content (Displayed to Friends) */}
+          <div className="w-full h-full min-h-[75vh] flex flex-col items-center justify-center px-6 text-center space-y-3">
+            
+            {/* Clue Category Pill */}
+            <span className="bg-[#F6BE18] text-[#141313] font-black text-xs sm:text-sm uppercase px-4 py-1 rounded-full border-2 border-[#141313] shadow-[2px_2px_0_#141313]">
+              {currentMovie.hero} • {currentMovie.year}
+            </span>
 
-          {/* Prompt line matching reference: "Guess the Movie!" with doodles */}
-          <div className="flex items-center justify-center gap-2 text-center py-1">
-            <DoodleStar className="w-3.5 h-3.5 text-[#171717]" />
-            <span className="text-sm font-black text-[#171717] tracking-wide">Guess the Movie!</span>
-            <DoodleStar className="w-3.5 h-3.5 text-[#171717]" />
+            {/* Telugu Title */}
+            <h2 className="font-telugu font-black text-4xl sm:text-6xl md:text-7xl text-[#141313] tracking-wide leading-tight">
+              {currentMovie.teluguTitle}
+            </h2>
+
+            {/* English Title */}
+            <div className="font-block text-3xl sm:text-5xl uppercase tracking-wider text-[#EC1276]">
+              {currentMovie.englishTitle}
+            </div>
+
+            {/* Clue / Character hint */}
+            <div className="max-w-lg bg-[#F4F1EA] border-2 border-[#141313] rounded-xl px-4 py-2 text-xs sm:text-sm font-extrabold text-[#141313]/90 mt-2">
+              💡 {currentMovie.headSetGoClue || currentMovie.characters.join(' • ')}
+            </div>
+
           </div>
 
-          {/* Clues for Friends */}
-          <div className="bg-white/70 border border-[#171717] rounded-xl p-2.5 text-center text-xs font-bold text-neutral-700">
-            Clues: {currentCard.clues.slice(0, 3).join(' • ')}
-          </div>
-
-          {/* Big Correct & Skip buttons matching reference screen 5 */}
-          <div className="grid grid-cols-2 gap-3 pt-2">
-            {/* Green Correct Button */}
+          {/* Full Screen Touch Trigger Controls: Left Half = Skip, Right Half = Correct */}
+          <div className="absolute inset-0 grid grid-cols-2 z-10 opacity-0 hover:opacity-10 transition-opacity">
             <button
-              onClick={() => handleAction(true)}
-              className="py-4 bg-[#88D49E] border-2 border-[#171717] rounded-2xl font-black text-sm text-[#171717] shadow-[2.5px_2.5px_0_#171717] active:translate-x-0.5 active:translate-y-0.5 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all hover:bg-[#77c78e]"
+              onClick={() => handleAction('skip')}
+              className="bg-red-500 cursor-pointer flex items-center justify-start p-8"
+              title="Tap left side to Skip"
             >
-              <Check className="w-6 h-6 stroke-[3]" />
-              <span>Correct</span>
+              <X size={48} className="text-white" />
             </button>
-
-            {/* Pink Skip Button */}
             <button
-              onClick={() => handleAction(false)}
-              className="py-4 bg-[#FFA6BA] border-2 border-[#171717] rounded-2xl font-black text-sm text-[#171717] shadow-[2.5px_2.5px_0_#171717] active:translate-x-0.5 active:translate-y-0.5 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all hover:bg-[#ff8da6]"
+              onClick={() => handleAction('correct')}
+              className="bg-green-500 cursor-pointer flex items-center justify-end p-8"
+              title="Tap right side for Correct"
             >
-              <X className="w-6 h-6 stroke-[3]" />
-              <span>Skip</span>
+              <Check size={48} className="text-white" />
             </button>
           </div>
 
-          {/* Footer Stats matching reference screen 5: Score: X | Round: 1/5 */}
-          <div className="flex items-center justify-between px-2 pt-2 text-xs font-black text-[#171717]">
-            <span>Score: {score}</span>
-            <span>Round: {roundNumber}/{totalRounds}</span>
+          {/* Bottom On-Screen Buttons (Guaranteed fallback for all devices) */}
+          <div className="absolute bottom-4 left-6 right-6 flex items-center justify-between z-20">
+            <AcampButton onClick={() => handleAction('skip')} variant="magenta" size="md">
+              ✕ Skip Card
+            </AcampButton>
+            <AcampButton onClick={() => handleAction('correct')} variant="green" size="md">
+              ✓ Correct! (+1)
+            </AcampButton>
           </div>
+
         </div>
       )}
 
-      {/* RESULTS SCREEN */}
+
+      {/* =========================================================================
+          RESULTS SCREEN
+          ========================================================================= */}
       {gameState === 'results' && (
-        <div className="bg-white border-2 border-[#171717] rounded-3xl p-6 shadow-[3px_3px_0_#171717] space-y-4 text-center">
-          <div className="w-16 h-16 bg-[#FFCB45] rounded-2xl border-2 border-[#171717] mx-auto flex items-center justify-center shadow-[2px_2px_0_#171717]">
-            <Trophy className="w-10 h-10 text-[#171717]" />
-          </div>
-          <div className="space-y-1">
-            <h2 className="text-2xl font-black text-[#171717]">Round Finished!</h2>
-            <p className="text-xs font-bold text-neutral-600">
-              You scored <span className="text-[#FF704D] font-black">{score}</span> out of {totalRounds}
+        <div className="max-w-2xl mx-auto space-y-6">
+          <ResultConfetti />
+
+          <div className="text-center space-y-2">
+            <span className="bg-[#00C853] text-white font-black text-xs uppercase px-3.5 py-1 rounded-md border border-[#141313]">
+              ROUND COMPLETE!
+            </span>
+            <h2 className="font-block text-5xl sm:text-6xl uppercase text-[#141313]">
+              FINAL SCORECARD
+            </h2>
+            <div className="font-mono text-3xl font-black text-[#EC1276]">
+              {correctCards.length} / {correctCards.length + skippedCards.length} CORRECT
+            </div>
+            <p className="text-xs font-bold text-[#141313]/70">
+              Accuracy: {correctCards.length + skippedCards.length > 0
+                ? Math.round((correctCards.length / (correctCards.length + skippedCards.length)) * 100)
+                : 0}%
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 pt-2">
-            <button
-              onClick={startRound}
-              className="py-3 bg-[#FFCB45] border-2 border-[#171717] rounded-xl font-black text-xs shadow-[2px_2px_0_#171717] flex items-center justify-center gap-1.5"
-            >
-              <RotateCcw className="w-4 h-4" />
-              <span>Play Again</span>
-            </button>
-            <Link href="/games" className="block">
-              <button className="w-full py-3 bg-[#FFF8E9] border-2 border-[#171717] rounded-xl font-black text-xs shadow-[2px_2px_0_#171717]">
-                Back to Games
-              </button>
-            </Link>
-          </div>
+          <DieCutCard className="p-6 space-y-6">
+            
+            {/* Breakdown Lists */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              
+              {/* Correct List */}
+              <div className="bg-[#F4F1EA] border-2 border-[#141313] rounded-xl p-3">
+                <div className="font-black text-xs uppercase text-[#00C853] mb-2 flex items-center justify-between">
+                  <span>✓ Correct ({correctCards.length})</span>
+                </div>
+                <div className="space-y-1.5 max-h-48 overflow-y-auto">
+                  {correctCards.map(c => (
+                    <div key={c.id} className="text-xs font-bold text-[#141313] bg-white px-2.5 py-1 rounded border border-[#141313]/30">
+                      {c.englishTitle} <span className="opacity-60">({c.year})</span>
+                    </div>
+                  ))}
+                  {correctCards.length === 0 && (
+                    <div className="text-xs text-gray-500 italic">No correct cards this round</div>
+                  )}
+                </div>
+              </div>
+
+              {/* Skipped List */}
+              <div className="bg-[#F4F1EA] border-2 border-[#141313] rounded-xl p-3">
+                <div className="font-black text-xs uppercase text-[#EC1276] mb-2 flex items-center justify-between">
+                  <span>✕ Skipped ({skippedCards.length})</span>
+                </div>
+                <div className="space-y-1.5 max-h-48 overflow-y-auto">
+                  {skippedCards.map(c => (
+                    <div key={c.id} className="text-xs font-bold text-[#141313] bg-white px-2.5 py-1 rounded border border-[#141313]/30">
+                      {c.englishTitle} <span className="opacity-60">({c.year})</span>
+                    </div>
+                  ))}
+                  {skippedCards.length === 0 && (
+                    <div className="text-xs text-gray-500 italic">Zero cards skipped! Perfect!</div>
+                  )}
+                </div>
+              </div>
+
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              <AcampButton onClick={handleStartGame} variant="yellow" size="lg" fullWidth>
+                🔄 Play Again
+              </AcampButton>
+              <Link href="/games" className="w-full">
+                <AcampButton variant="white" size="md" fullWidth>
+                  ← Back to Games Menu
+                </AcampButton>
+              </Link>
+            </div>
+
+          </DieCutCard>
         </div>
       )}
+
     </div>
   );
 }

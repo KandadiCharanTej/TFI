@@ -2,213 +2,337 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { EMOJI_CINEMA_DATA } from '@/data/content';
-import { EmojiCinemaItem } from '@/types';
-import { PopcornEmojiIcon } from '@/components/ui/EditorialArt';
-import { ArrowLeft, Clock, RotateCcw, Trophy } from 'lucide-react';
-import confetti from 'canvas-confetti';
+import { DieCutCard } from '@/components/DieCutCard';
+import { AcampButton } from '@/components/AcampButton';
+import { ResultConfetti } from '@/components/ResultConfetti';
+import { getEmojiCinemaDeck } from '@/data/teluguCinemaDatabase';
+import { TeluguMovie } from '@/types';
+import { soundManager, triggerHaptic } from '@/utils/audio';
+import { Check, X, Sparkles, Award, ArrowRight, RotateCcw, HelpCircle } from 'lucide-react';
+import clsx from 'clsx';
+
+type GameState = 'setup' | 'playing' | 'feedback' | 'results';
 
 export default function EmojiCinemaPage() {
-  const [gameState, setGameState] = useState<'setup' | 'playing' | 'results'>('setup');
-  const [timeLeft, setTimeLeft] = useState<number>(45); // 00:45 matching reference
-  const [roundNumber, setRoundNumber] = useState<number>(1);
-  const totalRounds = 5;
+  // Setup options
+  const [difficulty, setDifficulty] = useState<string>('all');
+  const [totalQuestions, setTotalQuestions] = useState<number>(10);
 
-  const [deck, setDeck] = useState<EmojiCinemaItem[]>([]);
+  // Active state
+  const [gameState, setGameState] = useState<GameState>('setup');
+  const [deck, setDeck] = useState<TeluguMovie[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const [isAnswered, setIsAnswered] = useState<boolean>(false);
+  const [streak, setStreak] = useState<number>(0);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [isCorrect, setIsCorrect] = useState<boolean>(false);
 
-  const startQuiz = () => {
-    const shuffled = [...EMOJI_CINEMA_DATA].sort(() => Math.random() - 0.5);
+  // History tracking for final review
+  const [history, setHistory] = useState<{
+    movie: TeluguMovie;
+    userAnswer: string;
+    correctAnswer: string;
+    wasCorrect: boolean;
+  }[]>([]);
+
+  // Start game flow
+  const handleStart = () => {
+    soundManager.playClick();
+    const filtered = getEmojiCinemaDeck(difficulty);
+    const shuffled = [...filtered].sort(() => 0.5 - Math.random()).slice(0, totalQuestions);
     setDeck(shuffled);
     setCurrentIndex(0);
     setScore(0);
-    setRoundNumber(1);
+    setStreak(0);
     setSelectedOption(null);
-    setIsAnswered(false);
-    setTimeLeft(45);
+    setHistory([]);
     setGameState('playing');
   };
 
-  useEffect(() => {
-    if (gameState !== 'playing' || isAnswered) return;
-    if (timeLeft <= 0) {
-      handleOptionPick(-1);
-      return;
-    }
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [gameState, isAnswered, timeLeft]);
+  const handleSelectOption = (option: string) => {
+    if (gameState !== 'playing' || selectedOption !== null) return;
 
-  const handleOptionPick = (optionIndex: number) => {
-    if (isAnswered) return;
-    setSelectedOption(optionIndex);
-    setIsAnswered(true);
+    setSelectedOption(option);
+    const currentMovie = deck[currentIndex];
+    const correct = currentMovie.emojiClue?.correctAnswer === option;
+    setIsCorrect(correct);
 
-    const currentItem = deck[currentIndex];
-    const picked = optionIndex >= 0 ? currentItem.options[optionIndex] : null;
-
-    if (picked && picked.isCorrect) {
-      setScore((s) => s + 1);
-      confetti({ particleCount: 30, spread: 50 });
+    if (correct) {
+      soundManager.playCorrect();
+      triggerHaptic(40);
+      setScore(prev => prev + 10 + streak * 2);
+      setStreak(prev => prev + 1);
+    } else {
+      soundManager.playPass();
+      triggerHaptic(20);
+      setStreak(0);
     }
 
-    setTimeout(() => {
-      if (roundNumber >= totalRounds || currentIndex + 1 >= deck.length) {
-        setGameState('results');
-        confetti({ particleCount: 90, spread: 70 });
-      } else {
-        setRoundNumber((r) => r + 1);
-        setCurrentIndex((i) => i + 1);
-        setSelectedOption(null);
-        setIsAnswered(false);
-        setTimeLeft(45);
-      }
-    }, 1200);
+    setHistory(prev => [
+      ...prev,
+      {
+        movie: currentMovie,
+        userAnswer: option,
+        correctAnswer: currentMovie.emojiClue?.correctAnswer || currentMovie.englishTitle,
+        wasCorrect: correct,
+      },
+    ]);
+
+    setGameState('feedback');
   };
 
-  const formatTimer = (secs: number) => {
-    const m = Math.floor(secs / 60);
-    const s = secs % 60;
-    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  const handleNextQuestion = () => {
+    soundManager.playClick();
+    setSelectedOption(null);
+
+    if (currentIndex + 1 >= deck.length) {
+      soundManager.playFanfare();
+      setGameState('results');
+    } else {
+      setCurrentIndex(prev => prev + 1);
+      setGameState('playing');
+    }
   };
 
-  const currentItem = deck[currentIndex] || EMOJI_CINEMA_DATA[0];
+  const currentMovie = deck[currentIndex];
+  const clue = currentMovie?.emojiClue;
+
+  // Compute Fan IQ Title based on final score
+  const getFanTitle = () => {
+    const accuracy = history.length > 0 ? (history.filter(h => h.wasCorrect).length / history.length) * 100 : 0;
+    if (accuracy >= 90) return '🏆 BOX OFFICE BADSHAH (Top 1% TFI Fan)';
+    if (accuracy >= 70) return '👑 CULT CINEMA CONNOISSEUR';
+    if (accuracy >= 50) return '🍿 FIRST DAY FIRST SHOW JUNKIE';
+    return '🎬 CASUAL THEATRE AUDIENCE';
+  };
 
   return (
-    <div className="max-w-md mx-auto space-y-4 pb-12">
-      {/* SETUP */}
+    <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+      
+      {/* =========================================================================
+          SETUP SCREEN
+          ========================================================================= */}
       {gameState === 'setup' && (
-        <div className="bg-white border-2 border-[#171717] rounded-3xl p-6 shadow-[3px_3px_0_#171717] space-y-4 text-center">
-          <div className="flex items-center justify-between">
-            <Link href="/games" className="p-1 hover:bg-[#FFCB45]/30 rounded-lg">
-              <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
+        <div className="max-w-2xl mx-auto space-y-6">
+          <div className="flex items-center gap-2">
+            <Link href="/games" className="text-xs font-black uppercase bg-white border border-[#141313] px-2.5 py-1 rounded-lg">
+              ← Back to Games
             </Link>
-            <h1 className="text-xl font-black text-[#171717]">Emoji Cinema</h1>
-            <div className="w-5" />
           </div>
 
-          <div className="w-20 h-20 bg-[#FFE082] rounded-2xl border-2 border-[#171717] mx-auto flex items-center justify-center shadow-[2px_2px_0_#171717]">
-            <PopcornEmojiIcon className="w-14 h-14" />
-          </div>
-
-          <div className="space-y-1">
-            <h2 className="text-2xl font-black text-[#171717]">Guess the Movie!</h2>
-            <p className="text-xs font-semibold text-neutral-600 max-w-xs mx-auto">
-              Decipher popular Telugu movies from emoji clues before the timer runs out!
-            </p>
-          </div>
-
-          <button
-            onClick={startQuiz}
-            className="w-full py-4 bg-[#FFCB45] border-2 border-[#171717] rounded-2xl font-black text-base shadow-[2.5px_2.5px_0_#171717] hover:bg-[#ffd45e] active:translate-x-0.5 active:translate-y-0.5 mt-2 cursor-pointer transition-all"
-          >
-            Start Quiz 🍿
-          </button>
-        </div>
-      )}
-
-      {/* GAMEPLAY MATCHING REFERENCE SCREEN 8 */}
-      {gameState === 'playing' && (
-        <div className="space-y-4">
-          {/* Top Bar: Back arrow, "Emoji Cinema", yellow pill timer 00:45 */}
-          <div className="flex items-center justify-between px-1">
-            <button onClick={() => setGameState('setup')} className="p-1 hover:bg-[#FFCB45]/30 rounded-lg">
-              <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
-            </button>
-            <h1 className="text-lg font-black text-[#171717]">Emoji Cinema</h1>
-
-            <div className="flex items-center gap-1 bg-[#FFCB45] px-3 py-1 rounded-full border-2 border-[#171717] shadow-[1.5px_1.5px_0_#171717] text-xs font-black">
-              <Clock className="w-3.5 h-3.5 stroke-[3]" />
-              <span>{formatTimer(timeLeft)}</span>
-            </div>
-          </div>
-
-          {/* Big White Emoji Clue Box matching reference screen 8: Popcorn + Heart + Clapperboard */}
-          <div className="bg-white border-2 border-[#171717] rounded-3xl p-8 shadow-[3px_3px_0_#171717] flex items-center justify-center min-h-[160px] text-center">
-            <span className="text-4xl sm:text-5xl tracking-widest filter drop-shadow-sm">
-              {currentItem.emojis}
+          <div className="text-center space-y-1">
+            <span className="bg-[#00E5FF] text-[#141313] font-black text-xs uppercase px-3 py-1 rounded-md border border-[#141313]">
+              GAME 04 • CINEMA EMOJI QUIZ
             </span>
-          </div>
-
-          {/* 4 Answer options in 2x2 grid matching reference screen 8: [A. Arjun Reddy] [B. Jersey] [C. Geetha Govindam] [D. Majili] */}
-          <div className="grid grid-cols-2 gap-3 pt-2">
-            {currentItem.options.map((option, idx) => {
-              const letter = ['A', 'B', 'C', 'D'][idx];
-              let cardStyle = 'bg-white hover:bg-neutral-50';
-
-              if (isAnswered) {
-                if (option.isCorrect) {
-                  cardStyle = 'bg-[#88D49E] text-black font-black';
-                } else if (selectedOption === idx) {
-                  cardStyle = 'bg-[#FFA6BA] text-black font-black';
-                } else {
-                  cardStyle = 'bg-neutral-100 opacity-60';
-                }
-              }
-
-              return (
-                <button
-                  key={idx}
-                  disabled={isAnswered}
-                  onClick={() => handleOptionPick(idx)}
-                  className={`p-3.5 border-2 border-[#171717] rounded-2xl shadow-[2px_2px_0_#171717] font-black text-xs text-left cursor-pointer transition-all active:translate-x-0.5 active:translate-y-0.5 ${cardStyle}`}
-                >
-                  <span className="text-neutral-500 mr-1.5">{letter}.</span>
-                  <span>{option.english}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Explanation reveal */}
-          {isAnswered && (
-            <div className="p-3 bg-[#FFF8E9] border-2 border-[#171717] rounded-xl text-center text-xs font-bold text-neutral-800 animate-in fade-in">
-              💡 {currentItem.explanation}
-            </div>
-          )}
-
-          {/* Footer stats */}
-          <div className="flex items-center justify-between px-2 pt-2 text-xs font-black text-[#171717]">
-            <span>Score: {score}</span>
-            <span>Question: {roundNumber}/{totalRounds}</span>
-          </div>
-        </div>
-      )}
-
-      {/* RESULTS */}
-      {gameState === 'results' && (
-        <div className="bg-white border-2 border-[#171717] rounded-3xl p-6 shadow-[3px_3px_0_#171717] space-y-4 text-center">
-          <div className="w-16 h-16 bg-[#FFCB45] rounded-2xl border-2 border-[#171717] mx-auto flex items-center justify-center shadow-[2px_2px_0_#171717]">
-            <Trophy className="w-10 h-10 text-[#171717]" />
-          </div>
-          <div className="space-y-1">
-            <h2 className="text-2xl font-black text-[#171717]">Quiz Completed!</h2>
-            <p className="text-xs font-bold text-neutral-600">
-              Score: <span className="text-[#FF704D] font-black">{score}</span> / {totalRounds}
+            <h1 className="font-block text-5xl sm:text-6xl uppercase text-[#141313] tracking-tight">
+              EMOJI CINEMA
+            </h1>
+            <p className="text-sm font-bold text-[#141313]/80">
+              Can you decode iconic Telugu blockbusters and comedy classics from pure emoji clues?
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 pt-2">
-            <button
-              onClick={startQuiz}
-              className="py-3 bg-[#FFCB45] border-2 border-[#171717] rounded-xl font-black text-xs shadow-[2px_2px_0_#171717] flex items-center justify-center gap-1.5"
-            >
-              <RotateCcw className="w-4 h-4" />
-              <span>Play Again</span>
-            </button>
-            <Link href="/games" className="block">
-              <button className="w-full py-3 bg-[#FFF8E9] border-2 border-[#171717] rounded-xl font-black text-xs shadow-[2px_2px_0_#171717]">
-                Back to Games
-              </button>
-            </Link>
-          </div>
+          <DieCutCard className="p-6 space-y-6">
+            
+            {/* Number of questions */}
+            <div>
+              <label className="block font-black text-xs uppercase tracking-wider mb-2 text-[#141313]">
+                1. Number of Questions:
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                {[5, 10, 15].map(q => (
+                  <button
+                    key={q}
+                    onClick={() => setTotalQuestions(q)}
+                    className={clsx(
+                      'border-2 border-[#141313] py-2 rounded-xl font-mono font-black text-sm cursor-pointer transition-all',
+                      totalQuestions === q
+                        ? 'bg-[#00E5FF] text-[#141313] shadow-[3px_3px_0_#141313]'
+                        : 'bg-white text-[#141313] hover:bg-[#F4F1EA]'
+                    )}
+                  >
+                    {q} Questions
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Example preview */}
+            <div className="bg-[#EAE6DF] border-2 border-[#141313] rounded-xl p-4 text-center">
+              <span className="text-[10px] font-black uppercase text-[#EC1276]">EXAMPLE CLUE</span>
+              <div className="text-3xl my-1.5">
+                🪵 🪓 🧔 🔴
+              </div>
+              <div className="text-xs font-bold text-[#141313]">
+                Red Sandalwood + Axe + Beard + Red = <strong>Pushpa: The Rise</strong>
+              </div>
+            </div>
+
+            <AcampButton onClick={handleStart} variant="cyan" size="lg" fullWidth>
+              ▶ Start Emoji Cinema Quiz
+            </AcampButton>
+
+          </DieCutCard>
         </div>
       )}
+
+
+      {/* =========================================================================
+          ACTIVE PLAYING / FEEDBACK SCREEN
+          ========================================================================= */}
+      {(gameState === 'playing' || gameState === 'feedback') && clue && (
+        <div className="max-w-2xl mx-auto space-y-4">
+          
+          {/* Progress Header */}
+          <div className="flex items-center justify-between">
+            <span className="bg-[#141313] text-[#00E5FF] font-mono font-bold text-xs px-3 py-1 rounded-lg border-2 border-[#141313]">
+              QUESTION {currentIndex + 1} / {deck.length}
+            </span>
+
+            <div className="flex items-center gap-2 font-mono font-bold text-xs">
+              {streak > 1 && (
+                <span className="bg-[#EC1276] text-white px-2.5 py-1 rounded-lg border-2 border-[#141313] animate-bounce">
+                  🔥 {streak}x STREAK
+                </span>
+              )}
+              <span className="bg-[#F6BE18] text-[#141313] px-3 py-1 rounded-lg border-2 border-[#141313]">
+                SCORE: {score} PTS
+              </span>
+            </div>
+          </div>
+
+          <DieCutCard className="p-8 text-center space-y-6">
+            
+            <div className="text-xs font-black uppercase text-[#141313]/60">
+              GUESS THE TELUGU MOVIE:
+            </div>
+
+            {/* Emojis Display */}
+            <div className="bg-[#F4F1EA] border-[3px] border-[#141313] rounded-2xl py-8 px-4 flex items-center justify-center shadow-[4px_4px_0_#141313]">
+              <span className="text-5xl sm:text-7xl tracking-widest drop-shadow-[2px_2px_0_#141313]">
+                {clue.emojis}
+              </span>
+            </div>
+
+            {/* 4 Multiple Choice Options */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              {clue.options.map(option => {
+                const isSelected = selectedOption === option;
+                const isCorrectOption = clue.correctAnswer === option;
+
+                let btnStyle = 'bg-white text-[#141313] hover:bg-[#F4F1EA]';
+                if (gameState === 'feedback') {
+                  if (isCorrectOption) {
+                    btnStyle = 'bg-[#00C853] text-white shadow-[4px_4px_0_#141313]';
+                  } else if (isSelected && !isCorrectOption) {
+                    btnStyle = 'bg-[#EC1276] text-white shadow-[4px_4px_0_#141313]';
+                  } else {
+                    btnStyle = 'opacity-40 bg-white text-[#141313]';
+                  }
+                }
+
+                return (
+                  <button
+                    key={option}
+                    disabled={gameState === 'feedback'}
+                    onClick={() => handleSelectOption(option)}
+                    className={clsx(
+                      'border-[2.5px] border-[#141313] p-4 rounded-xl font-block text-lg uppercase tracking-wide',
+                      'transition-all duration-120 cursor-pointer shadow-[3px_3px_0_#141313]',
+                      btnStyle
+                    )}
+                  >
+                    {option}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* FEEDBACK EXPLANATION ACCORDION */}
+            {gameState === 'feedback' && (
+              <div className="bg-[#FFF9E6] border-2 border-[#141313] rounded-xl p-4 text-left space-y-2 animate-fadeIn">
+                <div className="flex items-center gap-2">
+                  <span className={clsx('font-black text-xs uppercase px-2.5 py-0.5 rounded border border-[#141313]', isCorrect ? 'bg-[#00C853] text-white' : 'bg-[#EC1276] text-white')}>
+                    {isCorrect ? '✓ CORRECT! (+10 PTS)' : '✕ INCORRECT'}
+                  </span>
+                  <span className="font-block text-lg uppercase text-[#141313]">
+                    {clue.correctAnswer}
+                  </span>
+                </div>
+
+                <p className="text-xs font-semibold text-[#141313]/90 leading-relaxed">
+                  💡 <strong>Cinema Trivia:</strong> {clue.explanation}
+                </p>
+
+                <div className="pt-2">
+                  <AcampButton onClick={handleNextQuestion} variant="yellow" size="md" fullWidth>
+                    {currentIndex + 1 >= deck.length ? 'See Final Scorecard →' : 'Next Emoji Puzzle →'}
+                  </AcampButton>
+                </div>
+              </div>
+            )}
+
+          </DieCutCard>
+        </div>
+      )}
+
+
+      {/* =========================================================================
+          RESULTS SCREEN
+          ========================================================================= */}
+      {gameState === 'results' && (
+        <div className="max-w-2xl mx-auto space-y-6 text-center">
+          <ResultConfetti />
+
+          <div className="space-y-1">
+            <span className="bg-[#00C853] text-white font-black text-xs uppercase px-4 py-1.5 rounded-full border border-[#141313]">
+              QUIZ COMPLETE!
+            </span>
+            <h2 className="font-block text-5xl sm:text-6xl uppercase text-[#141313]">
+              EMOJI CINEMA SCORE
+            </h2>
+            <div className="font-mono text-4xl font-black text-[#EC1276]">
+              {score} PTS
+            </div>
+            <div className="font-black text-sm uppercase text-[#141313] bg-[#F6BE18] px-4 py-1 rounded-lg border-2 border-[#141313] inline-block mt-1">
+              {getFanTitle()}
+            </div>
+          </div>
+
+          <DieCutCard className="p-6 space-y-6">
+            
+            {/* Question breakdown */}
+            <div className="space-y-2 max-h-60 overflow-y-auto text-left pr-1">
+              {history.map((h, i) => (
+                <div key={i} className="bg-white border-2 border-[#141313] rounded-xl p-3 flex items-center justify-between">
+                  <div>
+                    <div className="text-lg">{h.movie.emojiClue?.emojis}</div>
+                    <div className="font-block text-base uppercase text-[#141313]">
+                      {h.correctAnswer}
+                    </div>
+                  </div>
+                  <span className={clsx('text-xs font-black px-2 py-0.5 rounded border border-[#141313]', h.wasCorrect ? 'bg-[#00C853] text-white' : 'bg-[#EC1276] text-white')}>
+                    {h.wasCorrect ? '✓ CORRECT' : '✕ WRONG'}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              <AcampButton onClick={handleStart} variant="cyan" size="lg" fullWidth>
+                🔄 Play Again
+              </AcampButton>
+              <Link href="/games" className="w-full">
+                <AcampButton variant="white" size="md" fullWidth>
+                  ← Back to Games Menu
+                </AcampButton>
+              </Link>
+            </div>
+
+          </DieCutCard>
+        </div>
+      )}
+
     </div>
   );
 }

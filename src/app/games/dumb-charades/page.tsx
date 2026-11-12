@@ -2,232 +2,472 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { DUMB_CHARADES_DATA } from '@/data/content';
-import { DumbCharadesItem } from '@/types';
-import { MimeActorIllustration } from '@/components/ui/EditorialArt';
-import { ArrowLeft, Clock, Check, X, RotateCcw, Trophy, Eye } from 'lucide-react';
-import confetti from 'canvas-confetti';
+import { DieCutCard } from '@/components/DieCutCard';
+import { AcampButton } from '@/components/AcampButton';
+import { ResultConfetti } from '@/components/ResultConfetti';
+import { getCharadesDeck } from '@/data/teluguCinemaDatabase';
+import { TeluguMovie } from '@/types';
+import { soundManager, triggerHaptic } from '@/utils/audio';
+import { Users, Eye, EyeOff, Check, X, ShieldAlert, Trophy, Award, ArrowRight } from 'lucide-react';
+import clsx from 'clsx';
+
+type Phase = 'setup' | 'handoff' | 'acting' | 'turn-summary' | 'winner';
 
 export default function DumbCharadesPage() {
-  const [gameState, setGameState] = useState<'setup' | 'handoff' | 'playing' | 'results'>('setup');
-  const [teamAScore, setTeamAScore] = useState<number>(12); // sample starting / reference looks
-  const [teamBScore, setTeamBScore] = useState<number>(10);
-  const [currentTurn, setCurrentTurn] = useState<'Team A' | 'Team B'>('Team A');
-  const [timeLeft, setTimeLeft] = useState<number>(60); // 01:00 matching reference
-  const [roundNumber, setRoundNumber] = useState<number>(1);
-  const totalRounds = 6;
+  // Setup options
+  const [teamAName, setTeamAName] = useState<string>('Kakinada Kings');
+  const [teamBName, setTeamBName] = useState<string>('Guntur Gondus');
+  const [difficulty, setDifficulty] = useState<string>('all');
+  const [roundDuration, setRoundDuration] = useState<number>(60);
+  const [maxRounds, setMaxRounds] = useState<number>(3); // Rounds per team
 
-  const [deck, setDeck] = useState<DumbCharadesItem[]>([]);
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  // Game execution state
+  const [phase, setPhase] = useState<Phase>('setup');
+  const [deck, setDeck] = useState<TeluguMovie[]>([]);
+  const [deckIndex, setDeckIndex] = useState<number>(0);
+  const [currentRound, setCurrentRound] = useState<number>(1);
+  const [activeTeam, setActiveTeam] = useState<'A' | 'B'>('A');
 
-  const startCharades = () => {
-    const shuffled = [...DUMB_CHARADES_DATA].sort(() => Math.random() - 0.5);
+  // Scores
+  const [teamAScore, setTeamAScore] = useState<number>(0);
+  const [teamBScore, setTeamBScore] = useState<number>(0);
+
+  // Turn timer and privacy
+  const [timeLeft, setTimeLeft] = useState<number>(60);
+  const [isPeeking, setIsPeeking] = useState<boolean>(false);
+  const [lastTurnWon, setLastTurnWon] = useState<boolean>(false);
+
+  // Start game flow
+  const handleStartGame = () => {
+    soundManager.playClick();
+    const filtered = getCharadesDeck(difficulty);
+    const shuffled = [...filtered].sort(() => 0.5 - Math.random());
     setDeck(shuffled);
-    setCurrentIndex(0);
+    setDeckIndex(0);
+    setCurrentRound(1);
+    setActiveTeam('A');
     setTeamAScore(0);
     setTeamBScore(0);
-    setCurrentTurn('Team A');
-    setRoundNumber(1);
-    setTimeLeft(60);
-    setGameState('handoff');
+    setPhase('handoff');
   };
 
+  // Start acting turn
+  const handleStartTurn = () => {
+    soundManager.playClick();
+    setTimeLeft(roundDuration);
+    setIsPeeking(false);
+    setPhase('acting');
+  };
+
+  // Turn timer
   useEffect(() => {
-    if (gameState !== 'playing') return;
+    if (phase !== 'acting') return;
+
     if (timeLeft <= 0) {
       handleFinishTurn(false);
       return;
     }
+
     const timer = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
+      setTimeLeft(prev => {
+        if (prev <= 5 && prev > 1) {
+          soundManager.playTick(true);
+        }
+        return prev - 1;
+      });
     }, 1000);
+
     return () => clearInterval(timer);
-  }, [gameState, timeLeft]);
+  }, [phase, timeLeft]);
 
-  const handleFinishTurn = (isGuessed: boolean) => {
-    if (isGuessed) {
-      if (currentTurn === 'Team A') setTeamAScore((s) => s + 1);
-      else setTeamBScore((s) => s + 1);
-    }
-
-    if (roundNumber >= totalRounds) {
-      setGameState('results');
-      confetti({ particleCount: 90, spread: 70 });
+  // Complete turn
+  const handleFinishTurn = (won: boolean) => {
+    setLastTurnWon(won);
+    if (won) {
+      soundManager.playCorrect();
+      triggerHaptic(50);
+      if (activeTeam === 'A') setTeamAScore(prev => prev + 1);
+      else setTeamBScore(prev => prev + 1);
     } else {
-      setRoundNumber((r) => r + 1);
-      setCurrentTurn((t) => (t === 'Team A' ? 'Team B' : 'Team A'));
-      setCurrentIndex((i) => (i + 1) % deck.length);
-      setTimeLeft(60);
-      setGameState('handoff');
+      soundManager.playPass();
+      triggerHaptic(25);
+    }
+
+    setPhase('turn-summary');
+  };
+
+  // Advance turn or end game
+  const handleNextTurn = () => {
+    soundManager.playClick();
+    setDeckIndex(prev => prev + 1);
+
+    if (activeTeam === 'A') {
+      setActiveTeam('B');
+      setPhase('handoff');
+    } else {
+      // Completed round for both teams
+      if (currentRound >= maxRounds) {
+        soundManager.playFanfare();
+        setPhase('winner');
+      } else {
+        setCurrentRound(prev => prev + 1);
+        setActiveTeam('A');
+        setPhase('handoff');
+      }
     }
   };
 
-  const formatTimer = (secs: number) => {
-    const m = Math.floor(secs / 60);
-    const s = secs % 60;
-    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-  };
-
-  const currentItem = deck[currentIndex] || DUMB_CHARADES_DATA[0];
+  const currentMovie = deck[deckIndex] || deck[0];
+  const activeTeamTitle = activeTeam === 'A' ? teamAName : teamBName;
 
   return (
-    <div className="max-w-md mx-auto space-y-4 pb-12">
-      {/* SETUP */}
-      {gameState === 'setup' && (
-        <div className="bg-white border-2 border-[#171717] rounded-3xl p-6 shadow-[3px_3px_0_#171717] space-y-4 text-center">
-          <div className="flex items-center justify-between">
-            <Link href="/games" className="p-1 hover:bg-[#FFCB45]/30 rounded-lg">
-              <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
+    <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+      
+      {/* =========================================================================
+          SETUP SCREEN
+          ========================================================================= */}
+      {phase === 'setup' && (
+        <div className="max-w-2xl mx-auto space-y-6">
+          <div className="flex items-center gap-2">
+            <Link href="/games" className="text-xs font-black uppercase bg-white border border-[#141313] px-2.5 py-1 rounded-lg">
+              ← Back to Games
             </Link>
-            <h1 className="text-xl font-black text-[#171717]">Dumb Charades</h1>
-            <div className="w-5" />
           </div>
 
-          <div className="w-24 h-24 mx-auto flex items-center justify-center">
-            <MimeActorIllustration className="w-24 h-24" />
-          </div>
-
-          <div className="space-y-1">
-            <h2 className="text-2xl font-black text-[#171717]">Act it Out!</h2>
-            <p className="text-xs font-semibold text-neutral-600 max-w-xs mx-auto">
-              Team A vs Team B. One player receives a secret Telugu movie title and acts it out with gestures only!
+          <div className="text-center space-y-1">
+            <span className="bg-[#00C853] text-white font-black text-xs uppercase px-3 py-1 rounded-md border border-[#141313]">
+              GAME 03 • SINGLE-DEVICE TEAM GAME
+            </span>
+            <h1 className="font-block text-5xl sm:text-6xl uppercase text-[#141313] tracking-tight">
+              DUMB CHARADES
+            </h1>
+            <p className="text-sm font-bold text-[#141313]/80">
+              Act out Telugu movies without making a sound! Protect secrets with the hold-to-peek privacy shutter.
             </p>
           </div>
 
-          <button
-            onClick={startCharades}
-            className="w-full py-4 bg-[#FFCB45] border-2 border-[#171717] rounded-2xl font-black text-base shadow-[2.5px_2.5px_0_#171717] hover:bg-[#ffd45e] active:translate-x-0.5 active:translate-y-0.5 mt-2 cursor-pointer transition-all"
-          >
-            Start Battle 🔥
-          </button>
+          <DieCutCard className="p-6 space-y-6">
+            
+            {/* Team Names */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block font-black text-xs uppercase tracking-wider mb-1 text-[#141313]">
+                  Team A Name:
+                </label>
+                <input
+                  type="text"
+                  value={teamAName}
+                  onChange={e => setTeamAName(e.target.value)}
+                  className="w-full bg-[#FFF9E6] border-2 border-[#141313] px-3 py-2 rounded-xl font-extrabold text-sm shadow-[2px_2px_0_#141313]"
+                />
+              </div>
+
+              <div>
+                <label className="block font-black text-xs uppercase tracking-wider mb-1 text-[#141313]">
+                  Team B Name:
+                </label>
+                <input
+                  type="text"
+                  value={teamBName}
+                  onChange={e => setTeamBName(e.target.value)}
+                  className="w-full bg-[#FCE8F3] border-2 border-[#141313] px-3 py-2 rounded-xl font-extrabold text-sm shadow-[2px_2px_0_#141313]"
+                />
+              </div>
+            </div>
+
+            {/* Rounds & Timer */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block font-black text-xs uppercase tracking-wider mb-1 text-[#141313]">
+                  Rounds per Team:
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {[3, 5, 7].map(r => (
+                    <button
+                      key={r}
+                      onClick={() => setMaxRounds(r)}
+                      className={clsx(
+                        'border-2 border-[#141313] py-2 rounded-xl font-black text-xs cursor-pointer',
+                        maxRounds === r ? 'bg-[#141313] text-[#F6BE18]' : 'bg-white text-[#141313]'
+                      )}
+                    >
+                      {r} Rounds
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-black text-xs uppercase tracking-wider mb-1 text-[#141313]">
+                  Timer per Turn:
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {[45, 60, 90].map(s => (
+                    <button
+                      key={s}
+                      onClick={() => setRoundDuration(s)}
+                      className={clsx(
+                        'border-2 border-[#141313] py-2 rounded-xl font-mono font-black text-xs cursor-pointer',
+                        roundDuration === s ? 'bg-[#00C853] text-white' : 'bg-white text-[#141313]'
+                      )}
+                    >
+                      {s}s
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <AcampButton onClick={handleStartGame} variant="green" size="lg" fullWidth>
+              ▶ Start Charades Tournament
+            </AcampButton>
+
+          </DieCutCard>
         </div>
       )}
 
-      {/* HANDOFF CURTAIN */}
-      {gameState === 'handoff' && (
-        <div className="bg-[#FFCB45] border-2 border-[#171717] rounded-3xl p-8 shadow-[3.5px_3.5px_0_#171717] space-y-5 text-center">
-          <div className="inline-block px-3 py-1 bg-white border-2 border-[#171717] rounded-full text-xs font-black">
-            Turn: {currentTurn}
-          </div>
-          <h2 className="text-3xl font-black text-[#171717]">
-            Pass Device to <br /> {currentTurn} Actor
-          </h2>
-          <p className="text-xs font-bold text-neutral-800">
-            Teammates look away! Only the acting player should reveal the secret movie title.
-          </p>
 
-          <button
-            onClick={() => setGameState('playing')}
-            className="w-full py-4 bg-white border-2 border-[#171717] rounded-2xl font-black text-base shadow-[2.5px_2.5px_0_#171717] hover:bg-neutral-50 active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer transition-all"
-          >
-            <Eye className="w-5 h-5" />
-            <span>Show Secret Movie</span>
-          </button>
-        </div>
-      )}
-
-      {/* GAMEPLAY MATCHING REFERENCE SCREEN 7 */}
-      {gameState === 'playing' && (
-        <div className="space-y-4">
-          {/* Top Bar: Back arrow, "Dumb Charades" */}
-          <div className="flex items-center justify-between px-1">
-            <button onClick={() => setGameState('setup')} className="p-1 hover:bg-[#FFCB45]/30 rounded-lg">
-              <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
-            </button>
-            <h1 className="text-lg font-black text-[#171717]">Dumb Charades</h1>
-            <div className="w-5" />
-          </div>
-
-          {/* Team A and Team B Cards matching reference screen 7 */}
-          <div className="grid grid-cols-2 gap-3">
-            {/* Team A (Blue Card) */}
-            <div className="p-4 bg-[#B3D4FC] border-2 border-[#171717] rounded-2xl shadow-[2.5px_2.5px_0_#171717] text-center">
-              <span className="text-xs font-black text-[#171717] block">Team A</span>
-              <span className="text-2xl font-black text-[#171717]">{teamAScore}</span>
+      {/* =========================================================================
+          ACTOR HANDOFF & PRIVACY PEEK SCREEN
+          ========================================================================= */}
+      {phase === 'handoff' && (
+        <div className="max-w-xl mx-auto space-y-6 text-center">
+          
+          {/* Live Score Strip */}
+          <div className="flex items-center justify-center gap-4">
+            <div className="bg-[#FFF9E6] border-2 border-[#141313] px-4 py-2 rounded-xl shadow-[3px_3px_0_#141313]">
+              <div className="text-[10px] font-black uppercase text-[#141313]/70">{teamAName}</div>
+              <div className="font-mono text-2xl font-black">{teamAScore} PTS</div>
             </div>
-
-            {/* Team B (Pink Card) */}
-            <div className="p-4 bg-[#FFA6BA] border-2 border-[#171717] rounded-2xl shadow-[2.5px_2.5px_0_#171717] text-center">
-              <span className="text-xs font-black text-[#171717] block">Team B</span>
-              <span className="text-2xl font-black text-[#171717]">{teamBScore}</span>
+            <div className="font-block text-xl">VS</div>
+            <div className="bg-[#FCE8F3] border-2 border-[#141313] px-4 py-2 rounded-xl shadow-[3px_3px_0_#141313]">
+              <div className="text-[10px] font-black uppercase text-[#141313]/70">{teamBName}</div>
+              <div className="font-mono text-2xl font-black">{teamBScore} PTS</div>
             </div>
           </div>
 
-          {/* Secret Movie Title Reveal for the Actor */}
-          <div className="p-3 bg-white border-2 border-[#171717] rounded-2xl text-center shadow-[1.5px_1.5px_0_#171717]">
-            <span className="text-[11px] font-black uppercase text-neutral-500">Secret Movie (Only You See This):</span>
-            <div className="text-xl font-black text-[#171717] mt-0.5">
-              {currentItem.movieEnglish} ({currentItem.movieTelugu})
+          <DieCutCard className="p-8 space-y-6">
+            <div className="inline-block bg-[#141313] text-white font-black text-xs uppercase px-4 py-1.5 rounded-full">
+              ROUND {currentRound} OF {maxRounds} • TURN FOR: {activeTeamTitle}
             </div>
-          </div>
 
-          {/* Center Mime Silhouette Card matching reference screen 7 */}
-          <div className="bg-white border-2 border-[#171717] rounded-3xl p-6 shadow-[3px_3px_0_#171717] flex flex-col items-center justify-center text-center">
-            <MimeActorIllustration className="w-36 h-36" />
-            <h3 className="text-base font-black text-[#171717] mt-2">
-              Act out the movie!
-            </h3>
-          </div>
-
-          {/* Center Yellow Pill Timer matching reference screen 7: e.g. [⏱️ 01:00] with small rays */}
-          <div className="flex items-center justify-center gap-2 pt-1">
-            <div className="flex items-center gap-1.5 bg-[#FFCB45] px-5 py-2 rounded-full border-2 border-[#171717] shadow-[2px_2px_0_#171717] text-sm font-black">
-              <Clock className="w-4 h-4 stroke-[3]" />
-              <span>{formatTimer(timeLeft)}</span>
-            </div>
-          </div>
-
-          {/* Action buttons */}
-          <div className="grid grid-cols-2 gap-3 pt-2">
-            <button
-              onClick={() => handleFinishTurn(false)}
-              className="py-3.5 bg-[#FFA6BA] border-2 border-[#171717] rounded-2xl font-black text-sm text-[#171717] shadow-[2.5px_2.5px_0_#171717] active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-center gap-1.5"
-            >
-              <X className="w-5 h-5 stroke-[3]" />
-              <span>Time Out / Pass</span>
-            </button>
-            <button
-              onClick={() => handleFinishTurn(true)}
-              className="py-3.5 bg-[#88D49E] border-2 border-[#171717] rounded-2xl font-black text-sm text-[#171717] shadow-[2.5px_2.5px_0_#171717] active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-center gap-1.5"
-            >
-              <Check className="w-5 h-5 stroke-[3]" />
-              <span>Team Guessed It!</span>
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* RESULTS */}
-      {gameState === 'results' && (
-        <div className="bg-white border-2 border-[#171717] rounded-3xl p-6 shadow-[3px_3px_0_#171717] space-y-4 text-center">
-          <div className="w-16 h-16 bg-[#FFCB45] rounded-2xl border-2 border-[#171717] mx-auto flex items-center justify-center shadow-[2px_2px_0_#171717]">
-            <Trophy className="w-10 h-10 text-[#171717]" />
-          </div>
-          <div className="space-y-1">
-            <h2 className="text-2xl font-black text-[#171717]">
-              {teamAScore > teamBScore ? 'Team A Wins! 🏆' : teamBScore > teamAScore ? 'Team B Wins! 🏆' : "It's a Tie! 🤝"}
+            <h2 className="font-block text-4xl sm:text-5xl uppercase text-[#141313]">
+              PASS PHONE TO ACTOR!
             </h2>
-            <p className="text-xs font-bold text-neutral-600">
-              Team A: {teamAScore} Pts | Team B: {teamBScore} Pts
+            <p className="text-sm font-bold text-[#141313]/80">
+              Only the actor from <strong>{activeTeamTitle}</strong> should look at the screen. Opponents and teammates must not look!
             </p>
-          </div>
 
-          <div className="grid grid-cols-2 gap-3 pt-2">
-            <button
-              onClick={startCharades}
-              className="py-3 bg-[#FFCB45] border-2 border-[#171717] rounded-xl font-black text-xs shadow-[2px_2px_0_#171717] flex items-center justify-center gap-1.5"
-            >
-              <RotateCcw className="w-4 h-4" />
-              <span>Rematch</span>
-            </button>
-            <Link href="/games" className="block">
-              <button className="w-full py-3 bg-[#FFF8E9] border-2 border-[#171717] rounded-xl font-black text-xs shadow-[2px_2px_0_#171717]">
-                Back to Games
-              </button>
-            </Link>
-          </div>
+            {/* PRIVACY SHUTTER: HOLD TO PEEK */}
+            <div className="space-y-2">
+              <div className="text-[11px] font-black uppercase text-[#EC1276]">
+                ACTOR PRIVACY SHUTTER (TOUCH &amp; HOLD TO REVEAL)
+              </div>
+              <div
+                onMouseDown={() => setIsPeeking(true)}
+                onMouseUp={() => setIsPeeking(false)}
+                onTouchStart={() => setIsPeeking(true)}
+                onTouchEnd={() => setIsPeeking(false)}
+                className={clsx(
+                  'border-[3px] border-[#141313] rounded-2xl p-6 min-h-[140px] flex flex-col items-center justify-center transition-all cursor-pointer select-none',
+                  isPeeking
+                    ? 'bg-[#F6BE18] text-[#141313] shadow-[4px_4px_0_#141313]'
+                    : 'bg-[#141313] text-white/60 hover:text-white'
+                )}
+              >
+                {isPeeking ? (
+                  <div className="space-y-1">
+                    <div className="font-telugu font-black text-3xl text-[#141313]">
+                      {currentMovie.teluguTitle}
+                    </div>
+                    <div className="font-block text-2xl uppercase text-[#EC1276]">
+                      {currentMovie.englishTitle} ({currentMovie.year})
+                    </div>
+                    <div className="text-xs font-bold text-[#141313]/80">
+                      Hero: {currentMovie.hero} • Director: {currentMovie.director}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-1 text-center">
+                    <div className="text-3xl">🔒</div>
+                    <div className="font-black text-sm uppercase tracking-wider text-[#F6BE18]">
+                      PRESS AND HOLD TO PEEK MOVIE
+                    </div>
+                    <div className="text-[10px] text-white/50">
+                      Releasing immediately hides it
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <AcampButton onClick={handleStartTurn} variant="green" size="lg" fullWidth>
+              ⏱ Memorized! Start Timer &amp; Act
+            </AcampButton>
+
+          </DieCutCard>
         </div>
       )}
+
+
+      {/* =========================================================================
+          ACTIVE ACTING TIMER SCREEN
+          ========================================================================= */}
+      {phase === 'acting' && (
+        <div className="max-w-2xl mx-auto space-y-6 text-center">
+          
+          <div className="flex items-center justify-between">
+            <span className="font-black text-xs uppercase bg-[#141313] text-[#F6BE18] px-3 py-1 rounded-lg">
+              ACTOR: {activeTeamTitle}
+            </span>
+            <div className="bg-[#EC1276] text-white font-mono font-black text-xl px-4 py-1.5 rounded-xl border-2 border-[#141313]">
+              ⏱ {timeLeft}s LEFT
+            </div>
+          </div>
+
+          <DieCutCard className="p-8 space-y-6 bg-white">
+            
+            <div className="text-xs font-black uppercase text-[#141313]/60">
+              ACT WITHOUT TALKING OR MAKING SOUNDS!
+            </div>
+
+            {/* Secret Card for Actor (Small reminder button) */}
+            <div
+              onMouseDown={() => setIsPeeking(true)}
+              onMouseUp={() => setIsPeeking(false)}
+              onTouchStart={() => setIsPeeking(true)}
+              onTouchEnd={() => setIsPeeking(false)}
+              className="bg-[#F4F1EA] border-2 border-dashed border-[#141313] rounded-xl p-3 text-xs font-bold text-center cursor-pointer select-none"
+            >
+              {isPeeking ? (
+                <span className="text-[#EC1276] font-black text-base">
+                  🎬 {currentMovie.englishTitle} ({currentMovie.year})
+                </span>
+              ) : (
+                <span>🔒 Forgot the name? Hold here to peek</span>
+              )}
+            </div>
+
+            <div className="font-block text-6xl text-[#141313] animate-pulse">
+              🤫 ACTING IN PROGRESS
+            </div>
+
+            {/* Controls */}
+            <div className="grid grid-cols-2 gap-4 pt-4">
+              <AcampButton
+                onClick={() => handleFinishTurn(false)}
+                variant="magenta"
+                size="lg"
+                fullWidth
+              >
+                ✕ Time Up / Skip
+              </AcampButton>
+              <AcampButton
+                onClick={() => handleFinishTurn(true)}
+                variant="green"
+                size="lg"
+                fullWidth
+              >
+                ✓ Guessed Correctly! (+1)
+              </AcampButton>
+            </div>
+
+          </DieCutCard>
+        </div>
+      )}
+
+
+      {/* =========================================================================
+          TURN SUMMARY SCREEN
+          ========================================================================= */}
+      {phase === 'turn-summary' && (
+        <div className="max-w-xl mx-auto space-y-6 text-center">
+          <DieCutCard className="p-8 space-y-6">
+            
+            <div className="text-4xl">
+              {lastTurnWon ? '🎉' : '⏳'}
+            </div>
+
+            <h3 className="font-block text-4xl uppercase text-[#141313]">
+              {lastTurnWon ? 'POINT SCORED!' : 'TURN COMPLETED'}
+            </h3>
+
+            <div className="bg-[#EAE6DF] border-2 border-[#141313] rounded-xl p-4">
+              <div className="text-xs font-bold uppercase text-[#141313]/70">THE MOVIE WAS:</div>
+              <div className="font-telugu font-black text-2xl text-[#141313] mt-1">
+                {currentMovie.teluguTitle}
+              </div>
+              <div className="font-block text-xl uppercase text-[#EC1276]">
+                {currentMovie.englishTitle} ({currentMovie.year})
+              </div>
+            </div>
+
+            <div className="flex items-center justify-around bg-white border-2 border-[#141313] rounded-xl p-3 font-mono font-bold">
+              <div>{teamAName}: {teamAScore} pts</div>
+              <div className="text-gray-400">|</div>
+              <div>{teamBName}: {teamBScore} pts</div>
+            </div>
+
+            <AcampButton onClick={handleNextTurn} variant="yellow" size="lg" fullWidth>
+              Next Turn →
+            </AcampButton>
+
+          </DieCutCard>
+        </div>
+      )}
+
+
+      {/* =========================================================================
+          WINNER DECLARATION SCREEN
+          ========================================================================= */}
+      {phase === 'winner' && (
+        <div className="max-w-xl mx-auto space-y-6 text-center">
+          <ResultConfetti />
+
+          <div className="space-y-2">
+            <span className="bg-[#F6BE18] text-[#141313] font-black text-xs uppercase px-4 py-1.5 rounded-full border-2 border-[#141313]">
+              TOURNAMENT COMPLETE!
+            </span>
+            <h2 className="font-block text-5xl sm:text-6xl uppercase text-[#141313]">
+              {teamAScore > teamBScore
+                ? `${teamAName} WINS!`
+                : teamBScore > teamAScore
+                ? `${teamBName} WINS!`
+                : 'IT IS A TIE!'}
+            </h2>
+          </div>
+
+          <DieCutCard className="p-8 space-y-6">
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-[#FFF9E6] border-2 border-[#141313] p-4 rounded-xl shadow-[3px_3px_0_#141313]">
+                <div className="font-black text-xs uppercase">{teamAName}</div>
+                <div className="font-mono text-4xl font-black text-[#141313] mt-1">{teamAScore}</div>
+                <div className="text-[10px] font-bold text-gray-500">POINTS</div>
+              </div>
+
+              <div className="bg-[#FCE8F3] border-2 border-[#141313] p-4 rounded-xl shadow-[3px_3px_0_#141313]">
+                <div className="font-black text-xs uppercase">{teamBName}</div>
+                <div className="font-mono text-4xl font-black text-[#EC1276] mt-1">{teamBScore}</div>
+                <div className="text-[10px] font-bold text-gray-500">POINTS</div>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              <AcampButton onClick={handleStartGame} variant="yellow" size="lg" fullWidth>
+                🔄 Play Rematch
+              </AcampButton>
+              <Link href="/games" className="w-full">
+                <AcampButton variant="white" size="md" fullWidth>
+                  ← Back to Games Menu
+                </AcampButton>
+              </Link>
+            </div>
+
+          </DieCutCard>
+        </div>
+      )}
+
     </div>
   );
 }

@@ -1,69 +1,110 @@
-export interface Movie {
+export type FanIdentity = 'bhAAi' | 'Bob' | 'Darling' | 'Tarak' | 'OG' | 'Boss' | 'Natural Star';
+
+export interface FanbaseInfo {
+  id: FanIdentity;
+  name: string;
+  hero: string;
+  title: string;
+  dialogue: string;
+  avatarColor: string;
+  icon: string;
+}
+
+export type LanguagePref = 'te' | 'te-en';
+
+export interface UserProfile {
   id: string;
-  titleTelugu: string;
-  titleEnglish: string;
+  name: string;
+  fanIdentity: FanIdentity;
+  languagePref: LanguagePref;
+  soundEnabled: boolean;
+  hapticsEnabled: boolean;
+  gamesPlayed: number;
+}
+
+export type GameId = 'head-set-go' | 'transify' | 'dumb-charades' | 'emoji-cinema' | 'box-office-auction';
+
+export interface TeluguMovie {
+  id: string;
+  teluguTitle: string;
+  englishTitle: string;
   year: number;
-  category: 'Commercial' | 'Mass Action' | 'Comedy' | 'Romantic' | 'Cult Classic' | 'Pan-India';
+  hero: string;
   director: string;
-  hero: string;
-  heroine?: string;
-  musicDirector: string;
-  trivia?: string;
-  ratingTier: 'Blockbuster' | 'Industry Hit' | 'Super Hit' | 'Cult Classic' | 'Average';
-  // Auction specific metrics (1 to 100)
-  boxOfficeScore: number; // 40% weight
-  audienceScore: number;  // 30% weight
-  cultScore: number;      // 30% weight
-  basePriceCr: number;    // Starting bid in Crores
-}
-
-export interface HeadSetGoCard {
-  id: string;
-  type: 'Movie' | 'Actor' | 'Dialogue' | 'Character';
-  telugu: string;
-  english: string;
-  clues: string[];
-  era: string;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
-}
-
-export interface TransifyItem {
-  id: string;
-  funnyTranslation: string;
-  actualMovieTelugu: string;
-  actualMovieEnglish: string;
-  hint: string;
-  explanation: string;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
-}
-
-export interface DumbCharadesItem {
-  id: string;
-  movieTelugu: string;
-  movieEnglish: string;
-  year: number;
-  hero: string;
-  hint: string;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
-}
-
-export interface EmojiCinemaItem {
-  id: string;
-  emojis: string;
-  options: {
+  genre: string[];
+  characters: string[];
+  iconicDialogue?: {
     telugu: string;
-    english: string;
-    isCorrect: boolean;
-  }[];
-  explanation: string;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
+    transliteration: string;
+    character: string;
+  };
+  // Game 1: Head Set Go specific fields
+  headSetGoCategory?: 'heroes' | 'characters' | 'dialogues' | 'blockbusters' | 'brahmi';
+  headSetGoClue?: string;
+  // Game 2: Transify specific fields
+  transifyPrompt?: {
+    brokenEnglish: string;
+    category: 'titles' | 'dialogues' | 'memes';
+    hint: string;
+    difficulty: 'easy' | 'medium' | 'hard';
+  };
+  // Game 3: Dumb Charades fields
+  charadesDifficulty?: 'easy' | 'medium' | 'hard';
+  charadesHints?: string[];
+  // Game 4: Emoji Cinema fields
+  emojiClue?: {
+    emojis: string;
+    options: string[];
+    correctAnswer: string;
+    explanation: string;
+    difficulty: 'easy' | 'medium' | 'hard';
+  };
+  // Game 5: Box Office Auction fields
+  auctionLot?: {
+    basePriceCr: number;
+    boScore: number; // 0-100
+    talkScore: number; // 0-100
+    cultScore: number; // 0-100
+    synergyTags: string[];
+    isTrap?: boolean;
+    pool: 'balanced' | 'nostalgia' | 'tier1' | 'chaos';
+    tagline: string;
+  };
 }
 
-export interface AuctionLot extends Movie {
-  lotNumber: number;
-  currentBid: number;
+// Single-device auction player
+export interface AuctionPlayer {
+  id: string;
+  name: string;
+  fanIdentity: FanIdentity;
+  purseCr: number;
+  initialPurseCr: number;
+  wonLots: TeluguMovie[];
+  totalSpentCr: number;
+  isFolded?: boolean;
+}
+
+// Multiplayer Auction Room state
+export interface AuctionRoomState {
+  roomCode: string;
+  hostId: string;
+  status: 'lobby' | 'bidding' | 'lot-sold' | 'finished';
+  currentLotIndex: number;
+  lots: TeluguMovie[];
+  currentBidCr: number;
   highestBidderId: string | null;
   highestBidderName: string | null;
-  status: 'upcoming' | 'bidding' | 'sold' | 'unsold';
+  timerSeconds: number;
+  players: AuctionPlayer[];
+  lotHistory: {
+    movie: TeluguMovie;
+    soldTo: string | null;
+    soldToName: string | null;
+    winningBidCr: number;
+    isUnsold: boolean;
+  }[];
+  poolType: 'balanced' | 'nostalgia' | 'tier1' | 'chaos';
+  startingPurseCr: number;
+  maxLots: number;
+  lastUpdated: number;
 }
-

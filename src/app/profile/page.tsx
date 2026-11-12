@@ -2,112 +2,188 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useUserStore } from '@/store/useUserStore';
-import { TeluguHeroSplash, FilmReelIcon } from '@/components/ui/EditorialArt';
-import { ArrowLeft, User, Languages, Volume2, VolumeX, Smartphone, Check } from 'lucide-react';
+import { DieCutCard } from '@/components/DieCutCard';
+import { AcampButton } from '@/components/AcampButton';
+import { useUser } from '@/utils/userContext';
+import { FANBASE_LIST } from '@/data/teluguCinemaDatabase';
+import { FanIdentity, LanguagePref } from '@/types';
+import { soundManager } from '@/utils/audio';
+import { User, Volume2, VolumeX, Smartphone, Globe, Trophy, Check, ArrowLeft } from 'lucide-react';
+import clsx from 'clsx';
 
 export default function ProfilePage() {
-  const { preferences, setDisplayName, setLanguageMode, toggleSound, toggleHaptics } = useUserStore();
-  const [editingName, setEditingName] = useState<string>(preferences.displayName);
+  const { profile, updateProfile, setFanIdentity, setLanguagePref, toggleSound, toggleHaptics } = useUser();
+  const [nameInput, setNameInput] = useState<string>(profile.name);
   const [savedNotice, setSavedNotice] = useState<boolean>(false);
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSaveName = (e: React.FormEvent) => {
     e.preventDefault();
-    if (editingName.trim()) {
-      setDisplayName(editingName.trim());
-      setSavedNotice(true);
-      setTimeout(() => setSavedNotice(false), 2000);
-    }
+    if (!nameInput.trim()) return;
+    soundManager.playClick();
+    updateProfile({ name: nameInput.trim() });
+    setSavedNotice(true);
+    setTimeout(() => setSavedNotice(false), 2000);
   };
 
+  const activeFan = FANBASE_LIST.find(f => f.id === profile.fanIdentity) || FANBASE_LIST[0];
+
   return (
-    <div className="max-w-md mx-auto space-y-4 pb-12">
-      <div className="flex items-center justify-between px-1">
-        <Link href="/" className="p-1 hover:bg-[#FFCB45]/30 rounded-lg">
-          <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
+    <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+      
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <Link href="/" className="text-xs font-black uppercase bg-white border border-[#141313] px-2.5 py-1 rounded-lg">
+          ← Back to Home
         </Link>
-        <h1 className="text-xl font-black text-[#171717]">Profile &amp; Settings</h1>
-        <div className="w-5" />
+        <span className="font-mono text-xs font-bold bg-[#EAE6DF] px-2.5 py-1 rounded-lg border border-[#141313]">
+          ID: {profile.id}
+        </span>
       </div>
 
-      {/* Profile Card */}
-      <div className="bg-[#FFA6BA] border-2 border-[#171717] rounded-3xl p-5 shadow-[3px_3px_0_#171717] flex items-center gap-4">
-        <div className="w-16 h-16 bg-white border-2 border-[#171717] rounded-2xl flex items-center justify-center overflow-hidden shrink-0 shadow-[1.5px_1.5px_0_#171717]">
-          <TeluguHeroSplash className="w-20 h-20" />
-        </div>
-        <div>
-          <span className="text-[10px] font-black uppercase px-2 py-0.5 bg-white border border-[#171717] rounded-md">
-            Tollywood Fan
-          </span>
-          <h2 className="text-2xl font-black text-[#171717] mt-1 leading-tight">{preferences.displayName}</h2>
-          <p className="text-xs font-semibold text-neutral-800">Ready for Telugu cinema party games!</p>
-        </div>
+      <div className="text-center space-y-1">
+        <span className="bg-[#EC1276] text-white font-black text-xs uppercase px-3 py-1 rounded-md border border-[#141313]">
+          PLAYER SETTINGS
+        </span>
+        <h1 className="font-block text-4xl sm:text-5xl uppercase text-[#141313] tracking-tight">
+          PRODUCER PROFILE
+        </h1>
+        <p className="text-xs font-bold text-[#141313]/70">
+          Customize your nickname, fan identity, audio preferences, and script display.
+        </p>
       </div>
 
-      {/* Settings Options */}
-      <div className="bg-white border-2 border-[#171717] rounded-3xl p-5 shadow-[3px_3px_0_#171717] space-y-4">
-        <form onSubmit={handleSave} className="space-y-2">
-          <label className="text-xs font-black uppercase text-neutral-500 block">Edit Nickname</label>
+      <DieCutCard className="p-6 space-y-6">
+        
+        {/* Name input */}
+        <form onSubmit={handleSaveName} className="space-y-2">
+          <label className="block font-black text-xs uppercase tracking-wider text-[#141313]">
+            Producer Display Name:
+          </label>
           <div className="flex gap-2">
             <input
               type="text"
-              value={editingName}
-              onChange={(e) => setEditingName(e.target.value)}
-              className="flex-1 px-3 py-2 border-2 border-[#171717] rounded-xl font-black text-sm"
+              value={nameInput}
+              onChange={e => setNameInput(e.target.value)}
+              maxLength={20}
+              className="flex-1 bg-white border-[2.5px] border-[#141313] px-3.5 py-2 rounded-xl font-bold text-sm shadow-[2px_2px_0_#141313] focus:bg-[#FFF9E6] focus:outline-none"
             />
-            <button
-              type="submit"
-              className="px-4 py-2 bg-[#FFCB45] border-2 border-[#171717] rounded-xl font-black text-xs shadow-[1.5px_1.5px_0_#171717]"
-            >
+            <AcampButton type="submit" variant="yellow" size="md">
               Save
-            </button>
+            </AcampButton>
           </div>
           {savedNotice && (
-            <p className="text-xs text-green-700 font-black flex items-center gap-1">
-              <Check className="w-3.5 h-3.5" /> Updated!
-            </p>
+            <div className="text-xs font-black text-[#00C853] flex items-center gap-1">
+              <Check size={14} /> Name updated successfully!
+            </div>
           )}
         </form>
 
-        {/* Language Preference */}
-        <div className="pt-2 border-t border-neutral-200 space-y-2">
-          <label className="text-xs font-black uppercase text-neutral-500 block">Display Mode</label>
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              onClick={() => setLanguageMode('both')}
-              className={`p-3 rounded-xl border-2 border-[#171717] font-black text-xs text-left ${
-                preferences.languageMode === 'both' ? 'bg-[#FFCB45] shadow-[2px_2px_0_#171717]' : 'bg-neutral-50'
-              }`}
-            >
-              Telugu + English Translit
-            </button>
-            <button
-              onClick={() => setLanguageMode('telugu')}
-              className={`p-3 rounded-xl border-2 border-[#171717] font-black text-xs text-left ${
-                preferences.languageMode === 'telugu' ? 'bg-[#FFCB45] shadow-[2px_2px_0_#171717]' : 'bg-neutral-50'
-              }`}
-            >
-              Pure Telugu Script
-            </button>
+        {/* Fanbase selection */}
+        <div>
+          <label className="block font-black text-xs uppercase tracking-wider mb-2 text-[#141313]">
+            Choose Your Hero Fanbase Identity:
+          </label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {FANBASE_LIST.map(fan => {
+              const isSelected = profile.fanIdentity === fan.id;
+              return (
+                <button
+                  key={fan.id}
+                  onClick={() => {
+                    soundManager.playClick(700);
+                    setFanIdentity(fan.id);
+                  }}
+                  className={clsx(
+                    'border-2 border-[#141313] p-3 rounded-xl text-left cursor-pointer transition-all flex items-start gap-2.5',
+                    isSelected
+                      ? 'bg-[#F6BE18] text-[#141313] shadow-[3px_3px_0_#141313]'
+                      : 'bg-white text-[#141313] hover:bg-[#F4F1EA]'
+                  )}
+                >
+                  <span className="text-2xl shrink-0">{fan.icon}</span>
+                  <div>
+                    <div className="font-block text-base uppercase leading-tight">
+                      {fan.id} • {fan.hero}
+                    </div>
+                    <div className="text-[11px] font-telugu font-bold text-[#141313]/80 mt-0.5">
+                      "{fan.dialogue}"
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* Audio Effects */}
-        <div className="pt-2 border-t border-neutral-200 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-xs font-black">
-            {preferences.soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-            <span>Game Sound Effects</span>
+        {/* Language Preference */}
+        <div>
+          <label className="block font-black text-xs uppercase tracking-wider mb-2 text-[#141313]">
+            Script &amp; Language Preference:
+          </label>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { id: 'te', label: 'తెలుగు (Telugu Only)', desc: 'Pure Telugu script display' },
+              { id: 'te-en', label: 'Telugu + English', desc: 'Telugu script with English transliteration' },
+            ].map(lang => (
+              <button
+                key={lang.id}
+                onClick={() => {
+                  soundManager.playClick();
+                  setLanguagePref(lang.id as LanguagePref);
+                }}
+                className={clsx(
+                  'border-2 border-[#141313] p-3 rounded-xl text-left cursor-pointer transition-all',
+                  profile.languagePref === lang.id
+                    ? 'bg-[#EC1276] text-white shadow-[3px_3px_0_#141313]'
+                    : 'bg-white text-[#141313] hover:bg-[#F4F1EA]'
+                )}
+              >
+                <div className="font-black text-xs uppercase">{lang.label}</div>
+                <div className={clsx('text-[10px] font-semibold mt-0.5', profile.languagePref === lang.id ? 'text-white/80' : 'text-gray-500')}>
+                  {lang.desc}
+                </div>
+              </button>
+            ))}
           </div>
+        </div>
+
+        {/* Toggles: Audio and Haptics */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t-2 border-[#141313]/10">
           <button
             onClick={toggleSound}
-            className={`px-3 py-1 rounded-lg border-2 border-[#171717] font-black text-xs ${
-              preferences.soundEnabled ? 'bg-[#88D49E]' : 'bg-neutral-200'
-            }`}
+            className={clsx(
+              'border-2 border-[#141313] p-3 rounded-xl flex items-center justify-between cursor-pointer transition-all shadow-[2px_2px_0_#141313]',
+              profile.soundEnabled ? 'bg-[#D7FADC]' : 'bg-gray-100'
+            )}
           >
-            {preferences.soundEnabled ? 'ON' : 'OFF'}
+            <div className="flex items-center gap-2 text-xs font-black uppercase">
+              {profile.soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
+              <span>Arcade Audio SFX</span>
+            </div>
+            <span className="font-mono text-xs font-bold">
+              {profile.soundEnabled ? 'ON' : 'MUTED'}
+            </span>
+          </button>
+
+          <button
+            onClick={toggleHaptics}
+            className={clsx(
+              'border-2 border-[#141313] p-3 rounded-xl flex items-center justify-between cursor-pointer transition-all shadow-[2px_2px_0_#141313]',
+              profile.hapticsEnabled ? 'bg-[#D7FADC]' : 'bg-gray-100'
+            )}
+          >
+            <div className="flex items-center gap-2 text-xs font-black uppercase">
+              <Smartphone size={16} />
+              <span>Haptic Vibration</span>
+            </div>
+            <span className="font-mono text-xs font-bold">
+              {profile.hapticsEnabled ? 'ENABLED' : 'OFF'}
+            </span>
           </button>
         </div>
-      </div>
+
+      </DieCutCard>
+
     </div>
   );
 }
