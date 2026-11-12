@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { DieCutCard } from '@/components/DieCutCard';
 import { AcampButton } from '@/components/AcampButton';
 import { useUser } from '@/utils/userContext';
@@ -10,6 +11,24 @@ import { FanIdentity, LanguagePref } from '@/types';
 import { soundManager } from '@/utils/audio';
 import { User, Volume2, VolumeX, Smartphone, Globe, Trophy, Check, ArrowLeft } from 'lucide-react';
 import clsx from 'clsx';
+
+const CHARACTER_MAP: Record<string, { image: string; tag: string; bg: string }> = {
+  Darling: {
+    image: '/images/characters/darling.png',
+    tag: '🦖 REBEL STAR • PRABHAS',
+    bg: '#EC1276',
+  },
+  Tarak: {
+    image: '/images/characters/tarak.png',
+    tag: '🐅 YOUNG TIGER • JR NTR',
+    bg: '#F6BE18',
+  },
+  'Natural Star': {
+    image: '/images/characters/nani.png',
+    tag: '🏏 NATURAL STAR • NANI',
+    bg: '#00E5FF',
+  },
+};
 
 export default function ProfilePage() {
   const { profile, updateProfile, setFanIdentity, setLanguagePref, toggleSound, toggleHaptics } = useUser();
@@ -51,6 +70,41 @@ export default function ProfilePage() {
           Customize your nickname, fan identity, audio preferences, and script display.
         </p>
       </div>
+
+      {/* Active Hero Identity Banner */}
+      {CHARACTER_MAP[profile.fanIdentity] && (
+        <div className="bg-[#FFF9E6] border-[3px] border-[#141313] rounded-2xl p-4 shadow-[4px_4px_0_#141313] flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="relative w-20 h-24 shrink-0">
+              <Image
+                src={CHARACTER_MAP[profile.fanIdentity].image}
+                alt={activeFan.hero}
+                fill
+                className="object-contain drop-shadow-[3px_3px_0_#141313]"
+                sizes="80px"
+              />
+            </div>
+            <div>
+              <span
+                className="inline-block text-[10px] font-black uppercase text-white px-2 py-0.5 rounded border border-[#141313] shadow-[1px_1px_0_#141313]"
+                style={{ backgroundColor: CHARACTER_MAP[profile.fanIdentity].bg }}
+              >
+                {CHARACTER_MAP[profile.fanIdentity].tag}
+              </span>
+              <div className="font-block text-2xl uppercase text-[#141313] mt-1">
+                {activeFan.name}
+              </div>
+              <div className="font-telugu font-black text-sm text-[#EC1276]">
+                &ldquo;{activeFan.dialogue}&rdquo;
+              </div>
+            </div>
+          </div>
+          <div className="hidden sm:block text-right">
+            <div className="text-[10px] font-mono text-gray-500 uppercase">OFFICIAL HERO</div>
+            <div className="font-block text-lg text-[#141313]">{activeFan.hero}</div>
+          </div>
+        </div>
+      )}
 
       <DieCutCard className="p-6 space-y-6">
         

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { DieCutCard } from '@/components/DieCutCard';
 import { AcampButton } from '@/components/AcampButton';
 import { ResultConfetti } from '@/components/ResultConfetti';
@@ -620,15 +621,39 @@ export default function PassAndPlayAuctionPage() {
         <div className="max-w-3xl mx-auto space-y-6 text-center">
           <ResultConfetti />
 
-          <div className="space-y-1">
-            <span className="bg-[#F6BE18] text-[#141313] font-black text-xs uppercase px-4 py-1.5 rounded-full border-2 border-[#141313]">
-              AUCTION COMPLETE!
-            </span>
-            <h2 className="font-block text-5xl sm:text-7xl uppercase text-[#141313]">
-              STAR PRODUCER OF THE YEAR
-            </h2>
-            <div className="font-block text-3xl sm:text-4xl text-[#EC1276]">
-              👑 {finalScores[0]?.player.name}
+          <div className="flex flex-col items-center justify-center space-y-2">
+            <div className="flex items-center justify-center gap-4">
+              <div className="relative w-24 h-32 hidden sm:block">
+                <Image
+                  src="/images/characters/darling.png"
+                  alt="Darling Prabhas"
+                  fill
+                  className="object-contain drop-shadow-[4px_4px_0_#141313]"
+                  sizes="96px"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <span className="bg-[#F6BE18] text-[#141313] font-black text-xs uppercase px-4 py-1.5 rounded-full border-2 border-[#141313]">
+                  AUCTION COMPLETE!
+                </span>
+                <h2 className="font-block text-4xl sm:text-6xl uppercase text-[#141313]">
+                  STAR PRODUCER OF THE YEAR
+                </h2>
+                <div className="font-block text-3xl sm:text-4xl text-[#EC1276]">
+                  👑 {finalScores[0]?.player.name}
+                </div>
+              </div>
+
+              <div className="relative w-24 h-32 hidden sm:block">
+                <Image
+                  src="/images/characters/tarak.png"
+                  alt="Tarak Jr NTR"
+                  fill
+                  className="object-contain drop-shadow-[4px_4px_0_#141313]"
+                  sizes="96px"
+                />
+              </div>
             </div>
           </div>
 

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { DieCutCard } from '@/components/DieCutCard';
 import { AcampButton } from '@/components/AcampButton';
 import { useUser } from '@/utils/userContext';
@@ -12,6 +13,21 @@ import { soundManager } from '@/utils/audio';
 import { StarSparkle, StreetCrown, LightningBolt, GraffitiSmiley } from '@/components/StreetDecorations';
 import { ArrowRight, Check } from 'lucide-react';
 import clsx from 'clsx';
+
+const CHARACTER_PREVIEW_MAP: Record<string, { image: string; tag: string }> = {
+  Darling: {
+    image: '/images/characters/darling.png',
+    tag: '🦖 REBEL STAR • PRABHAS',
+  },
+  Tarak: {
+    image: '/images/characters/tarak.png',
+    tag: '🐅 YOUNG TIGER • JR NTR',
+  },
+  'Natural Star': {
+    image: '/images/characters/nani.png',
+    tag: '🏏 NATURAL STAR • NANI',
+  },
+};
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -51,10 +67,26 @@ export default function OnboardingPage() {
               SCREEN 1: WELCOME & LOGO
               ========================================================================= */}
           {step === 1 && (
-            <div className="space-y-6">
-              <div className="relative inline-block my-2">
-                <StarSparkle className="w-14 h-14 absolute -top-4 -left-4" />
-                <div className="bg-[#F6BE18] border-[4px] border-[#141313] px-8 py-4 rounded-2xl shadow-[4px_4px_0_#141313] -rotate-2">
+            <div className="space-y-5">
+              <div className="flex justify-center -mb-2">
+                <div className="relative w-36 h-40 group">
+                  <Image
+                    src="/images/characters/nani.png"
+                    alt="Natural Star Nani"
+                    fill
+                    className="object-contain drop-shadow-[4px_4px_0_#141313]"
+                    sizes="144px"
+                    priority
+                  />
+                  <div className="absolute -bottom-1 -right-2 bg-[#F6BE18] text-[#141313] font-black text-[10px] uppercase px-2 py-0.5 rounded border border-[#141313] shadow-[2px_2px_0_#141313] rotate-3">
+                    🏏 NATURAL STAR
+                  </div>
+                </div>
+              </div>
+
+              <div className="relative inline-block my-1">
+                <StarSparkle className="w-12 h-12 absolute -top-3 -left-3" />
+                <div className="bg-[#F6BE18] border-[4px] border-[#141313] px-8 py-3 rounded-2xl shadow-[4px_4px_0_#141313] -rotate-2">
                   <h1 className="font-block text-5xl sm:text-6xl uppercase text-[#141313]">
                     TFI &amp; PITCH
                   </h1>
@@ -192,6 +224,29 @@ export default function OnboardingPage() {
                   ))}
                 </div>
               </div>
+
+              {/* Dynamic Character Sticker Preview */}
+              {CHARACTER_PREVIEW_MAP[profile.fanIdentity] && (
+                <div className="bg-[#F4F1EA] border-2 border-[#141313] rounded-2xl p-3 flex items-center gap-3 animate-in fade-in duration-200">
+                  <div className="relative w-14 h-18 shrink-0">
+                    <Image
+                      src={CHARACTER_PREVIEW_MAP[profile.fanIdentity].image}
+                      alt={profile.fanIdentity}
+                      fill
+                      className="object-contain drop-shadow-[2px_2px_0_#141313]"
+                      sizes="56px"
+                    />
+                  </div>
+                  <div>
+                    <span className="bg-[#141313] text-[#F6BE18] font-black text-[10px] uppercase px-2 py-0.5 rounded">
+                      {CHARACTER_PREVIEW_MAP[profile.fanIdentity].tag}
+                    </span>
+                    <div className="font-telugu font-bold text-xs text-[#141313] mt-1">
+                      &ldquo;{FANBASE_LIST.find(f => f.id === profile.fanIdentity)?.dialogue}&rdquo;
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <AcampButton onClick={handleNextStep} variant="yellow" size="lg" fullWidth>
                 🚀 Let's Play TFI &amp; Pitch!

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { DieCutCard } from '@/components/DieCutCard';
 import { AcampButton } from '@/components/AcampButton';
 import { Users, Clock, Flame, ShieldAlert, Sparkles, Gavel, Play, Shuffle } from 'lucide-react';
@@ -26,6 +27,10 @@ export default function GamesCataloguePage() {
       features: ['Landscape Forehead UI', 'Screen Wake Lock API', 'Touch & Gyroscope Tilt Controls', 'Telugu & English Clues'],
       href: '/games/head-set-go',
       buttonText: 'Play Head Set Go',
+      character: {
+        image: '/images/characters/tarak.png',
+        tag: '🐅 YOUNG TIGER TARAK',
+      },
     },
     {
       id: 'transify',
@@ -42,6 +47,10 @@ export default function GamesCataloguePage() {
       features: ['Judge Private Answer Shutter', 'Literal Titles, Dialogues & Memes', 'Immediate Card Advance', 'Live Score Tracking'],
       href: '/games/transify',
       buttonText: 'Play Transify',
+      character: {
+        image: '/images/characters/nani.png',
+        tag: '🏏 NATURAL STAR NANI',
+      },
     },
     {
       id: 'dumb-charades',
@@ -92,6 +101,10 @@ export default function GamesCataloguePage() {
       altHref: '/rooms',
       buttonText: 'Pass & Play Auction',
       altButtonText: 'Online Multiplayer Room',
+      character: {
+        image: '/images/characters/darling.png',
+        tag: '🦖 DARLING PRABHAS',
+      },
     },
   ];
 
@@ -156,13 +169,29 @@ export default function GamesCataloguePage() {
                 </span>
               </div>
 
-              <div className="flex items-baseline gap-2">
-                <h3 className="font-block text-3xl sm:text-4xl uppercase text-[#141313]">
-                  {game.title}
-                </h3>
-              </div>
-              <div className="font-telugu text-sm font-bold text-[#EC1276]">
-                {game.teluguTitle}
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <div className="flex items-baseline gap-2">
+                    <h3 className="font-block text-3xl sm:text-4xl uppercase text-[#141313]">
+                      {game.title}
+                    </h3>
+                  </div>
+                  <div className="font-telugu text-sm font-bold text-[#EC1276]">
+                    {game.teluguTitle}
+                  </div>
+                </div>
+
+                {game.character && (
+                  <div className="relative w-16 h-20 shrink-0 -mt-1 group">
+                    <Image
+                      src={game.character.image}
+                      alt={game.character.tag}
+                      fill
+                      className="object-contain drop-shadow-[2px_2px_0_#141313] transition-transform group-hover:scale-110"
+                      sizes="64px"
+                    />
+                  </div>
+                )}
               </div>
 
               <p className="text-xs sm:text-sm font-bold text-[#141313]/85 mt-2">

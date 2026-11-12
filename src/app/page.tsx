@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { DieCutCard } from '@/components/DieCutCard';
 import { AcampButton } from '@/components/AcampButton';
@@ -69,6 +70,30 @@ export default function HomePage() {
           ========================================================================= */}
       <section className="relative w-full text-center pt-2">
         
+        {/* Tarak Character Sticker (Left Flank) */}
+        <div className="hidden lg:block absolute -left-4 xl:left-2 top-6 w-48 xl:w-56 pointer-events-none z-20 select-none">
+          <img
+            src="/images/characters/tarak.png"
+            alt="Young Tiger Tarak"
+            className="w-full h-auto drop-shadow-[6px_8px_0_#141313] -rotate-6 hover:rotate-0 transition-transform duration-300"
+          />
+          <div className="bg-[#F6BE18] text-[#141313] font-black text-[10px] uppercase px-2 py-0.5 rounded border border-[#141313] shadow-[2px_2px_0_#141313] inline-block -rotate-3 mt-1">
+            🐅 YOUNG TIGER • TARAK
+          </div>
+        </div>
+
+        {/* Darling Character Sticker (Right Flank) */}
+        <div className="hidden lg:block absolute -right-4 xl:right-2 top-6 w-48 xl:w-56 pointer-events-none z-20 select-none">
+          <img
+            src="/images/characters/darling.png"
+            alt="Rebel Star Darling"
+            className="w-full h-auto drop-shadow-[6px_8px_0_#141313] rotate-6 hover:rotate-0 transition-transform duration-300"
+          />
+          <div className="bg-[#EC1276] text-white font-black text-[10px] uppercase px-2 py-0.5 rounded border border-[#141313] shadow-[2px_2px_0_#141313] inline-block rotate-3 mt-1">
+            🦖 REBEL STAR • DARLING
+          </div>
+        </div>
+
         {/* Floating Doodles around Logo */}
         <div className="relative inline-block px-4 sm:px-12 py-2">
           {/* Top-Left Starburst */}
@@ -152,20 +177,34 @@ export default function HomePage() {
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         {/* Pass-and-Play Single Device Hub */}
-        <DieCutCard className="p-6 bg-gradient-to-br from-white to-[#F4F1EA] flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <span className="bg-[#F6BE18] text-[#141313] text-xs font-black uppercase px-3 py-1 rounded-md border border-[#141313]">
-                📱 SINGLE-DEVICE MODE
-              </span>
-              <span className="font-mono text-xs font-bold text-[#141313]/60">OFFLINE READY</span>
+        <DieCutCard className="p-6 bg-gradient-to-br from-white to-[#F4F1EA] flex flex-col justify-between overflow-hidden relative">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex-1 space-y-2">
+              <div className="flex items-center justify-between mb-1">
+                <span className="bg-[#F6BE18] text-[#141313] text-xs font-black uppercase px-3 py-1 rounded-md border border-[#141313]">
+                  📱 SINGLE-DEVICE MODE
+                </span>
+                <span className="font-mono text-xs font-bold text-[#141313]/60">OFFLINE READY</span>
+              </div>
+              <h2 className="font-block text-3xl sm:text-4xl text-[#141313] uppercase leading-tight">
+                PLAY WITH FRIENDS
+              </h2>
+              <p className="text-sm font-semibold text-[#141313]/80">
+                Sitting together in room or college canteen? Pass one phone around for Dumb Charades, Head Set Go, Transify, or Pass-and-Play Auction!
+              </p>
             </div>
-            <h2 className="font-block text-3xl sm:text-4xl text-[#141313] uppercase leading-tight">
-              PLAY WITH FRIENDS
-            </h2>
-            <p className="text-sm font-semibold text-[#141313]/80 mt-1">
-              Sitting together in room or college canteen? Pass one phone around for Dumb Charades, Head Set Go, Transify, or Pass-and-Play Auction!
-            </p>
+            
+            {/* Natural Star Nani Character Sticker */}
+            <div className="w-24 sm:w-32 shrink-0 self-center sm:self-auto select-none">
+              <img
+                src="/images/characters/nani.png"
+                alt="Natural Star Nani"
+                className="w-full h-auto drop-shadow-[4px_6px_0_#141313] rotate-3 hover:rotate-0 transition-transform"
+              />
+              <div className="text-center font-black text-[9px] uppercase bg-white border border-[#141313] rounded px-1 mt-0.5 shadow-[1px_1px_0_#141313]">
+                🏏 NATURAL STAR
+              </div>
+            </div>
           </div>
 
           <div className="mt-6 flex flex-wrap gap-3">
@@ -231,10 +270,10 @@ export default function HomePage() {
           FLAGSHIP FEATURE: TFI BOX OFFICE AUCTION SHOWCASE
           ========================================================================= */}
       <section className="w-full">
-        <DieCutCard className="p-6 bg-[#F6BE18] border-[4px] border-[#141313]">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+        <DieCutCard className="p-6 bg-[#F6BE18] border-[4px] border-[#141313] relative overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
             
-            <div className="lg:col-span-7 space-y-2 text-left">
+            <div className="md:col-span-7 lg:col-span-6 space-y-2 text-left z-10">
               <div className="inline-flex items-center gap-2 bg-[#141313] text-[#F6BE18] px-3 py-1 rounded-lg text-xs font-black uppercase">
                 <Gavel size={15} />
                 <span>FLAGSHIP TOURNAMENT GAME</span>
@@ -253,17 +292,35 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="lg:col-span-5 flex flex-col gap-3">
+            <div className="md:col-span-5 lg:col-span-3 flex flex-col gap-3 z-10">
               <Link href="/games/box-office-auction/pass-and-play">
                 <AcampButton variant="black" size="lg" fullWidth>
-                  📱 Single-Device Pass &amp; Play
+                  📱 Pass &amp; Play
                 </AcampButton>
               </Link>
               <Link href="/rooms">
                 <AcampButton variant="magenta" size="lg" fullWidth>
-                  🌐 Online Multiplayer Auction
+                  🌐 Online Room
                 </AcampButton>
               </Link>
+            </div>
+
+            {/* Character Graphic: Darling Prabhas - Box Office King */}
+            <div className="hidden lg:flex lg:col-span-3 justify-center items-center relative">
+              <div className="relative group">
+                <div className="relative w-44 h-56 transition-transform duration-200 group-hover:scale-105">
+                  <Image
+                    src="/images/characters/darling.png"
+                    alt="Darling Prabhas"
+                    fill
+                    className="object-contain drop-shadow-[5px_5px_0_#141313]"
+                    sizes="176px"
+                  />
+                </div>
+                <div className="absolute -bottom-2 -left-2 bg-[#EC1276] text-white font-block text-xs uppercase px-2.5 py-1 rounded-md border-2 border-[#141313] shadow-[2px_2px_0_#141313] -rotate-3 whitespace-nowrap">
+                  🦖 BOX OFFICE SULTAN
+                </div>
+              </div>
             </div>
 
           </div>
