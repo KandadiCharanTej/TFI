@@ -59,3 +59,4 @@ CREATE TABLE IF NOT EXISTS public.auction_rooms (
 
 -- Index on room_code and status
 CREATE INDEX IF NOT EXISTS idx_auction_rooms_status ON public.auction_rooms(status);
+

@@ -97,3 +97,4 @@ export function LightningBolt({ className = 'w-12 h-16' }: { className?: string 
     </svg>
   );
 }
+

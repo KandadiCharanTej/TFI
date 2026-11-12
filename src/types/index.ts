@@ -108,3 +108,4 @@ export interface AuctionRoomState {
   maxLots: number;
   lastUpdated: number;
 }
+

@@ -212,3 +212,4 @@ export function triggerHaptic(duration = 40) {
     } catch {}
   }
 }
+

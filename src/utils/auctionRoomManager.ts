@@ -279,3 +279,4 @@ function resolveCurrentLot(room: AuctionRoomState) {
     room.status = 'lot-sold';
   }
 }
+

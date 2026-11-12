@@ -150,3 +150,4 @@ Players can pick from legendary Tollywood identities in their profile:
 
 ## 📄 License
 MIT License. Built with pride for Telugu cinema lovers worldwide.
+

@@ -158,3 +158,4 @@ export function calculateAuctionScores(players: AuctionPlayer[]): PlayerFinalSco
 
   return scoredPlayers;
 }
+

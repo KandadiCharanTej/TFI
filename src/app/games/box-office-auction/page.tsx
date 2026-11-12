@@ -88,3 +88,4 @@ export default function BoxOfficeAuctionHub() {
     </div>
   );
 }
+
