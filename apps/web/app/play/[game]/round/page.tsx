@@ -495,33 +495,14 @@ export default function JudgeRoundPage({
     );
   }
 
-  // 2. Countdown State (Get Ready)
-  if (s.phase === "getReady") {
-    return (
-      <div className="wall-safe-round flex flex-col items-center justify-center bg-yellow text-center">
-        <p className="text-xl font-black uppercase tracking-widest text-ink opacity-80">
-          <Tx v={J.getReady} />
-        </p>
-        <p className="mt-2 text-2xl font-black text-ink">{currentPlayer.name}</p>
-        <p
-          key={s.countdown}
-          className="wall-stamp mono-num text-[130px] font-black leading-none text-ink"
-          aria-live="assertive"
-        >
-          {s.countdown}
-        </p>
-      </div>
-    );
-  }
-
-  // 3. Passing Phone Screen between turns
+  // 2. Passing Phone Screen between turns
   if (s.phase === "passingPhone") {
     return (
       <div className="wall-safe-round flex flex-col items-center justify-center bg-yellow text-center">
         <div className="text-6xl mb-4" aria-hidden>
           📱 🤝
         </div>
-        <p className="text-lg font-black uppercase tracking-wider text-ink opacity-80">
+        <p className="text-lg font-black uppercase tracking-wider text-ink">
           <Tx v={J.passPhoneTo} />
         </p>
         <h2 className="anton-title mt-2 text-4xl font-black text-ink">
@@ -539,7 +520,7 @@ export default function JudgeRoundPage({
     );
   }
 
-  // 4. Turn End Screen (Summary of current player's score)
+  // 3. Turn End Screen (Summary of current player's score)
   if (s.phase === "turnEnd") {
     const isLastTurn = s.currentTurn >= s.totalTurns;
     return (
@@ -552,13 +533,13 @@ export default function JudgeRoundPage({
             {currentPlayer.name}
           </h2>
           <div className="mt-4 rounded-[16px] border-[2.5px] border-ink bg-[#F4F1EA] p-4">
-            <span className="text-xs font-black uppercase tracking-wider text-ink opacity-60">
+            <span className="text-xs font-black uppercase tracking-wider text-ink">
               <Tx v={J.score} />
             </span>
             <div className="mono-num mt-1 text-5xl font-black text-ink">
               {s.currentTurnCorrect}
             </div>
-            <div className="mt-2 text-xs font-bold text-ink opacity-70">
+            <div className="mt-2 text-xs font-bold text-ink">
               {s.currentTurnCorrect} {lang === "te" ? "సరైనవి" : "correct"} · {s.currentTurnSkipped}{" "}
               {lang === "te" ? "వదిలేసినవి" : "skipped"}
             </div>
@@ -580,7 +561,7 @@ export default function JudgeRoundPage({
     );
   }
 
-  // 5. Active Playing Screen (Portrait, with clue and answer strip)
+  // 4. Active Playing Screen (with getReady countdown overlay so card area paints immediately for LCP)
   const isRapidFire = slug === "rapid-fire";
   const clueText = currentCard ? (lang === "te" ? currentCard.te : currentCard.en) : "";
   const answerText = currentCard
@@ -591,11 +572,25 @@ export default function JudgeRoundPage({
 
   return (
     <div
-      role="main"
       className="wall-safe-round relative flex flex-col overflow-hidden p-0 transition-colors duration-150"
       style={{ backgroundColor: bg }}
       data-testid="judge-round-screen"
     >
+      {s.phase === "getReady" ? (
+        <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-yellow/95 p-6 text-center">
+          <p className="text-xl font-black uppercase tracking-widest text-ink">
+            <Tx v={J.getReady} />
+          </p>
+          <p className="mt-2 text-2xl font-black text-ink">{currentPlayer.name}</p>
+          <p
+            key={s.countdown}
+            className="wall-stamp mono-num text-[130px] font-black leading-none text-ink"
+            aria-live="assertive"
+          >
+            {s.countdown}
+          </p>
+        </div>
+      ) : null}
       <ConfettiBurst trigger={confettiTrigger} />
       <QuitRoundDialog
         open={quitOpen}
@@ -746,12 +741,12 @@ export default function JudgeRoundPage({
         </div>
       </header>
 
-      {/* Main Card View: Clue & Answer */}
-      <main className="flex flex-1 flex-col justify-center px-4 py-3">
+      {/* Card View: Clue & Answer */}
+      <div className="flex flex-1 flex-col justify-center px-4 py-3">
         <div className="mx-auto w-full max-w-sm rounded-[24px] border-[3px] border-ink bg-white p-5 shadow-[6px_6px_0_#141313]">
           {/* THE JUDGE READS Header */}
           <div className="text-center">
-            <span className="rounded-full border border-ink/40 bg-card px-3 py-0.5 text-[10px] font-black uppercase tracking-wider text-ink/70">
+            <span className="rounded-full border border-ink/40 bg-card px-3 py-0.5 text-[10px] font-black uppercase tracking-wider text-ink">
               <Tx v={J.theJudgeReads} />
             </span>
           </div>
@@ -791,7 +786,7 @@ export default function JudgeRoundPage({
             )}
           </div>
         </div>
-      </main>
+      </div>
 
       {/* Bottom Thumb Action Buttons */}
       <footer className="grid grid-cols-2 gap-3 p-4">

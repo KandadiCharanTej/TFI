@@ -250,23 +250,19 @@ export default function HsgRoundPage() {
       <div className="wall-safe-round flex flex-col items-center justify-center gap-4 bg-yellow p-8 text-center">
         <div className="text-6xl" aria-hidden>📱➡️</div>
         <p className="anton-title text-[28px] text-ink"><Tx v={TRANSLATIONS.hsg.turnSideways} /></p>
-        <p className="text-[15px] font-bold text-ink opacity-70"><Tx v={TRANSLATIONS.hsg.turnSidewaysNote} /></p>
-      </div>
-    );
-  }
-
-  // Get ready
-  if (s.phase === "getReady") {
-    return (
-      <div className="wall-safe-round flex flex-col items-center justify-center bg-yellow">
-        <p className="text-[20px] font-extrabold uppercase tracking-widest text-ink opacity-60"><Tx v={TRANSLATIONS.hsg.getReady} /></p>
-        <p key={s.countdown} className="wall-stamp mono-num text-[120px] font-black leading-none text-ink" aria-live="assertive">{s.countdown}</p>
+        <p className="text-[15px] font-bold text-ink"><Tx v={TRANSLATIONS.hsg.turnSidewaysNote} /></p>
       </div>
     );
   }
 
   return (
-    <div role="main" className="wall-safe-round relative flex flex-col overflow-hidden p-0" style={{ background: bg }}>
+    <div className="wall-safe-round relative flex flex-col overflow-hidden p-0" style={{ background: bg }}>
+      {s.phase === "getReady" ? (
+        <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-yellow/95">
+          <p className="text-[20px] font-extrabold uppercase tracking-widest text-ink"><Tx v={TRANSLATIONS.hsg.getReady} /></p>
+          <p key={s.countdown} className="wall-stamp mono-num text-[120px] font-black leading-none text-ink" aria-live="assertive">{s.countdown}</p>
+        </div>
+      ) : null}
       <ConfettiBurst trigger={confettiTrigger} />
       <QuitRoundDialog open={quitOpen} onOpenChange={setQuitOpen} onConfirm={() => router.push("/play/head-set-go")} />
       <HowToPlayDialog

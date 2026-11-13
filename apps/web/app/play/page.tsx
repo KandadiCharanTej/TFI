@@ -121,7 +121,11 @@ export default function PlayHomePage() {
           </div>
 
           <div className="mt-5 grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-3">
-            {filteredGames.map((game) => (
+            {filteredGames.map((game) => {
+              const displayNum = String(
+                visibleGames.findIndex((g) => g.slug === game.slug) + 1,
+              ).padStart(2, "0");
+              return (
               <Link
                 key={game.slug}
                 href={`/play/${game.slug}`}
@@ -129,7 +133,7 @@ export default function PlayHomePage() {
               >
                 <div>
                   <div className="flex items-center justify-between gap-1">
-                    <span className="mono-num text-[12px] text-ink">{game.number}</span>
+                    <span className="mono-num text-[12px] text-ink">{displayNum}</span>
                     <Badge tone={game.isOnlineOnly ? "cyan" : "white"} className="px-2 py-0.5 text-[10px]">
                       <Tx v={TRANSLATIONS.modes[game.modeKey]} />
                     </Badge>
@@ -157,12 +161,19 @@ export default function PlayHomePage() {
                 </div>
 
                 <div className="mt-3">
-                  <span className="inline-flex min-h-[44px] w-full items-center justify-center rounded-[10px] border-2 border-ink bg-yellow px-2 text-[12px] font-extrabold uppercase tracking-wider text-ink shadow-logo">
-                    <Tx v={P.playAction} /> →
-                  </span>
+                  {game.isOnlineOnly ? (
+                    <span className="inline-flex min-h-[44px] w-full items-center justify-center rounded-[10px] border-2 border-ink bg-concrete px-2 text-[12px] font-extrabold uppercase tracking-wider text-ink">
+                      <Tx v={TRANSLATIONS.common.comingSoon} />
+                    </span>
+                  ) : (
+                    <span className="inline-flex min-h-[44px] w-full items-center justify-center rounded-[10px] border-2 border-ink bg-yellow px-2 text-[12px] font-extrabold uppercase tracking-wider text-ink shadow-logo">
+                      <Tx v={P.playAction} /> →
+                    </span>
+                  )}
                 </div>
               </Link>
-            ))}
+              );
+            })}
           </div>
         </section>
       </div>

@@ -160,7 +160,7 @@ export default function LandingPage() {
                 <Tx v={L.betaPill} />
               </p>
 
-              <h1 className="anton-title m-0 text-[clamp(42px,8.5vw,112px)] leading-[0.94] text-ink">
+              <h1 className="anton-title wall-balance m-0 text-[clamp(42px,8.5vw,112px)] leading-[0.94] text-ink">
                 <Tx v={L.heroLine1} />
                 <br />
                 <Tx v={L.heroLine2} />
@@ -325,7 +325,7 @@ export default function LandingPage() {
             <div>
               <h2
                 id="pick-game-heading"
-                className="anton-title m-0 text-[clamp(40px,6vw,72px)] leading-none text-ink"
+                className="anton-title wall-balance m-0 text-[clamp(36px,5.4vw,64px)] leading-none text-ink"
               >
                 <Tx v={L.pickYourGameHeading} />
               </h2>
@@ -355,6 +355,9 @@ export default function LandingPage() {
           <div className="mt-12 grid grid-cols-1 gap-x-9 gap-y-10 px-2 sm:grid-cols-2 lg:grid-cols-4">
             {filteredGames.map((game, idx) => {
               const rot = STICKER_ROTS[idx % STICKER_ROTS.length] ?? 0;
+              const displayNum = String(
+                visibleGames.findIndex((g) => g.slug === game.slug) + 1,
+              ).padStart(2, "0");
               return (
                 <Link
                   key={game.slug}
@@ -363,7 +366,7 @@ export default function LandingPage() {
                   style={{ transform: `rotate(${rot}deg)` }}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="mono-num text-[14px] text-ink">{game.number}</span>
+                    <span className="mono-num text-[14px] text-ink">{displayNum}</span>
                     <Badge tone={game.isOnlineOnly ? "cyan" : "white"} className="text-[11px]">
                       <Tx v={TRANSLATIONS.modes[game.modeKey]} />
                     </Badge>
@@ -385,9 +388,15 @@ export default function LandingPage() {
                     <Tx v={game.description} />
                   </p>
 
-                  <span className="inline-flex min-h-[40px] items-center rounded-[10px] border-[2.5px] border-ink bg-yellow px-4 text-[13px] font-extrabold uppercase tracking-[0.06em] text-ink shadow-logo">
-                    <Tx v={TRANSLATIONS.playHome.playAction} /> →
-                  </span>
+                  {game.isOnlineOnly ? (
+                    <span className="inline-flex min-h-[40px] items-center rounded-[10px] border-[2.5px] border-ink bg-concrete px-4 text-[13px] font-extrabold uppercase tracking-[0.06em] text-ink">
+                      <Tx v={TRANSLATIONS.common.comingSoon} />
+                    </span>
+                  ) : (
+                    <span className="inline-flex min-h-[40px] items-center rounded-[10px] border-[2.5px] border-ink bg-yellow px-4 text-[13px] font-extrabold uppercase tracking-[0.06em] text-ink shadow-logo">
+                      <Tx v={TRANSLATIONS.playHome.playAction} /> →
+                    </span>
+                  )}
                 </Link>
               );
             })}
@@ -435,7 +444,7 @@ export default function LandingPage() {
               </span>
               <h2
                 id="auction-heading"
-                className="anton-title m-0 mt-5 text-[clamp(40px,5.6vw,68px)] leading-none text-sticker"
+                className="anton-title wall-balance m-0 mt-5 text-[clamp(30px,4.4vw,54px)] leading-[1.04] text-sticker"
               >
                 <Tx v={L.auctionHeading} />
               </h2>
@@ -459,9 +468,9 @@ export default function LandingPage() {
               </p>
 
               <div className="mt-6">
-                <WallLinkButton href="/play/box-office-auction" variant="yellow" lightBorder>
-                  <Tx v={L.tryAuctionBtn} /> →
-                </WallLinkButton>
+                <span className="inline-flex min-h-[48px] items-center rounded-[14px] border-[2.5px] border-concrete bg-concrete px-6 text-[15px] font-extrabold uppercase tracking-wider text-ink">
+                  <Tx v={TRANSLATIONS.common.comingSoon} />
+                </span>
               </div>
             </div>
 
@@ -525,7 +534,7 @@ export default function LandingPage() {
           <div className="min-w-0 flex-1 basis-[420px]">
             <h2
               id="telugu-heading"
-              className="anton-title m-0 text-[clamp(40px,5.6vw,68px)] leading-none text-ink"
+              className="anton-title wall-balance m-0 text-[clamp(30px,4.4vw,54px)] leading-[1.04] text-ink"
             >
               <Tx v={L.teluguHeading} />
               <br />

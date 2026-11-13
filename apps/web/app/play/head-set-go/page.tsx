@@ -46,7 +46,7 @@ export default function HsgSetupPage() {
           <h1 className="anton-title mt-3 text-[32px] leading-[1.05] text-ink">
             Head Set Go
           </h1>
-          <p className="mt-1 text-[14px] font-bold text-ink opacity-70">
+          <p className="mt-1 text-[14px] font-bold text-ink">
             <Tx v={TRANSLATIONS.hsg.tip} />
           </p>
         </Sticker>
@@ -111,7 +111,7 @@ export default function HsgSetupPage() {
               data-testid="hsg-timer-value"
             >
               {duration}
-              <span className="ml-1 text-[18px] font-bold opacity-60">s</span>
+              <span className="ml-1 text-[18px] font-bold text-ink">s</span>
             </div>
             <button
               type="button"

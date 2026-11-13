@@ -545,7 +545,7 @@ export const GAMES_CATALOG: readonly GameCatalogItem[] = [
     release: "beta",
     wave: 1,
     iconKind: "emoji",
-    modeKey: "phoneOrOnline",
+    modeKey: "onePhone",
     isOnlineOnly: false,
     title: { en: "Emoji Cinema", te: "ఎమోజీ సినిమా" },
     description: {
@@ -629,7 +629,7 @@ export const GAMES_CATALOG: readonly GameCatalogItem[] = [
     release: "beta",
     wave: 1,
     iconKind: "most",
-    modeKey: "phoneOrOnline",
+    modeKey: "onePhone",
     isOnlineOnly: false,
     title: { en: "Most Likely", te: "మోస్ట్ లైక్లీ" },
     description: {
