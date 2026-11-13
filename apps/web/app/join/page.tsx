@@ -3,10 +3,12 @@
 import { useState } from "react";
 import { isValidRoomCode } from "@tfi/game-core";
 import { AppFrame } from "@/components/app-frame";
+import { Tx } from "@/components/lang-provider";
 import { Badge, Sticker, WallButton, WallLinkButton } from "@/components/sticker-kit";
+import { TRANSLATIONS } from "@/lib/i18n";
 
 export default function JoinRoomPage() {
-  const [code, setCode] = useState("K7QM");
+  const [code, setCode] = useState("");
   const cleanCode = code.toUpperCase().trim();
   const valid = isValidRoomCode(cleanCode);
 
@@ -17,10 +19,9 @@ export default function JoinRoomPage() {
           ONLINE ROOMS · 4-LETTER CODE
         </Badge>
         <div>
-          <p className="te-script m-0 text-[26px] leading-[1.55] text-ink" lang="te">
-            రూమ్ కోడ్ ఎంటర్ చేయండి
-          </p>
-          <h1 className="anton-title m-0 text-[28px] text-ink">Enter a 4-letter code</h1>
+          <h1 className="anton-title m-0 text-[28px] text-ink">
+            <Tx v={TRANSLATIONS.pages.joinTitle} />
+          </h1>
         </div>
 
         <div>
@@ -28,7 +29,7 @@ export default function JoinRoomPage() {
             htmlFor="room-code-input"
             className="block text-xs font-extrabold uppercase tracking-wider text-ink"
           >
-            Room Code (No I, O, 0, 1)
+            <Tx v={TRANSLATIONS.pages.joinLabel} />
           </label>
           <input
             id="room-code-input"
@@ -36,6 +37,7 @@ export default function JoinRoomPage() {
             maxLength={4}
             value={code}
             onChange={(e) => setCode(e.target.value.toUpperCase())}
+            placeholder="e.g. K7QM"
             className="mono-num mt-2 w-full rounded-[14px] border-[3px] border-ink bg-card px-4 py-3 text-center text-3xl uppercase tracking-[0.2em] text-ink"
           />
         </div>
@@ -47,7 +49,7 @@ export default function JoinRoomPage() {
             </WallLinkButton>
           ) : (
             <WallButton variant="white" disabled className="w-full opacity-60">
-              Enter valid 4-letter code
+              <Tx v={TRANSLATIONS.pages.joinInvalid} />
             </WallButton>
           )}
         </div>

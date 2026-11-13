@@ -11,13 +11,15 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "build:content": "tsx scripts/build.ts"
   },
   "dependencies": {
     "zod": "^3.24.2"
   },
   "devDependencies": {
     "@tfi/config": "workspace:*",
+    "tsx": "^4.22.4",
     "typescript": "^5.8.2",
     "vitest": "^3.0.8"
   }

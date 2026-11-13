@@ -1,0 +1,362 @@
+[
+  {
+    "id": "hsg-act-001",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "ప్రభాస్",
+    "en": "Prabhas",
+    "difficulty": 1,
+    "tags": [
+      "hero"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-002",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "మహేష్ బాబు",
+    "en": "Mahesh Babu",
+    "difficulty": 1,
+    "tags": [
+      "hero"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-003",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "జూనియర్ ఎన్టీఆర్",
+    "en": "Jr NTR",
+    "difficulty": 1,
+    "tags": [
+      "hero"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-004",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "రామ్ చరణ్",
+    "en": "Ram Charan",
+    "difficulty": 1,
+    "tags": [
+      "hero"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-005",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "అల్లు అర్జున్",
+    "en": "Allu Arjun",
+    "difficulty": 1,
+    "tags": [
+      "hero"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-006",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "పవన్ కళ్యాణ్",
+    "en": "Pawan Kalyan",
+    "difficulty": 1,
+    "tags": [
+      "hero"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-007",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "నాని",
+    "en": "Nani",
+    "difficulty": 1,
+    "tags": [
+      "hero"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-008",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "విజయ్ దేవరకొండ",
+    "en": "Vijay Deverakonda",
+    "difficulty": 1,
+    "tags": [
+      "hero"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-009",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "రవి తేజ",
+    "en": "Ravi Teja",
+    "difficulty": 1,
+    "tags": [
+      "hero"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-010",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "వెంకటేష్",
+    "en": "Venkatesh",
+    "difficulty": 1,
+    "tags": [
+      "hero"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-011",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "బాలకృష్ణ",
+    "en": "Balakrishna",
+    "difficulty": 2,
+    "tags": [
+      "hero"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-012",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "చిరంజీవి",
+    "en": "Chiranjeevi",
+    "difficulty": 1,
+    "tags": [
+      "hero"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-013",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "నాగార్జున",
+    "en": "Nagarjuna",
+    "difficulty": 1,
+    "tags": [
+      "hero"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-014",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "సమంత",
+    "en": "Samantha",
+    "difficulty": 1,
+    "tags": [
+      "heroine"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-015",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "రష్మిక మందన్న",
+    "en": "Rashmika Mandanna",
+    "difficulty": 1,
+    "tags": [
+      "heroine"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-016",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "పూజా హెగ్డే",
+    "en": "Pooja Hegde",
+    "difficulty": 1,
+    "tags": [
+      "heroine"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-017",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "అనుష్క శెట్టి",
+    "en": "Anushka Shetty",
+    "difficulty": 1,
+    "tags": [
+      "heroine"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-018",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "త్రిష",
+    "en": "Trisha",
+    "difficulty": 1,
+    "tags": [
+      "heroine"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-019",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "శ్రీలీల",
+    "en": "Sreeleela",
+    "difficulty": 2,
+    "tags": [
+      "heroine"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-020",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "కృతి శెట్టి",
+    "en": "Krithi Shetty",
+    "difficulty": 2,
+    "tags": [
+      "heroine"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-021",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "ఎస్ఎస్ రాజమౌళి",
+    "en": "SS Rajamouli",
+    "difficulty": 2,
+    "tags": [
+      "director"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-022",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "త్రివిక్రమ్",
+    "en": "Trivikram",
+    "difficulty": 2,
+    "tags": [
+      "director"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-023",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "సుకుమార్",
+    "en": "Sukumar",
+    "difficulty": 2,
+    "tags": [
+      "director"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-024",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "సితార ఎంటర్టైన్మెంట్స్",
+    "en": "Sithara Entertainments",
+    "difficulty": 3,
+    "tags": [
+      "production"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-025",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "దేవి శ్రీ ప్రసాద్",
+    "en": "Devi Sri Prasad",
+    "difficulty": 2,
+    "tags": [
+      "music"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-026",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "తమన్",
+    "en": "Thaman",
+    "difficulty": 2,
+    "tags": [
+      "music"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-027",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "అదివి సేష్",
+    "en": "Adivi Sesh",
+    "difficulty": 2,
+    "tags": [
+      "hero"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-028",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "నితిన్",
+    "en": "Nithiin",
+    "difficulty": 2,
+    "tags": [
+      "hero"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-029",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "శర్వానంద్",
+    "en": "Sharwanand",
+    "difficulty": 2,
+    "tags": [
+      "hero"
+    ],
+    "verified": false
+  },
+  {
+    "id": "hsg-act-030",
+    "deck": "actors",
+    "game": "head-set-go",
+    "te": "సాయి పల్లవి",
+    "en": "Sai Pallavi",
+    "difficulty": 1,
+    "tags": [
+      "heroine"
+    ],
+    "verified": false
+  }
+]

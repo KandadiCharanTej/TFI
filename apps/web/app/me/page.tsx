@@ -1,39 +1,36 @@
 "use client";
 
 import { AppFrame } from "@/components/app-frame";
+import { LangSwitch } from "@/components/lang-switch";
+import { Tx, useLang } from "@/components/lang-provider";
 import { Chip, Sticker } from "@/components/sticker-kit";
+import { TRANSLATIONS } from "@/lib/i18n";
 import { usePreferencesStore } from "@/lib/store";
 
 export default function MePage() {
-  const {
-    deviceName,
-    locale,
-    soundEnabled,
-    reducedMotion,
-    setDeviceName,
-    setLocale,
-    setSoundEnabled,
-    setReducedMotion,
-  } = usePreferencesStore();
+  const { deviceName, soundEnabled, reducedMotion, setDeviceName, setSoundEnabled, setReducedMotion } =
+    usePreferencesStore();
+  const { lang } = useLang();
 
   return (
     <AppFrame>
       <Sticker className="mx-auto max-w-[540px] space-y-6 p-6">
         <div>
-          <p className="te-script m-0 text-[26px] leading-[1.55] text-ink" lang="te">
-            నా సెట్టింగ్స్ (సైన్-ఇన్ అవసరం లేదు)
-          </p>
           <h1 className="anton-title m-0 text-[28px] text-ink">
-            Device Profile &amp; Preferences
+            <Tx v={TRANSLATIONS.pages.meTitle} />
           </h1>
+          <p className="m-0 mt-1 text-sm font-bold text-ink opacity-70">
+            <Tx v={TRANSLATIONS.pages.meNoSignIn} />
+          </p>
         </div>
 
+        {/* Device Name */}
         <div>
           <label
             htmlFor="guest-name-input"
             className="block text-xs font-extrabold uppercase tracking-wider text-ink"
           >
-            Guest Device Name (Saved on this phone)
+            <Tx v={TRANSLATIONS.pages.meDeviceName} />
           </label>
           <input
             id="guest-name-input"
@@ -45,25 +42,18 @@ export default function MePage() {
           />
         </div>
 
+        {/* Language */}
         <div className="space-y-2">
           <p className="m-0 text-xs font-extrabold uppercase tracking-wider text-ink">
-            Language / భాష
+            Language / {lang === "te" ? "భాష" : "Language"}
           </p>
-          <div className="flex gap-3">
-            <Chip active={locale === "te"} onClick={() => setLocale("te")}>
-              <span className="te-script text-base" lang="te">
-                తెలుగు (Default)
-              </span>
-            </Chip>
-            <Chip active={locale === "en"} onClick={() => setLocale("en")}>
-              English
-            </Chip>
-          </div>
+          <LangSwitch />
         </div>
 
+        {/* Sound & Motion */}
         <div className="space-y-2">
           <p className="m-0 text-xs font-extrabold uppercase tracking-wider text-ink">
-            Accessibility &amp; Sound
+            <Tx v={TRANSLATIONS.pages.meAccessibility} />
           </p>
           <div className="flex flex-wrap gap-3">
             <Chip active={soundEnabled} onClick={() => setSoundEnabled(!soundEnabled)}>

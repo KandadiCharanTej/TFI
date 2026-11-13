@@ -1,53 +1,45 @@
 "use client";
 
 import { create } from "zustand";
-import type { Locale } from "./i18n";
+import { PREF_KEYS, readBoolPref, writeBoolPref } from "./prefs";
 
 export interface PreferencesState {
-  locale: Locale;
   deviceName: string;
   soundEnabled: boolean;
   reducedMotion: boolean;
   fanVibe: string;
-  setLocale: (locale: Locale) => void;
-  toggleLocale: () => void;
   setDeviceName: (name: string) => void;
   setSoundEnabled: (enabled: boolean) => void;
   setReducedMotion: (reduced: boolean) => void;
   setFanVibe: (vibe: string) => void;
+  /** Load remembered choices from this device. Called once on the client. */
+  hydrate: () => void;
 }
 
-const GUEST_ANIMALS = [
-  "Guest Tiger",
-  "Guest Falcon",
-  "Guest Panther",
-  "Guest Cobra",
-  "Guest Lion",
-  "Guest Stallion",
-] as const;
-
 export function getDefaultGuestName(): string {
-  return GUEST_ANIMALS[0];
+  return "Guest Tiger";
 }
 
 export const usePreferencesStore = create<PreferencesState>((set) => ({
-  locale: "te",
   deviceName: getDefaultGuestName(),
   soundEnabled: true,
   reducedMotion: false,
   fanVibe: "bhAAi",
-  setLocale: (locale) => set({ locale }),
-  toggleLocale: () =>
-    set((state) => ({
-      locale: state.locale === "te" ? "en" : "te",
-    })),
   setDeviceName: (deviceName) => set({ deviceName }),
-  setSoundEnabled: (soundEnabled) => set({ soundEnabled }),
+  setSoundEnabled: (soundEnabled) => {
+    writeBoolPref(PREF_KEYS.sound, soundEnabled);
+    set({ soundEnabled });
+  },
   setReducedMotion: (reducedMotion) => {
-    if (typeof document !== "undefined") {
-      document.documentElement.dataset.reducedMotion = String(reducedMotion);
-    }
+    document.documentElement.dataset.reducedMotion = String(reducedMotion);
+    writeBoolPref(PREF_KEYS.reducedMotion, reducedMotion);
     set({ reducedMotion });
   },
   setFanVibe: (fanVibe) => set({ fanVibe }),
+  hydrate: () => {
+    const soundEnabled = readBoolPref(PREF_KEYS.sound, true);
+    const reducedMotion = readBoolPref(PREF_KEYS.reducedMotion, false);
+    document.documentElement.dataset.reducedMotion = String(reducedMotion);
+    set({ soundEnabled, reducedMotion });
+  },
 }));

@@ -226,9 +226,10 @@ export function Badge({
 
 export interface TapeStripProps {
   readonly items: readonly string[];
+  readonly label: string;
 }
 
-export function TapeStrip({ items }: TapeStripProps) {
+export function TapeStrip({ items, label }: TapeStripProps) {
   const renderPass = (keyPrefix: string) =>
     items.map((item, idx) => (
       <span key={`${keyPrefix}-${idx}`} className="inline-flex items-center gap-9">
@@ -245,7 +246,7 @@ export function TapeStrip({ items }: TapeStripProps) {
     ));
 
   return (
-    <div className="-mt-1.5 overflow-hidden py-2.5" aria-label="Game marquee">
+    <div className="-mt-1.5 overflow-hidden py-2.5" aria-label={label}>
       <div
         style={{
           transform: "rotate(-1.2deg)",
@@ -270,13 +271,13 @@ export function TapeStrip({ items }: TapeStripProps) {
 export interface TimerBarProps {
   readonly secondsRemaining: number;
   readonly totalSeconds: number;
-  readonly label?: string;
+  readonly label: string;
 }
 
 /**
  * TimerBar: Space Mono Bold timer pill + high-contrast ink progress bar.
  */
-export function TimerBar({ secondsRemaining, totalSeconds, label = "Timer" }: TimerBarProps) {
+export function TimerBar({ secondsRemaining, totalSeconds, label }: TimerBarProps) {
   const pct = Math.max(0, Math.min(100, Math.round((secondsRemaining / totalSeconds) * 100)));
   const mins = Math.floor(secondsRemaining / 60);
   const secs = String(secondsRemaining % 60).padStart(2, "0");
@@ -301,7 +302,7 @@ export function TimerBar({ secondsRemaining, totalSeconds, label = "Timer" }: Ti
 
 export interface BidDisplayProps {
   readonly currentBidCr: number;
-  readonly label?: string;
+  readonly label: string;
   readonly compact?: boolean;
 }
 
@@ -310,7 +311,7 @@ export interface BidDisplayProps {
  */
 export function BidDisplay({
   currentBidCr,
-  label = "CURRENT BID (GAME COINS)",
+  label,
   compact = false,
 }: BidDisplayProps) {
   return (

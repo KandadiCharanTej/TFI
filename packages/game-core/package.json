@@ -17,5 +17,9 @@
     "@tfi/config": "workspace:*",
     "typescript": "^5.8.2",
     "vitest": "^3.0.8"
+  },
+  "dependencies": {
+    "@tfi/content": "workspace:*",
+    "xstate": "^5.33.4"
   }
 }

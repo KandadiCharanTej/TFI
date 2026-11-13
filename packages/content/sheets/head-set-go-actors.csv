@@ -1,0 +1,31 @@
+id,game,deck,en,te,verified,difficulty,tags
+hsg-act-001,head-set-go,actors,Prabhas,ప్రభాస్,false,1,hero
+hsg-act-002,head-set-go,actors,Mahesh Babu,మహేష్ బాబు,false,1,hero
+hsg-act-003,head-set-go,actors,Jr NTR,జూనియర్ ఎన్టీఆర్,false,1,hero
+hsg-act-004,head-set-go,actors,Ram Charan,రామ్ చరణ్,false,1,hero
+hsg-act-005,head-set-go,actors,Allu Arjun,అల్లు అర్జున్,false,1,hero
+hsg-act-006,head-set-go,actors,Pawan Kalyan,పవన్ కళ్యాణ్,false,1,hero
+hsg-act-007,head-set-go,actors,Nani,నాని,false,1,hero
+hsg-act-008,head-set-go,actors,Vijay Deverakonda,విజయ్ దేవరకొండ,false,1,hero
+hsg-act-009,head-set-go,actors,Ravi Teja,రవి తేజ,false,1,hero
+hsg-act-010,head-set-go,actors,Venkatesh,వెంకటేష్,false,1,hero
+hsg-act-011,head-set-go,actors,Balakrishna,బాలకృష్ణ,false,2,hero
+hsg-act-012,head-set-go,actors,Chiranjeevi,చిరంజీవి,false,1,hero
+hsg-act-013,head-set-go,actors,Nagarjuna,నాగార్జున,false,1,hero
+hsg-act-014,head-set-go,actors,Samantha,సమంత,false,1,heroine
+hsg-act-015,head-set-go,actors,Rashmika Mandanna,రష్మిక మందన్న,false,1,heroine
+hsg-act-016,head-set-go,actors,Pooja Hegde,పూజా హెగ్డే,false,1,heroine
+hsg-act-017,head-set-go,actors,Anushka Shetty,అనుష్క శెట్టి,false,1,heroine
+hsg-act-018,head-set-go,actors,Trisha,త్రిష,false,1,heroine
+hsg-act-019,head-set-go,actors,Sreeleela,శ్రీలీల,false,2,heroine
+hsg-act-020,head-set-go,actors,Krithi Shetty,కృతి శెట్టి,false,2,heroine
+hsg-act-021,head-set-go,actors,SS Rajamouli,ఎస్ఎస్ రాజమౌళి,false,2,director
+hsg-act-022,head-set-go,actors,Trivikram,త్రివిక్రమ్,false,2,director
+hsg-act-023,head-set-go,actors,Sukumar,సుకుమార్,false,2,director
+hsg-act-024,head-set-go,actors,Sithara Entertainments,సితార ఎంటర్టైన్మెంట్స్,false,3,production
+hsg-act-025,head-set-go,actors,Devi Sri Prasad,దేవి శ్రీ ప్రసాద్,false,2,music
+hsg-act-026,head-set-go,actors,Thaman,తమన్,false,2,music
+hsg-act-027,head-set-go,actors,Adivi Sesh,అదివి సేష్,false,2,hero
+hsg-act-028,head-set-go,actors,Nithiin,నితిన్,false,2,hero
+hsg-act-029,head-set-go,actors,Sharwanand,శర్వానంద్,false,2,hero
+hsg-act-030,head-set-go,actors,Sai Pallavi,సాయి పల్లవి,false,1,heroine
