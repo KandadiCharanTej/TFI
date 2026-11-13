@@ -130,6 +130,7 @@ test.describe("Phase 0 & Phase 1 Quality Gates", () => {
 
   test("Play Home (/play) at 390x844 and 1280x800 passes axe and keyboard navigation", async ({
     page,
+    browserName,
   }) => {
     const consoleErrors: string[] = [];
     page.on("console", (msg) => {
@@ -174,12 +175,14 @@ test.describe("Phase 0 & Phase 1 Quality Gates", () => {
       fullPage: true,
     });
 
-    // Keyboard tab navigation check
-    await page.keyboard.press("Tab");
-    const focusedTag = await page.evaluate(
-      () => document.activeElement?.tagName ?? "",
-    );
-    expect(["A", "BUTTON"]).toContain(focusedTag);
+    // Keyboard tab navigation check (macOS WebKit does not Tab-focus <a> without Option+Tab)
+    if (browserName !== "webkit") {
+      await page.keyboard.press("Tab");
+      const focusedTag = await page.evaluate(
+        () => document.activeElement?.tagName ?? "",
+      );
+      expect(["A", "BUTTON"]).toContain(focusedTag);
+    }
 
     const axeDesktop = await new AxeBuilder({ page }).analyze();
     expect(axeDesktop.violations).toEqual([]);

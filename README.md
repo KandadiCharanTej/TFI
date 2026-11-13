@@ -1,6 +1,6 @@
 # TFI & Pitch
 
-A Telugu-first party-game web app for friends. 10 short games around Telugu cinema, Indian cricket, and friend-group banter.
+A Telugu-cinema party-game web app for friends. Beta includes 7 movie games (6 one-phone games ready + Box Office Auction online coming in Phase 6). Set `SHOW_MVP_GAMES=true` to preview cricket and MVP games.
 
 ## Language rule (decided 13 Nov 2026)
 
@@ -8,7 +8,7 @@ The app is **English by default**. Telugu script appears only when the user swit
 
 | Cookie | Meaning |
 |--------|---------|
-| `lang=en` (default) | English everywhere. Noto Sans Telugu font not loaded. |
+| `lang=en` (default) | English everywhere. Anek Telugu font not loaded. |
 | `lang=te` | Telugu script leads, English small beneath. Telugu typography rules apply. |
 
 The switch label "తె / EN" uses Telugu script in both modes — this is the only allowed exception.
@@ -18,6 +18,7 @@ The switch label "తె / EN" uses Telugu script in both modes — this is the 
 ```bash
 pnpm install          # install all packages
 pnpm content:build    # build card JSONs from CSVs (run this once after cloning)
+pnpm content:review   # export review.csv and print verified vs unverified counts
 pnpm dev              # start dev server
 pnpm typecheck        # TypeScript check (all packages)
 pnpm test             # unit tests (all packages)

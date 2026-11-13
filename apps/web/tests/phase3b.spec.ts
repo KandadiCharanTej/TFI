@@ -3,7 +3,7 @@
  */
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { BASE, BETA_SLUGS, TELUGU_RE, bodyTextNoSwitch, setLang, waitHydrated } from "./helpers";
+import { BASE, BETA_SLUGS, TELUGU_RE, bodyTextNoSwitch, saveShot, setLang, waitHydrated } from "./helpers";
 
 test.describe("Beta scope: movie games only (flag off)", () => {
   const PAGES = ["/", "/play", "/about", "/privacy", "/terms", "/join", "/me", "/health"];
@@ -103,5 +103,123 @@ test.describe("Font direction A loading rules", () => {
       .filter((u) => u.includes("anek-telugu"))
       .reduce((sum, u) => sum + (sizes[u] ?? 0), 0);
     expect(teluguBytes).toBeLessThan(250 * 1024);
+  });
+});
+
+test.describe("Phase 3b games: Dumb Charades, Most Likely, Rapid Fire, & Offline", () => {
+  test("Dumb Charades setup, round flow, shutter reveal, and axe check", async ({ page }) => {
+    const errors: string[] = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    await setLang(page, "en");
+    await page.goto(`${BASE}/play/dumb-charades`);
+    await waitHydrated(page);
+    await saveShot("phase3b-charades-setup.png", await page.screenshot());
+
+    const axeSetup = await new AxeBuilder({ page }).analyze();
+    expect(axeSetup.violations).toEqual([]);
+
+    await page.getByTestId("charades-start-btn").click();
+    await page.waitForURL("**/play/dumb-charades/round");
+
+    // Dismiss How-To-Play dialog
+    await expect(page.getByTestId("charades-howto-dialog")).toBeVisible();
+    await page.getByTestId("charades-howto-ok").click();
+
+    await expect(page.getByTestId("charades-passing-screen")).toBeVisible();
+    await saveShot("phase3b-charades-round.png", await page.screenshot());
+
+    // Press and hold shutter to reveal card, then start acting
+    const shutter = page.getByTestId("charades-shutter-btn");
+    await shutter.dispatchEvent("pointerdown");
+    await expect(page.getByTestId("charades-revealed-title")).toBeVisible();
+    await page.getByTestId("charades-start-acting-btn").click();
+
+    await expect(page.getByTestId("charades-acting-screen")).toBeVisible();
+    await page.getByTestId("charades-got-it-btn").click();
+    await expect(page.getByTestId("charades-turn-end")).toBeVisible();
+    expect(errors).toEqual([]);
+  });
+
+  test("Most Likely setup, privacy shield, self-vote block, reveal, and axe check", async ({ page }) => {
+    const errors: string[] = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    await setLang(page, "en");
+    await page.goto(`${BASE}/play/most-likely`);
+    await waitHydrated(page);
+    await saveShot("phase3b-most-likely-setup.png", await page.screenshot());
+
+    const axeSetup = await new AxeBuilder({ page }).analyze();
+    expect(axeSetup.violations).toEqual([]);
+
+    await page.getByTestId("vote-start-btn").click();
+    await page.waitForURL("**/play/most-likely/round");
+    await page.getByTestId("vote-howto-ok").click();
+
+    await expect(page.getByTestId("vote-privacy-screen")).toBeVisible();
+    await saveShot("phase3b-most-likely-round.png", await page.screenshot());
+
+    // 3 players vote on prompt 1
+    await page.getByTestId("vote-ready-btn").click();
+    await expect(page.getByTestId("vote-voting-screen")).toBeVisible();
+    // Self-vote button p1 must be disabled
+    await expect(page.getByTestId("vote-target-p1")).toBeDisabled();
+    await page.getByTestId("vote-target-p2").click();
+
+    await page.getByTestId("vote-ready-btn").click();
+    await expect(page.getByTestId("vote-target-p2")).toBeDisabled();
+    await page.getByTestId("vote-target-p3").click();
+
+    await page.getByTestId("vote-ready-btn").click();
+    await expect(page.getByTestId("vote-target-p3")).toBeDisabled();
+    await page.getByTestId("vote-target-p2").click();
+
+    // 4th player votes
+    await page.getByTestId("vote-ready-btn").click();
+    await expect(page.getByTestId("vote-target-p4")).toBeDisabled();
+    await page.getByTestId("vote-target-p1").click();
+
+    await expect(page.getByTestId("vote-reveal-screen")).toBeVisible();
+    await expect(page.getByTestId("vote-prompt-winner")).toBeVisible();
+    expect(errors).toEqual([]);
+  });
+
+  test("Rapid Fire movie edition has zero cricket text", async ({ page }) => {
+    await setLang(page, "en");
+    await page.goto(`${BASE}/play/rapid-fire`);
+    await waitHydrated(page);
+    const text = await bodyTextNoSwitch(page);
+    expect(text.toLowerCase()).not.toContain("cricket");
+    expect(text.toLowerCase()).not.toContain("ipl");
+  });
+
+  test("Offline replay works for Dumb Charades and Most Likely", async ({ page, context }) => {
+    await setLang(page, "en");
+    await page.goto(`${BASE}/play/dumb-charades`);
+    await waitHydrated(page);
+    await page.evaluate(() => navigator.serviceWorker?.ready);
+    await page.reload();
+    await waitHydrated(page);
+    await page.goto(`${BASE}/play/most-likely`);
+    await waitHydrated(page);
+
+    await context.setOffline(true);
+    await page.goto(`${BASE}/play/dumb-charades`);
+    await expect(page.getByTestId("charades-start-btn")).toBeVisible();
+    await page.goto(`${BASE}/play/most-likely`);
+    await expect(page.getByTestId("vote-start-btn")).toBeVisible();
+    await context.setOffline(false);
+  });
+
+  test("Axe 0 violations & 0 console errors across beta setup routes", async ({ page }) => {
+    const errors: string[] = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    await setLang(page, "en");
+    for (const slug of BETA_SLUGS) {
+      await page.goto(`${BASE}/play/${slug}`);
+      await waitHydrated(page);
+      const axe = await new AxeBuilder({ page }).analyze();
+      expect(axe.violations, `Axe violations on /play/${slug}`).toEqual([]);
+    }
+    expect(errors).toEqual([]);
   });
 });

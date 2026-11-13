@@ -348,6 +348,11 @@ html[data-reduced-motion="true"] .wall-card-interactive {
   max-width: var(--prose-max);
 }
 
+/* Telugu switch label uses Anek Telugu only in Telugu mode so EN mode never downloads it */
+html[lang="te"] .lang-switch-te {
+  font-family: 'Anek Telugu', system-ui, sans-serif;
+}
+
 /* Full-screen round ergonomics & safe areas */
 .wall-safe-round {
   min-height: 100dvh;

@@ -57,7 +57,7 @@ const FAQ_ITEMS = [
   {
     q: { en: "Can we switch between English and Telugu?", te: "ఇంగ్లీష్ మరియు తెలుగు మధ్య మారొచ్చా?" },
     a: {
-      en: "Yes. Tap తె / EN in the top bar anytime, even mid-setup.",
+      en: "Yes. Tap the language switch in the top bar anytime, even mid-setup.",
       te: "అవును. పై బార్‌లో తె / EN నొక్కి ఎప్పుడైనా మారొచ్చు.",
     },
   },

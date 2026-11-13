@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { createActor } from "xstate";
 import { hsgMachine } from "./hsg-machine.js";
 import {
@@ -18,6 +18,8 @@ import {
 } from "./registry.js";
 import { isValidRoomCode } from "./index.js";
 import type { GameCard } from "./index.js";
+import { pickNextCharadesCard } from "./charades-machine.js";
+import { pickSessionPrompts } from "./vote-machine.js";
 
 // ─── Fixtures ─────────────────────────────────────────────────────────────────
 
@@ -636,5 +638,198 @@ describe("voteMachine", () => {
     );
     expect(res.isTie).toBe(true);
     expect(res.topVotes).toBe(1);
+  });
+
+  it("covers branch edges across hsg, judge, charades, vote, and localStorage", () => {
+    // 1. Mock browser localStorage + window (both working and throwing)
+    const store = new Map<string, string>();
+    const fakeLs = {
+      getItem: (k: string) => store.get(k) ?? null,
+      setItem: (k: string, v: string) => { store.set(k, v); },
+    };
+    vi.stubGlobal("window", {});
+    vi.stubGlobal("localStorage", fakeLs);
+
+    saveJudgeRecent("transify", ["j1", "j2"]);
+    expect(loadJudgeRecent("transify")).toEqual(["j1", "j2"]);
+    saveCharadesRecent(["c1"]);
+    expect(loadCharadesRecent()).toEqual(["c1"]);
+    saveVoteRecent(["v1"]);
+    expect(loadVoteRecent()).toEqual(["v1"]);
+
+    // Throwing localStorage catch branches
+    vi.stubGlobal("localStorage", {
+      getItem: () => { throw new Error("deny"); },
+      setItem: () => { throw new Error("quota"); },
+    });
+    expect(loadJudgeRecent("transify")).toEqual([]);
+    expect(() => saveJudgeRecent("transify", ["x"])).not.toThrow();
+    expect(loadCharadesRecent()).toEqual([]);
+    expect(() => saveCharadesRecent(["x"])).not.toThrow();
+    expect(loadVoteRecent()).toEqual([]);
+    expect(() => saveVoteRecent(["x"])).not.toThrow();
+    vi.unstubAllGlobals();
+
+    // 2. hsgMachine: PASS exhausting deck, TICK to 0, PLAY_AGAIN
+    vi.useFakeTimers();
+    const DECK = [
+      { id: "d1", game: "hsg", deck: "movies", en: "Pokiri", te: "పోకిరి", difficulty: 1 as const, tags: [], verified: false },
+      { id: "d2", game: "hsg", deck: "movies", en: "Magadheera", te: "మగధీర", difficulty: 2 as const, tags: [], verified: false },
+      { id: "d3", game: "hsg", deck: "movies", en: "Eega", te: "ఈగ", difficulty: 3 as const, tags: [], verified: false },
+    ];
+    const hsg = createActor(hsgMachine, {
+      input: { deck: DECK.slice(0, 1), duration: 2 },
+    });
+    hsg.start();
+    hsg.send({ type: "START" });
+    hsg.send({ type: "COUNTDOWN_TICK" });
+    hsg.send({ type: "COUNTDOWN_TICK" });
+    hsg.send({ type: "COUNTDOWN_TICK" });
+    hsg.send({ type: "PASS" }); // deck exhausted on PASS
+    expect(hsg.getSnapshot().value).toBe("roundEnd");
+    vi.advanceTimersByTime(350);
+    expect(hsg.getSnapshot().value).toBe("results");
+    hsg.send({ type: "PLAY_AGAIN" });
+    expect(hsg.getSnapshot().value).toBe("getReady");
+    hsg.send({ type: "COUNTDOWN_TICK" });
+    hsg.send({ type: "COUNTDOWN_TICK" });
+    hsg.send({ type: "COUNTDOWN_TICK" });
+    hsg.send({ type: "TICK" });
+    hsg.send({ type: "TICK" });
+    hsg.send({ type: "TICK" }); // secondsLeft hits 0 and roundOver fires
+    expect(hsg.getSnapshot().value).toBe("roundEnd");
+    hsg.stop();
+    vi.useRealTimers();
+
+    // 3. judgeMachine: SKIP exhausting deck, TICK to 0, PLAY_AGAIN
+    const jm = createActor(judgeMachine, {
+      input: {
+        gameId: "transify",
+        players: [{ id: "p1", name: "P1" }],
+        deck: DECK.slice(0, 2),
+        duration: 2,
+      },
+    });
+    jm.start();
+    jm.send({ type: "START" });
+    jm.send({ type: "COUNTDOWN_TICK" });
+    jm.send({ type: "COUNTDOWN_TICK" });
+    jm.send({ type: "COUNTDOWN_TICK" });
+    jm.send({ type: "SKIP" });
+    jm.send({ type: "TICK" });
+    jm.send({ type: "TICK" });
+    jm.send({ type: "TICK" }); // timer hits 0
+    expect(jm.getSnapshot().value).toBe("turnEnd");
+    jm.send({ type: "NEXT_TURN" });
+    expect(jm.getSnapshot().value).toBe("results");
+    jm.send({ type: "PLAY_AGAIN" });
+    expect(jm.getSnapshot().value).toBe("setup");
+    jm.stop();
+
+    // 4. charadesMachine: difficulty modes, empty winners, PLAY_AGAIN, PASS exhausting
+    expect(getCharadesWinners([])).toEqual([]);
+    expect(pointsForDifficulty(1)).toBe(1);
+    expect(pointsForDifficulty(2)).toBe(2);
+    expect(pointsForDifficulty(3)).toBe(3);
+    expect(pickNextCharadesCard([], [], [], "easy")).toBeNull();
+    const diffDeck = DECK;
+    expect(pickNextCharadesCard(diffDeck, [], [], "easy")?.difficulty).toBe(1);
+    expect(pickNextCharadesCard(diffDeck, [], [], "medium")?.difficulty).toBe(2);
+    expect(pickNextCharadesCard(diffDeck, [], [], "hard")?.difficulty).toBe(3);
+    // Fallback when all easy cards are used
+    expect(pickNextCharadesCard(diffDeck, [diffDeck[0]!.id], [], "easy")).not.toBeNull();
+    // Stale fallback when all cards are recent
+    expect(pickNextCharadesCard(diffDeck, [], diffDeck.map((d) => d.id), "mix")).not.toBeNull();
+
+    const cm = createActor(charadesMachine, {
+      input: {
+        teams: [{ id: "t1", name: "Team 1" }],
+        roundsPerTeam: 1,
+        duration: 2,
+        difficultyMix: "mix",
+        deck: diffDeck.slice(0, 1),
+      },
+    });
+    cm.start();
+    cm.send({ type: "START" });
+    cm.send({ type: "REVEAL_CARD" });
+    cm.send({ type: "START_ACTING" });
+    cm.send({ type: "TICK" });
+    cm.send({ type: "TICK" });
+    cm.send({ type: "TICK" });
+    expect(cm.getSnapshot().value).toBe("turnEnd");
+    cm.send({ type: "NEXT_TURN" });
+    if (cm.getSnapshot().value === "passingPhone") {
+      cm.send({ type: "PHONE_PASSED" });
+      cm.send({ type: "REVEAL_CARD" });
+      cm.send({ type: "START_ACTING" });
+      cm.send({ type: "TIME_UP" });
+      cm.send({ type: "NEXT_TURN" });
+    }
+    expect(cm.getSnapshot().value).toBe("results");
+    cm.send({ type: "PLAY_AGAIN" });
+    expect(cm.getSnapshot().value).toBe("setup");
+    cm.stop();
+
+    // 5. voteMachine helpers: stale fallback & empty/invalid votes
+    const picked = pickSessionPrompts(VOTE_DECK, 3, VOTE_DECK.map((v) => v.id));
+    expect(picked.length).toBeGreaterThan(0);
+    const emptyTally = tallyPromptVotes(VOTE_DECK[0]!, [{ id: "p1", name: "A" }], { p1: "unknown" });
+    expect(emptyTally.topVotes).toBe(0);
+    expect(emptyTally.winnerIds).toEqual(["p1"]);
+    expect(tallyPromptVotes(VOTE_DECK[0]!, [], {}).winnerIds).toEqual([]);
+  });
+
+  it("covers fallback defaults for empty teams, players, decks, and hsg storage errors", () => {
+    vi.stubGlobal("window", {});
+    vi.stubGlobal("localStorage", {
+      getItem: () => "{invalid-json",
+      setItem: () => { throw new Error("quota"); },
+    });
+    const hsgErr = createActor(hsgMachine, { input: { deck: [], duration: 5 } });
+    hsgErr.start();
+    hsgErr.send({ type: "START" });
+    hsgErr.send({ type: "COUNTDOWN_TICK" });
+    hsgErr.send({ type: "COUNTDOWN_TICK" });
+    hsgErr.send({ type: "COUNTDOWN_TICK" });
+    hsgErr.send({ type: "TIME_UP" });
+    expect(hsgErr.getSnapshot().value).toBe("roundEnd");
+    hsgErr.stop();
+    vi.unstubAllGlobals();
+
+    const vmFallback = createActor(voteMachine, {
+      input: { players: [], totalPrompts: 1, deck: VOTE_DECK },
+    });
+    vmFallback.start();
+    expect(vmFallback.getSnapshot().context.players.length).toBe(3);
+    vmFallback.stop();
+
+    const cmFallback = createActor(charadesMachine, {
+      input: { teams: [], roundsPerTeam: 1, duration: 5, difficultyMix: "mix", deck: [] },
+    });
+    cmFallback.start();
+    cmFallback.send({ type: "START" });
+    cmFallback.send({ type: "REVEAL_CARD" });
+    cmFallback.send({ type: "START_ACTING" });
+    cmFallback.send({ type: "GUESSED" });
+    cmFallback.send({ type: "NEXT_TURN" });
+    cmFallback.send({ type: "PHONE_PASSED" });
+    cmFallback.send({ type: "REVEAL_CARD" });
+    cmFallback.send({ type: "START_ACTING" });
+    cmFallback.send({ type: "TIME_UP" });
+    expect(cmFallback.getSnapshot().value).toBe("turnEnd");
+    cmFallback.stop();
+
+    const jmFallback = createActor(judgeMachine, {
+      input: { gameId: "transify", players: [], deck: [], duration: 5 },
+    });
+    jmFallback.start();
+    jmFallback.send({ type: "START" });
+    jmFallback.send({ type: "COUNTDOWN_TICK" });
+    jmFallback.send({ type: "COUNTDOWN_TICK" });
+    jmFallback.send({ type: "COUNTDOWN_TICK" });
+    jmFallback.send({ type: "TIME_UP" });
+    expect(jmFallback.getSnapshot().value).toBe("turnEnd");
+    jmFallback.stop();
   });
 });
