@@ -17,6 +17,9 @@ export interface ShareCardInput {
  * using one of three cycleable templates (Score, Winner, Gang Poster).
  */
 export function drawWallSharePoster(canvas: HTMLCanvasElement, input: ShareCardInput): void {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("tfi:share_clicked"));
+  }
   const W = 1080;
   const H = 1350;
   canvas.width = W;

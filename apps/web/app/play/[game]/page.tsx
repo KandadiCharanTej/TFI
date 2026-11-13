@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { MODE_COLORS } from "@tfi/config/tokens";
 import { GAME_REGISTRY, getGameById } from "@tfi/game-core";
@@ -7,8 +8,31 @@ import { WallIcon } from "@/components/icons";
 import { Tx } from "@/components/lang-provider";
 import { Badge, Sticker, WallLinkButton } from "@/components/sticker-kit";
 import { readShowMvpFlag } from "@/lib/games";
+import { getServerLang } from "@/lib/lang-server";
 import { GAMES_CATALOG, TRANSLATIONS } from "@/lib/i18n";
 import SetupClient from "./setup-client";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ game: string }>;
+}): Promise<Metadata> {
+  const { game: slug } = await params;
+  const lang = await getServerLang();
+  const catalogGame = GAMES_CATALOG.find((g) => g.slug === slug);
+  if (!catalogGame) return {};
+  const title = `${catalogGame.title[lang]} | TFI & Pitch`;
+  const description = catalogGame.description[lang];
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [{ url: "/og-share.png", width: 1200, height: 630, alt: title }],
+    },
+  };
+}
 
 export function generateStaticParams() {
   const showMvp = readShowMvpFlag(process.env.SHOW_MVP_GAMES);

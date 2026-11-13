@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { ConsentBanner } from "@/components/consent-banner";
 import { FlagsProvider } from "@/components/flags-provider";
 import { LangProvider } from "@/components/lang-provider";
 import { PrefsBootstrap } from "@/components/prefs-bootstrap";
@@ -10,13 +11,29 @@ import { getServerLang } from "@/lib/lang-server";
 
 export async function generateMetadata(): Promise<Metadata> {
   const lang = await getServerLang();
+  const title = TRANSLATIONS.brand.pageTitle[lang];
+  const description = TRANSLATIONS.brand.pageDescription[lang];
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://tfi-and-pitch.example";
   return {
-    title: TRANSLATIONS.brand.pageTitle[lang],
-    description: TRANSLATIONS.brand.pageDescription[lang],
+    metadataBase: new URL(siteUrl),
+    title,
+    description,
     manifest: "/manifest.webmanifest",
     icons: {
       icon: "/icons/icon-192.png",
       apple: "/icons/apple-touch-icon.png",
+    },
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      images: [{ url: "/og-share.png", width: 1200, height: 630, alt: "TFI & Pitch" }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/og-share.png"],
     },
   };
 }
@@ -34,6 +51,9 @@ export default async function RootLayout({
 }>) {
   const lang = await getServerLang();
   const showMvp = readShowMvpFlag(process.env.SHOW_MVP_GAMES);
+  const feedbackUrl = process.env.FEEDBACK_URL ?? "";
+  const posthogKey = process.env.POSTHOG_KEY ?? "";
+  const sentryDsn = process.env.SENTRY_DSN ?? "";
 
   return (
     <html lang={lang}>
@@ -67,9 +87,15 @@ export default async function RootLayout({
       <body>
         <LangProvider initialLang={lang}>
           <PrefsBootstrap />
-          <FlagsProvider showMvp={showMvp}>
+          <FlagsProvider
+            showMvp={showMvp}
+            feedbackUrl={feedbackUrl}
+            posthogKey={posthogKey}
+            sentryDsn={sentryDsn}
+          >
             {children}
             <SwManager />
+            <ConsentBanner />
           </FlagsProvider>
         </LangProvider>
       </body>

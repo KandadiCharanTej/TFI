@@ -171,3 +171,45 @@ test.describe("Part 3: Info pages, /me settings, 404, and footer", () => {
     await expect(page.locator("a[href='/play']").first()).toBeVisible();
   });
 });
+
+test.describe("Part 4: SEO, OG link previews, feedback, and zero-telemetry without consent", () => {
+  test("robots.txt, sitemap.xml (beta-only), and og-share.png serve cleanly", async ({ request }) => {
+    const robots = await request.get(`${BASE}/robots.txt`);
+    expect(robots.status()).toBe(200);
+    expect(await robots.text()).toContain("Sitemap:");
+
+    const sitemap = await request.get(`${BASE}/sitemap.xml`);
+    expect(sitemap.status()).toBe(200);
+    const xml = await sitemap.text();
+    expect(xml).toContain("/play/head-set-go");
+    expect(xml).not.toContain("/play/cricket-iq");
+
+    const og = await request.get(`${BASE}/og-share.png`);
+    expect(og.status()).toBe(200);
+  });
+
+  test("Per-game metadata sets title and og:image", async ({ page }) => {
+    await setLang(page, "en");
+    await page.goto(`${BASE}/play/transify`);
+    await expect(page).toHaveTitle(/Transify \| TFI & Pitch/);
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+      "content",
+      /\/og-share\.png/,
+    );
+  });
+
+  test("No telemetry requests are sent without user consent", async ({ page }) => {
+    const posthogRequests: string[] = [];
+    page.on("request", (req) => {
+      if (req.url().includes("posthog.com")) {
+        posthogRequests.push(req.url());
+      }
+    });
+    await setLang(page, "en");
+    await page.goto(`${BASE}/play`);
+    await waitHydrated(page);
+    await page.goto(`${BASE}/play/transify`);
+    await waitHydrated(page);
+    expect(posthogRequests).toHaveLength(0);
+  });
+});

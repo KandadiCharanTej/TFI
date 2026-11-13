@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { AppFrame } from "@/components/app-frame";
+import { FeedbackSticker } from "@/components/feedback-sticker";
 import { Tx, useLang } from "@/components/lang-provider";
 import { Sticker, WallButton, WallLinkButton } from "@/components/sticker-kit";
 import { TRANSLATIONS } from "@/lib/i18n";
@@ -210,6 +211,9 @@ export default function HsgResultsPage() {
             {shareMsg}
           </p>
         )}
+        <div className="flex justify-center">
+          <FeedbackSticker />
+        </div>
       </div>
     </AppFrame>
   );
