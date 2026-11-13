@@ -19,10 +19,22 @@ const PRECACHE_URLS = [
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches
-      .open(CACHE_NAME)
-      .then((cache) => cache.addAll(PRECACHE_URLS))
-      .catch(() => undefined),
+    caches.open(CACHE_NAME).then(async (cache) => {
+      await Promise.all(PRECACHE_URLS.map((url) => cache.add(url).catch(() => undefined)));
+      // Also precache JS/CSS chunks referenced by /offline so /offline renders without network
+      try {
+        const res = await cache.match("/offline");
+        if (res) {
+          const html = await res.text();
+          const assets = html.match(/\/_next\/static\/[^"'\s<>]+\.(?:js|css)/g) || [];
+          await Promise.all(
+            [...new Set(assets)].map((asset) => cache.add(asset).catch(() => undefined)),
+          );
+        }
+      } catch {
+        // Ignore precache parse errors
+      }
+    }),
   );
   // If no worker is active yet, activate immediately; otherwise wait for user refresh.
   if (!self.registration.active) {

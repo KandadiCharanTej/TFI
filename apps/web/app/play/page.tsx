@@ -134,6 +134,7 @@ export default function PlayHomePage() {
               <Link
                 key={game.slug}
                 href={`/play/${game.slug}`}
+                prefetch={false}
                 className="wall-card-interactive wall-sticker-sm flex flex-col justify-between p-3.5 text-ink sm:p-4"
               >
                 <div>

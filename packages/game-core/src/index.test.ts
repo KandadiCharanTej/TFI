@@ -739,20 +739,20 @@ describe("voteMachine", () => {
     // Fallback when all easy cards are used
     expect(pickNextCharadesCard(diffDeck, [diffDeck[0]!.id], [], "easy")).not.toBeNull();
     // Stale fallback when all cards are recent
-    expect(pickNextCharadesCard(diffDeck, [], diffDeck.map((d) => d.id), "mix")).not.toBeNull();
+    expect(pickNextCharadesCard(diffDeck, [], diffDeck.map((d) => d.id), "mixed")).not.toBeNull();
 
     const cm = createActor(charadesMachine, {
       input: {
         teams: [{ id: "t1", name: "Team 1" }],
         roundsPerTeam: 1,
         duration: 2,
-        difficultyMix: "mix",
+        difficultyMix: "mixed",
         deck: diffDeck.slice(0, 1),
       },
     });
     cm.start();
     cm.send({ type: "START" });
-    cm.send({ type: "REVEAL_CARD" });
+    cm.send({ type: "SKIP_FILM" });
     cm.send({ type: "START_ACTING" });
     cm.send({ type: "TICK" });
     cm.send({ type: "TICK" });
@@ -760,8 +760,6 @@ describe("voteMachine", () => {
     expect(cm.getSnapshot().value).toBe("turnEnd");
     cm.send({ type: "NEXT_TURN" });
     if (cm.getSnapshot().value === "passingPhone") {
-      cm.send({ type: "PHONE_PASSED" });
-      cm.send({ type: "REVEAL_CARD" });
       cm.send({ type: "START_ACTING" });
       cm.send({ type: "TIME_UP" });
       cm.send({ type: "NEXT_TURN" });
@@ -805,16 +803,14 @@ describe("voteMachine", () => {
     vmFallback.stop();
 
     const cmFallback = createActor(charadesMachine, {
-      input: { teams: [], roundsPerTeam: 1, duration: 5, difficultyMix: "mix", deck: [] },
+      input: { teams: [], roundsPerTeam: 1, duration: 5, difficultyMix: "mixed", deck: [] },
     });
     cmFallback.start();
     cmFallback.send({ type: "START" });
-    cmFallback.send({ type: "REVEAL_CARD" });
+    cmFallback.send({ type: "SKIP_FILM" });
     cmFallback.send({ type: "START_ACTING" });
-    cmFallback.send({ type: "GUESSED" });
+    cmFallback.send({ type: "GOT_IT" });
     cmFallback.send({ type: "NEXT_TURN" });
-    cmFallback.send({ type: "PHONE_PASSED" });
-    cmFallback.send({ type: "REVEAL_CARD" });
     cmFallback.send({ type: "START_ACTING" });
     cmFallback.send({ type: "TIME_UP" });
     expect(cmFallback.getSnapshot().value).toBe("turnEnd");

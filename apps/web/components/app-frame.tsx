@@ -74,6 +74,7 @@ export function AppFrame({ children }: AppFrameProps) {
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch={false}
                 aria-current={isActive ? "page" : undefined}
                 className="flex min-h-[54px] items-center gap-3 rounded-[14px] border-[2.5px] border-ink px-4 py-2 font-extrabold text-ink shadow-btn transition-transform"
                 style={{ backgroundColor: isActive ? "#F6BE18" : "#FFFFFF" }}
@@ -111,6 +112,7 @@ export function AppFrame({ children }: AppFrameProps) {
               <li key={item.href}>
                 <Link
                   href={item.href}
+                  prefetch={false}
                   aria-current={isActive ? "page" : undefined}
                   className="flex min-h-[52px] items-center justify-center gap-2 rounded-[14px] border-[2.5px] border-ink px-2 py-1.5 font-extrabold text-ink"
                   style={{

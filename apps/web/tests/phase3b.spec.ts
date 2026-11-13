@@ -66,7 +66,7 @@ test.describe("Beta scope: movie games only (flag off)", () => {
     await setLang(page, "te");
     await page.goto(`${BASE}/`);
     await waitHydrated(page);
-    await expect(page.getByText("మన సినిమా, మన సరదా, మన గ్యాంగ్")).toBeVisible();
+    await expect(page.getByText("మన సినిమా, మన సరదా, మన గ్యాంగ్", { exact: true })).toBeVisible();
     const axe = await new AxeBuilder({ page }).analyze();
     expect(axe.violations).toEqual([]);
   });

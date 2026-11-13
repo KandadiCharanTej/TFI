@@ -9,7 +9,6 @@ import {
   HowToPlayDialog,
   OfflineBanner,
   QuitRoundDialog,
-  RoundSkeleton,
 } from "@/components/round-ui";
 import { TRANSLATIONS } from "@/lib/i18n";
 import type { GameCard } from "@tfi/game-core";
@@ -487,15 +486,7 @@ export default function JudgeRoundPage({
   const bg = s.stamp === "correct" ? "#00C853" : s.stamp === "skip" ? "#EC1276" : "#EAE6DF";
 
   // 1. Loading State
-  if (s.phase === "loading") {
-    return (
-      <div className="wall-safe-round flex items-center justify-center bg-[#EAE6DF]">
-        <RoundSkeleton />
-      </div>
-    );
-  }
-
-  // 2. Passing Phone Screen between turns
+  // 1. Passing Phone Screen between turns
   if (s.phase === "passingPhone") {
     return (
       <div className="wall-safe-round flex flex-col items-center justify-center bg-yellow text-center">
@@ -576,15 +567,14 @@ export default function JudgeRoundPage({
       style={{ backgroundColor: bg }}
       data-testid="judge-round-screen"
     >
-      {s.phase === "getReady" ? (
+      {s.phase === "loading" || s.phase === "getReady" ? (
         <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-yellow/95 p-6 text-center">
           <p className="text-xl font-black uppercase tracking-widest text-ink">
             <Tx v={J.getReady} />
           </p>
           <p className="mt-2 text-2xl font-black text-ink">{currentPlayer.name}</p>
           <p
-            key={s.countdown}
-            className="wall-stamp mono-num text-[130px] font-black leading-none text-ink"
+            className="anton-title text-[130px] font-black leading-none text-ink"
             aria-live="assertive"
           >
             {s.countdown}

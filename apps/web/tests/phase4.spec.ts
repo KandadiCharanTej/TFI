@@ -75,6 +75,9 @@ test.describe("Part 2: Installable PWA & offline", () => {
         await navigator.serviceWorker.ready;
       }
     });
+    // Reload once so the service worker controls this client before visiting games
+    await page.reload();
+    await waitHydrated(page);
 
     const playableSlugs = [
       "head-set-go",
@@ -168,7 +171,7 @@ test.describe("Part 3: Info pages, /me settings, 404, and footer", () => {
     await setLang(page, "en");
     await page.goto(`${BASE}/this-page-does-not-exist-404`);
     await expect(page.getByRole("heading", { name: /Page not found/i })).toBeVisible();
-    await expect(page.locator("a[href='/play']").first()).toBeVisible();
+    await expect(page.getByRole("link", { name: /Go to Play Home/i })).toBeVisible();
   });
 });
 

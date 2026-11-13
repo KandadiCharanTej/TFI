@@ -18,13 +18,13 @@ export function PublicFooter({ className = "" }: { readonly className?: string }
           <Tx v={TRANSLATIONS.brand.unofficialDisclaimer} />
         </p>
         <nav aria-label={t(TRANSLATIONS.nav.footerNav)} className="flex flex-wrap gap-4 text-[13px] font-extrabold">
-          <Link href="/about" className="underline">
+          <Link href="/about" prefetch={false} className="underline">
             <Tx v={TRANSLATIONS.nav.about} />
           </Link>
-          <Link href="/privacy" className="underline">
+          <Link href="/privacy" prefetch={false} className="underline">
             <Tx v={TRANSLATIONS.nav.privacy} />
           </Link>
-          <Link href="/terms" className="underline">
+          <Link href="/terms" prefetch={false} className="underline">
             <Tx v={TRANSLATIONS.nav.terms} />
           </Link>
           {feedbackUrl ? (
