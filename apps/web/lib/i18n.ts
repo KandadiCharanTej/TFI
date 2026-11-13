@@ -98,6 +98,7 @@ export const TRANSLATIONS = {
     about: { en: "About", te: "మా గురించి" },
     privacy: { en: "Privacy", te: "గోప్యత" },
     terms: { en: "Terms", te: "నిబంధనలు" },
+    feedback: { en: "Feedback", te: "అభిప్రాయం" },
   },
   modes: {
     onePhone: { en: "One phone", te: "ఒకే ఫోన్" },
@@ -305,15 +306,44 @@ export const TRANSLATIONS = {
       en: "All auctions use pretend game coins only. There are no payments, wallets, prizes or real-money wagers of any kind.",
       te: "అన్ని వేలాలు ఆట నాణేలతో మాత్రమే. చెల్లింపులు, వాలెట్లు, బహుమతులు, నిజమైన డబ్బు పందేలు ఏమీ ఉండవు.",
     },
-    privacyTitle: { en: "Privacy Policy", te: "గోప్యతా విధానం" },
+    aboutMadeBy: {
+      en: "Made by the TFI & Pitch team.",
+      te: "TFI & Pitch బృందం తయారు చేసింది.",
+    },
+    privacyTitle: { en: "Privacy Policy (Draft)", te: "గోప్యతా విధానం (డ్రాఫ్ట్)" },
     privacyBody: {
       en: "There is no sign-in in the beta. A guest gets an automatic device name, for example \"Guest Tiger\", saved only on your device. No email, no password, no personal-data forms, and no tracking of children.",
       te: "బీటాలో సైన్-ఇన్ లేదు. అతిథికి \"Guest Tiger\" లాంటి ఆటోమేటిక్ పరికరం పేరు వస్తుంది, అది మీ ఫోన్‌లో మాత్రమే ఉంటుంది. ఈమెయిల్, పాస్‌వర్డ్, వ్యక్తిగత వివరాల ఫారాలు ఉండవు, పిల్లలను ట్రాక్ చేయం.",
     },
-    termsTitle: { en: "Terms of Play", te: "ఆట నిబంధనలు" },
+    privacyHeadingStored: { en: "What stays on your phone", te: "మీ ఫోన్‌లో ఉండేవి" },
+    privacyStored: {
+      en: "Your device name, language, sound, vibration, motion, and text-size preferences are stored in localStorage only.",
+      te: "మీ పరికరం పేరు, భాష, శబ్దం, వైబ్రేషన్, కదలిక, అక్షరాల పరిమాణం ఇష్టాలు మాత్రమే మీ ఫోన్‌లో సేవ్ అవుతాయి.",
+    },
+    privacyHeadingAnalytics: { en: "Optional anonymous counts", te: "ఐచ్ఛిక అనామక గణాంకాలు" },
+    privacyAnalytics: {
+      en: "Only if you tap Yes on the consent sticker do we count anonymous events (game opened, round started, round finished). No names, cards, or device IDs are ever sent.",
+      te: "మీరు అంగీకార స్టిక్కర్‌లో అవును అని నొక్కితే మాత్రమే అనామక గణాంకాలు (ఆట తెరిచినవి, రౌండ్ మొదలైనవి, పూర్తయినవి) లెక్కిస్తాము. పేర్లు, కార్డులు, పరికరపు ఐడీలు ఎప్పుడూ పంపబడవు.",
+    },
+    privacyHeadingRights: { en: "Clear your data anytime", te: "ఎప్పుడైనా మీ డేటాను తొలగించండి" },
+    privacyRights: {
+      en: "Open Me → Clear my data on this device to wipe all saved preferences immediately.",
+      te: "నేను పేజీలోకి వెళ్ళి 'ఈ ఫోన్‌లోని నా డేటాను తొలగించు' నొక్కితే అన్ని ఇష్టాలు వెంటనే చెరిగిపోతాయి.",
+    },
+    termsTitle: { en: "Terms of Play (Draft)", te: "ఆట నిబంధనలు (డ్రాఫ్ట్)" },
     termsBody: {
       en: "All games are free party games for friends. Auctions use pretend coins only. No real money, payments, wallets or prizes ever exist here.",
       te: "అన్ని గేమ్స్ ఫ్రెండ్స్ కోసం ఉచిత పార్టీ గేమ్స్. వేలాలు ఆట నాణేలతో మాత్రమే. నిజమైన డబ్బు, చెల్లింపులు, వాలెట్లు, బహుమతులు ఇక్కడ ఎప్పుడూ ఉండవు.",
+    },
+    termsHeadingRules: { en: "Fair play and fan content", te: "నిజాయితీ ఆట, అభిమాన కంటెంట్" },
+    termsRules: {
+      en: "Film titles, actor names, and clues are used purely for friendly trivia and party charades.",
+      te: "సినిమా పేర్లు, నటుల పేర్లు, క్లూస్ కేవలం స్నేహితుల సరదా ఆటల కోసం మాత్రమే.",
+    },
+    termsHeadingLiability: { en: "As-is beta service", te: "బీటా సేవ" },
+    termsLiability: {
+      en: "This beta is provided as-is for entertainment. Play safely and avoid looking at your phone while driving.",
+      te: "ఈ బీటా వినోదం కోసం అందించబడింది. సురక్షితంగా ఆడండి, డ్రైవింగ్ చేస్తూ ఫోన్ చూడకండి.",
     },
     offlineTitle: { en: "You are offline", te: "మీరు ఆఫ్‌లైన్‌లో ఉన్నారు" },
     offlineBody: {
@@ -331,7 +361,31 @@ export const TRANSLATIONS = {
     meLanguage: { en: "Language", te: "భాష" },
     meAccessibility: { en: "Accessibility and sound", te: "సౌలభ్యం, శబ్దం" },
     meSound: { en: "Sound", te: "శబ్దం" },
+    meVibration: { en: "Vibration", te: "వైబ్రేషన్" },
     meReducedMotion: { en: "Reduced motion", te: "తక్కువ కదలిక" },
+    meLargeText: { en: "Large text", te: "పెద్ద అక్షరాలు" },
+    meClearData: { en: "Clear my data on this device", te: "ఈ ఫోన్‌లోని నా డేటాను తొలగించు" },
+    meClearConfirmTitle: { en: "Clear all device data?", te: "ఫోన్‌లోని డేటా అంతా తొలగించాలా?" },
+    meClearConfirmBody: {
+      en: "This resets your device name, language, sound, vibration, motion, and text-size preferences.",
+      te: "ఇది మీ పరికరం పేరు, భాష, శబ్దం, వైబ్రేషన్, కదలిక, అక్షరాల పరిమాణం ఇష్టాలను రీసెట్ చేస్తుంది.",
+    },
+    meClearConfirmBtn: { en: "Yes, clear data", te: "అవును, తొలగించు" },
+    meClearCancelBtn: { en: "Cancel", te: "రద్దు చేయి" },
+    meCleared: { en: "Device data cleared.", te: "ఫోన్ డేటా తొలగించబడింది." },
+    meVersion: { en: "App version", te: "యాప్ వెర్షన్" },
+    notFoundTitle: { en: "Page not found", te: "పేజీ దొరకలేదు" },
+    notFoundBody: {
+      en: "That card isn't in the deck. Let's head back to the games.",
+      te: "ఈ కార్డ్ డెక్‌లో లేదు. తిరిగి ఆటల దగ్గరకు వెళ్దాం.",
+    },
+    errorTitle: { en: "Something went wrong", te: "ఏదో తప్పు జరిగింది" },
+    errorBody: {
+      en: "The round hit a snag. Try again or return to Play Home.",
+      te: "రౌండ్‌లో చిన్న ఆటంకం వచ్చింది. మళ్ళీ ప్రయత్నించండి లేదా ఆట హోమ్‌కు వెళ్ళండి.",
+    },
+    errorRetry: { en: "Try again", te: "మళ్ళీ ప్రయత్నించండి" },
+    sendFeedback: { en: "Send feedback", te: "అభిప్రాయం పంపండి" },
     on: { en: "ON", te: "ఉంది" },
     off: { en: "OFF", te: "లేదు" },
     roomNewBadge: { en: "WAVE 2 · ONLINE ROOMS", te: "వేవ్ 2 · ఆన్‌లైన్ రూమ్స్" },
@@ -467,6 +521,14 @@ export const TRANSLATIONS = {
     step2Body: { en: "Tap the friend who fits the prompt best (you can't pick yourself).", te: "వాక్యానికి సరిపోయే స్నేహితుడి పేరుపై నొక్కండి (మీ పేరు ఎంచుకోలేరు)." },
     step3Title: { en: "3. Reveal & crown", te: "3. విజేతను చూడండి" },
     step3Body: { en: "Everyone sees the winner after all votes are in!", te: "అందరి ఓట్లు పూర్తయ్యాక విజేత ఎవరో తెలుస్తుంది!" },
+  },
+  consent: {
+    question: {
+      en: "Help us improve: share anonymous usage counts?",
+      te: "యాప్ మెరుగుపరచడానికి సహాయం చేయండి: అనామక వినియోగ గణాంకాలు పంచుకోవాలా?",
+    },
+    yes: { en: "Yes", te: "అవును" },
+    no: { en: "No", te: "వద్దు" },
   },
   pwa: {
     installTitle: { en: "Add to home screen", te: "హోమ్ స్క్రీన్‌కు జోడించండి" },

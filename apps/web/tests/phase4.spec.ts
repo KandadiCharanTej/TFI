@@ -133,3 +133,41 @@ test.describe("Part 2: Installable PWA & offline", () => {
     await expect(page.getByTestId("install-sticker")).toBeHidden();
   });
 });
+
+test.describe("Part 3: Info pages, /me settings, 404, and footer", () => {
+  test("Public footer links to About, Privacy, and Terms work across routes", async ({ page }) => {
+    await setLang(page, "en");
+    for (const route of ["/about", "/privacy", "/terms"]) {
+      await page.goto(`${BASE}${route}`);
+      await waitHydrated(page);
+      await expect(page.locator("h1")).toBeVisible();
+      await expect(page.locator("footer a[href='/about']")).toBeVisible();
+      await expect(page.locator("footer a[href='/privacy']")).toBeVisible();
+      await expect(page.locator("footer a[href='/terms']")).toBeVisible();
+    }
+  });
+
+  test("/me toggles persist and Clear my data resets device preferences", async ({ page }) => {
+    await setLang(page, "en");
+    await page.goto(`${BASE}/me`);
+    await waitHydrated(page);
+
+    const nameInput = page.locator("#guest-name-input");
+    await nameInput.fill("Boss Fan");
+    await page.getByRole("button", { name: /Large text/i }).click();
+    await expect(page.locator("html")).toHaveAttribute("data-large-text", "true");
+
+    await page.getByRole("button", { name: /Clear my data on this device/i }).click();
+    await expect(page.getByRole("dialog")).toBeVisible();
+    await page.getByRole("button", { name: /Yes, clear data/i }).click();
+    await expect(nameInput).toHaveValue("Guest Tiger");
+    await expect(page.locator("html")).toHaveAttribute("data-large-text", "false");
+  });
+
+  test("404 page renders cleanly with link back to Play Home", async ({ page }) => {
+    await setLang(page, "en");
+    await page.goto(`${BASE}/this-page-does-not-exist-404`);
+    await expect(page.getByRole("heading", { name: /Page not found/i })).toBeVisible();
+    await expect(page.locator("a[href='/play']").first()).toBeVisible();
+  });
+});

@@ -3,10 +3,31 @@
  * Every call is wrapped in try/catch because storage can be blocked.
  */
 export const PREF_KEYS = {
+  deviceName: "tfi.deviceName",
   sound: "tfi.sound",
+  vibration: "tfi.vibration",
   reducedMotion: "tfi.reducedMotion",
+  largeText: "tfi.largeText",
   headSetGoSetup: "tfi.hsg.setup",
 } as const;
+
+export function readStringPref(key: string, fallback: string): string {
+  try {
+    const raw = window.localStorage.getItem(key);
+    if (raw && raw.trim().length > 0) return raw;
+  } catch {
+    // Ignore
+  }
+  return fallback;
+}
+
+export function writeStringPref(key: string, value: string): void {
+  try {
+    window.localStorage.setItem(key, value);
+  } catch {
+    // Ignore
+  }
+}
 
 export function readBoolPref(key: string, fallback: boolean): boolean {
   try {

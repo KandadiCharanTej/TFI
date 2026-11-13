@@ -15,7 +15,7 @@ import {
   TapeStrip,
   WallLinkButton,
 } from "@/components/sticker-kit";
-import { useVisibleGames } from "@/components/flags-provider";
+import { useFlags, useVisibleGames } from "@/components/flags-provider";
 import { MODE_FILTERS, filterByMode, panelModeKey, type ModeFilter } from "@/lib/games";
 import { BRAND_NAME, FAN_VIBES, TRANSLATIONS } from "@/lib/i18n";
 
@@ -93,6 +93,7 @@ export default function LandingPage() {
   }, []);
 
   const visibleGames = useVisibleGames();
+  const { feedbackUrl } = useFlags();
   const filteredGames = filterByMode(visibleGames, filter);
   const tapeItems = visibleGames.map((g) => g.title[lang]);
 
@@ -705,6 +706,16 @@ export default function LandingPage() {
             <Link href="/terms" className="underline">
               <Tx v={TRANSLATIONS.nav.terms} />
             </Link>
+            {feedbackUrl ? (
+              <a
+                href={feedbackUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline"
+              >
+                <Tx v={TRANSLATIONS.nav.feedback} />
+              </a>
+            ) : null}
           </nav>
         </div>
       </footer>

@@ -38,6 +38,10 @@
   --prose-max: 65ch;
 }
 
+html[data-large-text="true"] {
+  font-size: 18px;
+}
+
 /* Self-hosted fonts: zero external Google requests at runtime */
 @font-face {
   font-family: 'Anton';

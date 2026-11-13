@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { WallIcon } from "./icons";
 import { LangSwitch } from "./lang-switch";
+import { PublicFooter } from "./public-footer";
 import { Tx } from "./lang-provider";
 import { BRAND_NAME, TRANSLATIONS } from "@/lib/i18n";
 
@@ -94,6 +95,7 @@ export function AppFrame({ children }: AppFrameProps) {
           className="w-full flex-1 px-4 pb-28 pt-4 md:px-0 md:pb-12 md:pt-0"
         >
           {children}
+          <PublicFooter className="mt-10 rounded-[14px] border-[2.5px] border-ink" />
         </main>
       </div>
 

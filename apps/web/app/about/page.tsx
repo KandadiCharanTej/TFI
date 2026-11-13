@@ -20,6 +20,9 @@ export default function AboutPage() {
         <p className="m-0 text-sm font-medium leading-relaxed text-ink">
           <Tx v={P.aboutBody2} />
         </p>
+        <p className="m-0 text-sm font-extrabold text-ink">
+          <Tx v={P.aboutMadeBy} />
+        </p>
         <WallLinkButton href="/play" variant="yellow">
           <Tx v={TRANSLATIONS.common.backToPlay} /> →
         </WallLinkButton>
