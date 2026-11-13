@@ -4,16 +4,21 @@ Things that need a human decision or native-speaker review before they go live.
 
 ## Content
 
-### Cards pending verification (all 60 starter cards)
+### Cards pending verification (all 180 starter cards across 6 decks)
 
-All cards in the content pipeline are marked `verified: false`. They need review by a Telugu cinema enthusiast who can confirm:
+All cards in the content pipeline are marked `verified: false`. They need review by a Telugu cinema enthusiast and cricket fan who can confirm:
 - Telugu script spelling is correct (no missing conjuncts or malformed glyphs)
 - Difficulty ratings are appropriate for the target audience (16–35, friends)
 - No card accidentally refers to a currently-sensitive topic
+- Cricket IQ cards never reference protected brand terms (e.g. tournament names)
 
 The CSVs are at:
-- `packages/content/sheets/head-set-go-movies.csv`
-- `packages/content/sheets/head-set-go-actors.csv`
+- `packages/content/sheets/head-set-go-movies.csv` (30 cards)
+- `packages/content/sheets/head-set-go-actors.csv` (30 cards)
+- `packages/content/sheets/transify-movies.csv` (30 cards)
+- `packages/content/sheets/emoji-cinema-movies.csv` (30 cards)
+- `packages/content/sheets/rapid-fire-party.csv` (30 cards)
+- `packages/content/sheets/cricket-iq-trivia.csv` (30 cards)
 
 ### Telugu translations in `lib/i18n.ts`
 

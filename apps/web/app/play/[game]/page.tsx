@@ -1,15 +1,24 @@
-import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { CATEGORY_COLORS } from "@tfi/config/tokens";
+import { GAME_REGISTRY, getGameById } from "@tfi/game-core";
 import { AppFrame } from "@/components/app-frame";
 import { GameTitle } from "@/components/game-title";
 import { WallIcon } from "@/components/icons";
+import { Tx } from "@/components/lang-provider";
 import { Badge, Sticker, WallLinkButton } from "@/components/sticker-kit";
-import { GAMES_CATALOG } from "@/lib/i18n";
+import { GAMES_CATALOG, TRANSLATIONS } from "@/lib/i18n";
+import SetupClient from "./setup-client";
 
 export function generateStaticParams() {
-  return GAMES_CATALOG.map((g) => ({ game: g.slug }));
+  return GAME_REGISTRY.map((g) => ({ game: g.id }));
 }
+
+const RULES_MAP: Record<string, { en: string; te: string }> = {
+  transify: TRANSLATIONS.gamesMeta.transifyRule,
+  "emoji-cinema": TRANSLATIONS.gamesMeta.emojiCinemaRule,
+  "rapid-fire": TRANSLATIONS.gamesMeta.rapidFireRule,
+  "cricket-iq": TRANSLATIONS.gamesMeta.cricketIqRule,
+};
 
 export default async function GameSetupPage({
   params,
@@ -18,28 +27,39 @@ export default async function GameSetupPage({
 }) {
   const { game: slug } = await params;
 
-  // Head Set Go has its own setup page — redirect there.
+  // Head Set Go has its own dedicated flow
   if (slug === "head-set-go") {
     redirect("/play/head-set-go");
   }
 
-  const game = GAMES_CATALOG.find((g) => g.slug === slug);
-  if (!game) notFound();
+  const regGame = getGameById(slug);
+  const catalogGame = GAMES_CATALOG.find((g) => g.slug === slug);
+  if (!regGame || !catalogGame) notFound();
 
-  const panelColor = CATEGORY_COLORS[game.category];
+  // If the game is ready and uses the Judge template:
+  if (regGame.status === "ready" && regGame.template === "Judge") {
+    const rule = RULES_MAP[slug] ?? catalogGame.description;
+    return (
+      <SetupClient
+        game={regGame}
+        title={catalogGame.title}
+        description={catalogGame.description}
+        rule={rule}
+      />
+    );
+  }
+
+  // Otherwise, it's a Coming Soon game (Phase 3b or Wave 2)
+  const panelColor = CATEGORY_COLORS[regGame.category];
 
   return (
     <AppFrame>
-      <div className="space-y-6">
+      <div className="mx-auto max-w-[480px] space-y-6 p-4">
         <Sticker className="p-6">
           <div className="flex items-center justify-between">
-            <Badge tone="yellow">GAME #{game.number}</Badge>
-            <Badge tone={game.isOnlineOnly ? "cyan" : "white"}>
-              {game.modeKey === "onePhone"
-                ? "1 Phone"
-                : game.modeKey === "online"
-                  ? "Online"
-                  : "1 Phone or Online"}
+            <Badge tone="yellow">GAME #{regGame.number}</Badge>
+            <Badge tone={regGame.mode === "Online" ? "cyan" : "white"}>
+              {regGame.mode}
             </Badge>
           </div>
 
@@ -49,29 +69,39 @@ export default async function GameSetupPage({
               style={{ backgroundColor: panelColor }}
             >
               <div className="h-14 w-14">
-                <WallIcon kind={game.iconKind} />
+                <WallIcon kind={regGame.iconId} />
               </div>
             </div>
             <div>
-              <GameTitle title={game.title} as="h1" teClassName="text-[28px]" enClassName="text-[26px]" />
-              <p className="m-0 mt-1 text-[15px] font-bold text-ink">{game.description.en}</p>
+              <GameTitle
+                title={catalogGame.title}
+                as="h1"
+                teClassName="text-[28px]"
+                enClassName="text-[26px]"
+              />
+              <p className="m-0 mt-1 text-[14px] font-bold text-ink">
+                <Tx v={catalogGame.description} />
+              </p>
             </div>
           </div>
 
           <div className="mt-6 rounded-[14px] border-2 border-ink bg-card p-4">
-            <p className="m-0 text-[14px] font-bold text-ink">
-              Full game setup coming in a later phase. Head Set Go is ready now.
+            <p className="m-0 text-[15px] font-black text-ink">
+              <Tx v={TRANSLATIONS.judge.comingSoon} />
+            </p>
+            <p className="m-0 mt-1 text-[13px] font-bold text-ink/70">
+              <Tx v={TRANSLATIONS.judge.comingSoonNote} />
             </p>
           </div>
 
           <div className="mt-6 flex flex-wrap gap-3">
             <WallLinkButton href="/play" variant="white">
-              ← Back to Play Home
+              ← <Tx v={TRANSLATIONS.common.backToPlayHome} />
             </WallLinkButton>
-            {game.isOnlineOnly ? (
-              <Link href={`/room/new?game=${game.slug}`} className="wall-btn bg-cyan text-ink">
+            {regGame.mode === "Online" ? (
+              <WallLinkButton href={`/room/new?game=${regGame.id}`} variant="cyan">
                 Create Online Room →
-              </Link>
+              </WallLinkButton>
             ) : null}
           </div>
         </Sticker>

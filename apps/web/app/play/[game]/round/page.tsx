@@ -1,0 +1,725 @@
+"use client";
+
+import { useEffect, useRef, useCallback, useState, useReducer, use } from "react";
+import { useRouter } from "next/navigation";
+import * as Dialog from "@radix-ui/react-dialog";
+import { Tx, useLang } from "@/components/lang-provider";
+import { TRANSLATIONS } from "@/lib/i18n";
+import type { GameCard } from "@tfi/game-core";
+
+const J = TRANSLATIONS.judge;
+
+// ─── Types ───────────────────────────────────────────────────────────────────
+
+interface Player {
+  id: string;
+  name: string;
+}
+
+interface TurnSummary {
+  playerId: string;
+  playerName: string;
+  turnNumber: number;
+  correct: number;
+  skipped: number;
+}
+
+type Stamp = "correct" | "skip" | null;
+type Phase = "loading" | "getReady" | "playing" | "paused" | "turnEnd" | "passingPhone" | "allDone";
+
+interface State {
+  gameId: string;
+  deck: string;
+  cards: GameCard[];
+  currentIndex: number;
+  players: Player[];
+  currentPlayerIndex: number;
+  currentTurn: number;
+  totalTurns: number;
+  currentTurnCorrect: number;
+  currentTurnSkipped: number;
+  secondsLeft: number;
+  duration: number;
+  phase: Phase;
+  countdown: number;
+  stamp: Stamp;
+  muted: boolean;
+  usedCardIds: string[];
+  turnSummaries: TurnSummary[];
+}
+
+type Action =
+  | {
+      type: "INIT";
+      gameId: string;
+      deck: string;
+      cards: GameCard[];
+      duration: number;
+      players: Player[];
+    }
+  | { type: "COUNTDOWN_TICK" }
+  | { type: "TICK" }
+  | { type: "CORRECT" }
+  | { type: "SKIP" }
+  | { type: "PAUSE" }
+  | { type: "RESUME" }
+  | { type: "CLEAR_STAMP" }
+  | { type: "TOGGLE_MUTE" }
+  | { type: "NEXT_TURN" }
+  | { type: "PHONE_PASSED" }
+  | { type: "TIME_UP" };
+
+function reducer(s: State, a: Action): State {
+  switch (a.type) {
+    case "INIT": {
+      return {
+        ...s,
+        gameId: a.gameId,
+        deck: a.deck,
+        cards: a.cards,
+        duration: a.duration,
+        secondsLeft: a.duration,
+        players: a.players,
+        totalTurns: a.players.length,
+        phase: "getReady",
+        countdown: 3,
+      };
+    }
+    case "COUNTDOWN_TICK": {
+      if (s.countdown <= 1) {
+        return { ...s, phase: "playing", countdown: 3 };
+      }
+      return { ...s, countdown: s.countdown - 1 };
+    }
+    case "TICK": {
+      const left = Math.max(0, s.secondsLeft - 1);
+      if (left <= 0) {
+        // Turn ended due to timer
+        const player = s.players[s.currentPlayerIndex] ?? { id: "p1", name: "Player 1" };
+        const summary: TurnSummary = {
+          playerId: player.id,
+          playerName: player.name,
+          turnNumber: s.currentTurn,
+          correct: s.currentTurnCorrect,
+          skipped: s.currentTurnSkipped,
+        };
+        return {
+          ...s,
+          secondsLeft: 0,
+          phase: "turnEnd",
+          turnSummaries: [...s.turnSummaries, summary],
+        };
+      }
+      return { ...s, secondsLeft: left };
+    }
+    case "TIME_UP": {
+      const player = s.players[s.currentPlayerIndex] ?? { id: "p1", name: "Player 1" };
+      const summary: TurnSummary = {
+        playerId: player.id,
+        playerName: player.name,
+        turnNumber: s.currentTurn,
+        correct: s.currentTurnCorrect,
+        skipped: s.currentTurnSkipped,
+      };
+      return {
+        ...s,
+        phase: "turnEnd",
+        turnSummaries: [...s.turnSummaries, summary],
+      };
+    }
+    case "CORRECT": {
+      if (s.phase !== "playing") return s;
+      const card = s.cards[s.currentIndex];
+      const nextIdx = (s.currentIndex + 1) % Math.max(1, s.cards.length);
+      return {
+        ...s,
+        currentTurnCorrect: s.currentTurnCorrect + 1,
+        usedCardIds: card ? [...s.usedCardIds, card.id] : s.usedCardIds,
+        currentIndex: nextIdx,
+        stamp: "correct",
+      };
+    }
+    case "SKIP": {
+      if (s.phase !== "playing") return s;
+      const card = s.cards[s.currentIndex];
+      const nextIdx = (s.currentIndex + 1) % Math.max(1, s.cards.length);
+      return {
+        ...s,
+        currentTurnSkipped: s.currentTurnSkipped + 1,
+        usedCardIds: card ? [...s.usedCardIds, card.id] : s.usedCardIds,
+        currentIndex: nextIdx,
+        stamp: "skip",
+      };
+    }
+    case "PAUSE": {
+      return s.phase === "playing" ? { ...s, phase: "paused" } : s;
+    }
+    case "RESUME": {
+      return { ...s, phase: "getReady", countdown: 3 };
+    }
+    case "CLEAR_STAMP": {
+      return { ...s, stamp: null };
+    }
+    case "TOGGLE_MUTE": {
+      return { ...s, muted: !s.muted };
+    }
+    case "NEXT_TURN": {
+      if (s.currentTurn >= s.totalTurns) {
+        return { ...s, phase: "allDone" };
+      }
+      return {
+        ...s,
+        currentTurn: s.currentTurn + 1,
+        currentPlayerIndex: (s.currentPlayerIndex + 1) % s.players.length,
+        phase: "passingPhone",
+      };
+    }
+    case "PHONE_PASSED": {
+      return {
+        ...s,
+        phase: "getReady",
+        countdown: 3,
+        secondsLeft: s.duration,
+        currentTurnCorrect: 0,
+        currentTurnSkipped: 0,
+      };
+    }
+    default:
+      return s;
+  }
+}
+
+const INITIAL_STATE: State = {
+  gameId: "",
+  deck: "",
+  cards: [],
+  currentIndex: 0,
+  players: [{ id: "p1", name: "Player 1" }],
+  currentPlayerIndex: 0,
+  currentTurn: 1,
+  totalTurns: 1,
+  currentTurnCorrect: 0,
+  currentTurnSkipped: 0,
+  secondsLeft: 60,
+  duration: 60,
+  phase: "loading",
+  countdown: 3,
+  stamp: null,
+  muted: false,
+  usedCardIds: [],
+  turnSummaries: [],
+};
+
+// ─── Web Audio Beeps ─────────────────────────────────────────────────────────
+
+function useAudio(muted: boolean) {
+  const ctxRef = useRef<AudioContext | null>(null);
+
+  const beep = useCallback(
+    (freq: number, dur: number, vol = 0.3) => {
+      if (muted) return;
+      try {
+        ctxRef.current ??= new AudioContext();
+        const ctx = ctxRef.current;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = freq;
+        gain.gain.value = vol;
+        osc.start();
+        osc.stop(ctx.currentTime + dur);
+      } catch {
+        /* silent on unsupported browsers */
+      }
+    },
+    [muted],
+  );
+
+  return {
+    correct: () => beep(880, 0.1),
+    pass: () => beep(330, 0.1),
+    countdown: () => beep(660, 0.07, 0.2),
+    timeUp: () => beep(220, 0.35),
+  };
+}
+
+// ─── Round Page Component ────────────────────────────────────────────────────
+
+export default function JudgeRoundPage({
+  params,
+}: {
+  params: Promise<{ game: string }>;
+}) {
+  const { game: slug } = use(params);
+  const router = useRouter();
+  const { lang } = useLang();
+  const [s, dispatch] = useReducer(reducer, INITIAL_STATE);
+  const [pauseOpen, setPauseOpen] = useState(false);
+  const audio = useAudio(s.muted);
+
+  useEffect(() => {
+    document.title = `${slug} Round | TFI & Pitch`;
+  }, [slug]);
+
+  // Initialize from sessionStorage or defaults
+  useEffect(() => {
+    async function loadGame() {
+      let duration = 60;
+      let players: Player[] = [
+        { id: "p1", name: "Player 1" },
+        { id: "p2", name: "Player 2" },
+      ];
+      let deckName = `${slug}-movies`;
+      if (slug === "rapid-fire") deckName = "rapid-fire-party";
+      else if (slug === "cricket-iq") deckName = "cricket-iq-trivia";
+
+      try {
+        const rawConfig = sessionStorage.getItem("judge.config");
+        if (rawConfig) {
+          const parsed = JSON.parse(rawConfig) as {
+            deck: string;
+            duration: number;
+            players: Player[];
+          };
+          if (parsed.duration) duration = parsed.duration;
+          if (parsed.deck) deckName = parsed.deck;
+          if (parsed.players?.length) players = parsed.players;
+        }
+      } catch {
+        /* ignore */
+      }
+
+      let cards: GameCard[] = [];
+      try {
+        const res = await fetch(`/cards/${deckName}.json`);
+        if (res.ok) {
+          cards = (await res.json()) as GameCard[];
+        }
+      } catch {
+        /* fallback below */
+      }
+
+      if (!cards.length) {
+        cards = [
+          {
+            id: `${slug}-fb-1`,
+            game: slug,
+            deck: deckName,
+            en: "Pokiri",
+            te: "పోకిరి",
+            answerEn: "Pokiri",
+            answerTe: "పోకిరి",
+            difficulty: 1,
+            tags: ["fallback"],
+            verified: false,
+          },
+          {
+            id: `${slug}-fb-2`,
+            game: slug,
+            deck: deckName,
+            en: "Magadheera",
+            te: "మగధీర",
+            answerEn: "Magadheera",
+            answerTe: "మగధీర",
+            difficulty: 1,
+            tags: ["fallback"],
+            verified: false,
+          },
+          {
+            id: `${slug}-fb-3`,
+            game: slug,
+            deck: deckName,
+            en: "Eega",
+            te: "ఈగ",
+            answerEn: "Eega",
+            answerTe: "ఈగ",
+            difficulty: 1,
+            tags: ["fallback"],
+            verified: false,
+          },
+        ];
+      }
+
+      // Fisher-Yates shuffle
+      for (let i = cards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        [cards[i], cards[j]] = [cards[j]!, cards[i]!];
+      }
+
+      dispatch({
+        type: "INIT",
+        gameId: slug,
+        deck: deckName,
+        cards,
+        duration,
+        players,
+      });
+    }
+
+    void loadGame();
+  }, [slug]);
+
+  // Countdown timer
+  useEffect(() => {
+    if (s.phase !== "getReady") return;
+    const id = setInterval(() => {
+      audio.countdown();
+      dispatch({ type: "COUNTDOWN_TICK" });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [s.phase, audio]);
+
+  // Round turn timer
+  useEffect(() => {
+    if (s.phase !== "playing") return;
+    const id = setInterval(() => {
+      dispatch({ type: "TICK" });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [s.phase]);
+
+  // Support immediate time-up in test environments
+  useEffect(() => {
+    const handleTimeUp = () => dispatch({ type: "TIME_UP" });
+    window.addEventListener("judge-time-up", handleTimeUp);
+    return () => window.removeEventListener("judge-time-up", handleTimeUp);
+  }, []);
+
+  // Auto-pause on tab switch / background
+  useEffect(() => {
+    const handleVisChange = () => {
+      if (document.hidden) {
+        dispatch({ type: "PAUSE" });
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisChange);
+    return () => document.removeEventListener("visibilitychange", handleVisChange);
+  }, []);
+
+  // Clear visual stamp
+  useEffect(() => {
+    if (!s.stamp) return;
+    const id = setTimeout(() => dispatch({ type: "CLEAR_STAMP" }), 250);
+    return () => clearTimeout(id);
+  }, [s.stamp]);
+
+  // Wake lock
+  useEffect(() => {
+    if (!("wakeLock" in navigator)) return;
+    let lock: WakeLockSentinel | null = null;
+    navigator.wakeLock
+      .request("screen")
+      .then((l) => {
+        lock = l;
+      })
+      .catch(() => {});
+    return () => {
+      lock?.release().catch(() => {});
+    };
+  }, []);
+
+  // When allDone, save results and navigate to results page
+  useEffect(() => {
+    if (s.phase === "allDone") {
+      audio.timeUp();
+      sessionStorage.setItem("judge.results", JSON.stringify(s.turnSummaries));
+      sessionStorage.setItem("judge.players", JSON.stringify(s.players));
+      sessionStorage.setItem("judge.gameId", slug);
+      router.push(`/play/${slug}/results`);
+    }
+  }, [s.phase, s.turnSummaries, s.players, slug, router, audio]);
+
+  // Handlers
+  const handleCorrect = useCallback(() => {
+    if (s.phase !== "playing") return;
+    audio.correct();
+    navigator.vibrate?.(50);
+    dispatch({ type: "CORRECT" });
+  }, [s.phase, audio]);
+
+  const handleSkip = useCallback(() => {
+    if (s.phase !== "playing") return;
+    audio.pass();
+    navigator.vibrate?.(30);
+    dispatch({ type: "SKIP" });
+  }, [s.phase, audio]);
+
+  const currentPlayer = s.players[s.currentPlayerIndex] ?? {
+    id: "p1",
+    name: "Player 1",
+  };
+  const currentCard = s.cards[s.currentIndex];
+  const pct = s.duration > 0 ? (s.secondsLeft / s.duration) * 100 : 0;
+  const timerColor = pct > 40 ? "#00C853" : pct > 15 ? "#F6BE18" : "#EC1276";
+  const bg = s.stamp === "correct" ? "#00C853" : s.stamp === "skip" ? "#EC1276" : "#EAE6DF";
+
+  // 1. Loading State
+  if (s.phase === "loading") {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#EAE6DF]">
+        <p className="anton-title text-3xl text-ink">Loading…</p>
+      </div>
+    );
+  }
+
+  // 2. Countdown State (Get Ready)
+  if (s.phase === "getReady") {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-yellow p-6 text-center select-none">
+        <p className="text-xl font-black uppercase tracking-widest text-ink opacity-80">
+          <Tx v={J.getReady} />
+        </p>
+        <p className="mt-2 text-2xl font-black text-ink">{currentPlayer.name}</p>
+        <p
+          className="mono-num text-[130px] font-black leading-none text-ink"
+          aria-live="assertive"
+        >
+          {s.countdown}
+        </p>
+      </div>
+    );
+  }
+
+  // 3. Passing Phone Screen between turns
+  if (s.phase === "passingPhone") {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-yellow p-6 text-center select-none">
+        <div className="text-6xl mb-4" aria-hidden>
+          📱 🤝
+        </div>
+        <p className="text-lg font-black uppercase tracking-wider text-ink opacity-80">
+          <Tx v={J.passPhoneTo} />
+        </p>
+        <h2 className="anton-title mt-2 text-4xl font-black text-ink">
+          {currentPlayer.name}
+        </h2>
+        <button
+          type="button"
+          onClick={() => dispatch({ type: "PHONE_PASSED" })}
+          className="wall-btn mt-8 min-h-[56px] bg-white px-8 text-xl font-black text-ink shadow-[4px_4px_0_#141313]"
+          data-testid="judge-ready-btn"
+        >
+          <Tx v={J.readyButton} />
+        </button>
+      </div>
+    );
+  }
+
+  // 4. Turn End Screen (Summary of current player's score)
+  if (s.phase === "turnEnd") {
+    const isLastTurn = s.currentTurn >= s.totalTurns;
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-[#EAE6DF] p-6 text-center select-none">
+        <div className="w-full max-w-sm rounded-[24px] border-[3px] border-ink bg-white p-6 shadow-[6px_6px_0_#141313]">
+          <span className="rounded-full border-2 border-ink bg-yellow px-3 py-1 text-xs font-black uppercase">
+            <Tx v={J.turnSummary} />
+          </span>
+          <h2 className="anton-title mt-3 text-3xl font-black text-ink">
+            {currentPlayer.name}
+          </h2>
+          <div className="mt-4 rounded-[16px] border-[2.5px] border-ink bg-[#F4F1EA] p-4">
+            <span className="text-xs font-black uppercase tracking-wider text-ink opacity-60">
+              <Tx v={J.score} />
+            </span>
+            <div className="mono-num mt-1 text-5xl font-black text-ink">
+              {s.currentTurnCorrect}
+            </div>
+            <div className="mt-2 text-xs font-bold text-ink opacity-70">
+              {s.currentTurnCorrect} {lang === "te" ? "సరైనవి" : "correct"} · {s.currentTurnSkipped}{" "}
+              {lang === "te" ? "వదిలేసినవి" : "skipped"}
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => dispatch({ type: "NEXT_TURN" })}
+            className="wall-btn mt-6 w-full bg-yellow py-3 text-lg font-black text-ink"
+            data-testid="judge-next-turn-btn"
+          >
+            {isLastTurn ? (
+              <Tx v={J.resultsTitle} />
+            ) : (
+              <Tx v={J.nextTurn} />
+            )}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // 5. Active Playing Screen (Portrait, with clue and answer strip)
+  const isRapidFire = slug === "rapid-fire";
+  const clueText = currentCard ? (lang === "te" ? currentCard.te : currentCard.en) : "";
+  const answerText = currentCard
+    ? (lang === "te"
+        ? currentCard.answerTe ?? currentCard.te
+        : currentCard.answerEn ?? currentCard.en)
+    : "";
+
+  return (
+    <div
+      role="main"
+      className="relative flex min-h-screen select-none flex-col overflow-hidden transition-colors duration-150"
+      style={{ backgroundColor: bg }}
+      data-testid="judge-round-screen"
+    >
+      {/* Top Timer Progress Bar */}
+      <div className="relative h-3 w-full border-b-2 border-ink bg-card">
+        <div
+          className="h-full transition-all duration-200"
+          style={{ width: `${pct}%`, backgroundColor: timerColor }}
+        />
+      </div>
+
+      {/* Top Header Bar */}
+      <header className="flex items-center justify-between px-4 pt-3">
+        {/* Score pill */}
+        <div
+          className="mono-num rounded-full border-2 border-ink bg-white px-3 py-1 text-base font-black text-ink shadow-[2px_2px_0_#141313]"
+          aria-label="Score"
+        >
+          ✓ {s.currentTurnCorrect}
+        </div>
+
+        {/* Current Judge Indicator */}
+        <div className="rounded-full border-2 border-ink bg-yellow px-3 py-0.5 text-xs font-black uppercase text-ink">
+          {currentPlayer.name}
+        </div>
+
+        {/* Actions: Pause & Sound */}
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => dispatch({ type: "TOGGLE_MUTE" })}
+            aria-label={s.muted ? "Unmute" : "Mute"}
+            className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink bg-white text-sm font-black text-ink shadow-[2px_2px_0_#141313]"
+          >
+            {s.muted ? "🔇" : "🔊"}
+          </button>
+
+          {/* Pause Modal via Radix Dialog */}
+          <Dialog.Root
+            open={pauseOpen}
+            onOpenChange={(o) => {
+              setPauseOpen(o);
+              if (o) dispatch({ type: "PAUSE" });
+            }}
+          >
+            <Dialog.Trigger asChild>
+              <button
+                type="button"
+                aria-label="Pause"
+                className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink bg-white text-sm font-black text-ink shadow-[2px_2px_0_#141313]"
+                data-testid="judge-pause-btn"
+              >
+                ⏸
+              </button>
+            </Dialog.Trigger>
+            <Dialog.Portal>
+              <Dialog.Overlay className="fixed inset-0 bg-ink/60" />
+              <Dialog.Content className="fixed left-1/2 top-1/2 w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-[20px] border-[3px] border-ink bg-white p-6 shadow-[6px_6px_0_#141313]">
+                <Dialog.Title className="anton-title text-2xl text-ink">
+                  <Tx v={J.paused} />
+                </Dialog.Title>
+                <div className="mt-5 flex flex-col gap-3">
+                  <Dialog.Close asChild>
+                    <button
+                      type="button"
+                      onClick={() => dispatch({ type: "RESUME" })}
+                      className="wall-btn bg-yellow text-ink"
+                    >
+                      <Tx v={J.resume} />
+                    </button>
+                  </Dialog.Close>
+                  <button
+                    type="button"
+                    onClick={() => router.push(`/play/${slug}`)}
+                    className="wall-btn bg-card text-ink"
+                  >
+                    <Tx v={J.quit} />
+                  </button>
+                </div>
+              </Dialog.Content>
+            </Dialog.Portal>
+          </Dialog.Root>
+
+          {/* Seconds Left Pill */}
+          <div
+            className="mono-num rounded-full border-2 border-ink bg-white px-3 py-1 text-base font-black text-ink shadow-[2px_2px_0_#141313]"
+            data-testid="judge-seconds-left"
+          >
+            {s.secondsLeft}s
+          </div>
+        </div>
+      </header>
+
+      {/* Main Card View: Clue & Answer */}
+      <main className="flex flex-1 flex-col justify-center px-4 py-3">
+        <div className="mx-auto w-full max-w-sm rounded-[24px] border-[3px] border-ink bg-white p-5 shadow-[6px_6px_0_#141313]">
+          {/* THE JUDGE READS Header */}
+          <div className="text-center">
+            <span className="rounded-full border border-ink/40 bg-card px-3 py-0.5 text-[10px] font-black uppercase tracking-wider text-ink/70">
+              <Tx v={J.theJudgeReads} />
+            </span>
+          </div>
+
+          {/* Clue Area */}
+          <div className="my-5 flex min-h-[120px] items-center justify-center text-center">
+            <div
+              className={`font-black text-ink leading-[1.2] ${
+                slug === "emoji-cinema"
+                  ? "text-5xl"
+                  : lang === "te"
+                    ? "text-[32px]"
+                    : "anton-title text-[36px]"
+              }`}
+              data-testid="judge-clue"
+            >
+              {clueText}
+            </div>
+          </div>
+
+          {/* Yellow Answer Strip (Visible only to the Judge holding phone) */}
+          <div className="rounded-[16px] border-[2.5px] border-ink bg-yellow p-3.5 text-center shadow-[3px_3px_0_#141313]">
+            <div className="text-[10px] font-black uppercase tracking-widest text-ink opacity-70">
+              <Tx v={isRapidFire ? J.acceptedAnswersLabel : J.answerLabel} />
+            </div>
+            <div
+              className="mt-1 font-black text-ink leading-tight"
+              style={{ fontSize: lang === "te" ? "22px" : "20px" }}
+              data-testid="judge-answer"
+            >
+              {answerText}
+            </div>
+            {currentCard?.hint && (
+              <div className="mt-1 text-[11px] font-bold text-ink/70">
+                {currentCard.hint}
+              </div>
+            )}
+          </div>
+        </div>
+      </main>
+
+      {/* Bottom Thumb Action Buttons */}
+      <footer className="grid grid-cols-2 gap-3 p-4">
+        <button
+          type="button"
+          onClick={handleSkip}
+          className="wall-btn min-h-[58px] bg-white text-lg font-black text-ink shadow-[4px_4px_0_#141313]"
+          data-testid="judge-skip-btn"
+        >
+          <Tx v={J.skip} />
+        </button>
+        <button
+          type="button"
+          onClick={handleCorrect}
+          className="wall-btn min-h-[58px] bg-[#00C853] text-lg font-black text-ink shadow-[4px_4px_0_#141313]"
+          data-testid="judge-correct-btn"
+        >
+          <Tx v={J.correct} />
+        </button>
+      </footer>
+    </div>
+  );
+}

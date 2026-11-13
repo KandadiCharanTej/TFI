@@ -1,0 +1,31 @@
+id,game,deck,en,te,answerEn,answerTe,hint,difficulty,tags,verified
+trans-001,transify,transify-movies,Rogue,రోగ్,Pokiri,పోకిరి,2006 Puri Jagannadh,1,classic,false
+trans-002,transify,transify-movies,Fly,ఈగ,Eega,ఈగ,2012 SS Rajamouli,1,action,false
+trans-003,transify,transify-movies,One Man,ఒక్కడు,Okkadu,ఒక్కడు,2003 Gunasekhar,1,classic,false
+trans-004,transify,transify-movies,Doll House,బొమ్మరిల్లు,Bommarillu,బొమ్మరిల్లు,2006 Bhaskar,1,family,false
+trans-005,transify,transify-movies,Him,అతడు,Athadu,అతడు,2005 Trivikram,1,thriller,false
+trans-006,transify,transify-movies,Celebration,జల్సా,Jalsa,జల్సా,2008 Trivikram,1,comedy,false
+trans-007,transify,transify-movies,Great Warrior,మగధీర,Magadheera,మగధీర,2009 SS Rajamouli,1,epic,false
+trans-008,transify,transify-movies,Aggression,దూకుడు,Dookudu,దూకుడు,2011 Srinu Vaitla,1,action,false
+trans-009,transify,transify-movies,Leader,నాయకుడు,Leader,లీడర్,2010 Sekhar Kammula,2,drama,false
+trans-010,transify,transify-movies,Happiness,ఖుషి,Khushi,ఖుషి,2001 SJ Suryah,1,romance,false
+trans-011,transify,transify-movies,Lion Mountain,సింహాద్రి,Simhadri,సింహాద్రి,2003 SS Rajamouli,1,action,false
+trans-012,transify,transify-movies,Courage,ఖలేజా,Khaleja,ఖలేజా,2010 Trivikram,2,action,false
+trans-013,transify,transify-movies,Storm,తుఫాన్,Thoofan,తూఫాన్,2013 Apoorva Lakhia,2,action,false
+trans-014,transify,transify-movies,Gentleman,జెంటిల్‌మన్,Gentleman,జెంటిల్‌మన్,2016 Mohan Krishna Indraganti,2,thriller,false
+trans-015,transify,transify-movies,Racer,రేసుగుర్రం,Race Gurram,రేసు గుర్రం,2014 Surender Reddy,1,comedy,false
+trans-016,transify,transify-movies,King,బాద్‌షా,Baadshah,బాద్‌షా,2013 Srinu Vaitla,1,comedy,false
+trans-017,transify,transify-movies,Wave,అల,Ala Vaikunthapurramuloo,అల వైకుంఠపురములో,2020 Trivikram,1,family,false
+trans-018,transify,transify-movies,Surge,ఉప్పెన,Uppena,ఉప్పెన,2021 Buchi Babu Sana,1,romance,false
+trans-019,transify,transify-movies,Flower,పుష్ప,Pushpa,పుష్ప,2021 Sukumar,1,action,false
+trans-020,transify,transify-movies,Roar,గర్జన,Simha,సింహ,2010 Boyapati Srinu,2,action,false
+trans-021,transify,transify-movies,Miracle,అద్భుతం,Adhurs,అదుర్స్,2010 VV Vinayak,1,comedy,false
+trans-022,transify,transify-movies,Hero,నాయకుడు,Nayak,నాయక్,2013 VV Vinayak,2,action,false
+trans-023,transify,transify-movies,Golden Lotus,స్వర్ణకమలం,Swarnakamalam,స్వర్ణకమలం,1988 K Viswanath,2,classic,false
+trans-024,transify,transify-movies,Prisoner,ఖైదీ,Khaidi,ఖైదీ,1983 A Kodandarami Reddy,1,classic,false
+trans-025,transify,transify-movies,Noble Man,ఆర్య,Arya,ఆర్య,2004 Sukumar,1,romance,false
+trans-026,transify,transify-movies,Temper,కోపం,Temper,టెంపర్,2015 Puri Jagannadh,1,action,false
+trans-027,transify,transify-movies,Shining Star,ధ్రువ,Dhruva,ధ్రువ,2016 Surender Reddy,2,thriller,false
+trans-028,transify,transify-movies,Mirror,బింబం,Bimbisara,బింబిసార,2022 Mallidi Vassishta,2,fantasy,false
+trans-029,transify,transify-movies,Love Path,ప్రేమకథ,Premikudu,ప్రేమికుడు,1994 Shankar,2,romance,false
+trans-030,transify,transify-movies,Strong One,బాహుబలి,Baahubali,బాహుబలి,2015 SS Rajamouli,1,epic,false

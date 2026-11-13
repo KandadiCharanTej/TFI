@@ -1,0 +1,452 @@
+[
+  {
+    "id": "emj-001",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "🪰",
+    "en": "🪰",
+    "answerTe": "ఈగ",
+    "answerEn": "Eega",
+    "hint": "2012 SS Rajamouli",
+    "difficulty": 1,
+    "tags": [
+      "fantasy"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-002",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "🏹 ⚔️",
+    "en": "🏹 ⚔️",
+    "answerTe": "బాహుబలి",
+    "answerEn": "Baahubali",
+    "hint": "2015 SS Rajamouli",
+    "difficulty": 1,
+    "tags": [
+      "epic"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-003",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "🏠 🧸",
+    "en": "🏠 🧸",
+    "answerTe": "బొమ్మరిల్లు",
+    "answerEn": "Bommarillu",
+    "hint": "2006 Bhaskar",
+    "difficulty": 1,
+    "tags": [
+      "family"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-004",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "🌹 🪓",
+    "en": "🌹 🪓",
+    "answerTe": "పుష్ప",
+    "answerEn": "Pushpa",
+    "hint": "2021 Sukumar",
+    "difficulty": 1,
+    "tags": [
+      "action"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-005",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "🏍️ 💨",
+    "en": "🏍️ 💨",
+    "answerTe": "రేసు గుర్రం",
+    "answerEn": "Race Gurram",
+    "hint": "2014 Surender Reddy",
+    "difficulty": 1,
+    "tags": [
+      "comedy"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-006",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "🦁 🏔️",
+    "en": "🦁 🏔️",
+    "answerTe": "సింహాద్రి",
+    "answerEn": "Simhadri",
+    "hint": "2003 SS Rajamouli",
+    "difficulty": 1,
+    "tags": [
+      "action"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-007",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "👑 🐘",
+    "en": "👑 🐘",
+    "answerTe": "బాహుబలి 2",
+    "answerEn": "Baahubali 2",
+    "hint": "2017 SS Rajamouli",
+    "difficulty": 1,
+    "tags": [
+      "epic"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-008",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "🔫 🕶️",
+    "en": "🔫 🕶️",
+    "answerTe": "పోకిరి",
+    "answerEn": "Pokiri",
+    "hint": "2006 Puri Jagannadh",
+    "difficulty": 1,
+    "tags": [
+      "action"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-009",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "🚂 💨",
+    "en": "🚂 💨",
+    "answerTe": "వెంకీ",
+    "answerEn": "Venky",
+    "hint": "2004 Srinu Vaitla",
+    "difficulty": 1,
+    "tags": [
+      "comedy"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-010",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "🏏 👕",
+    "en": "🏏 👕",
+    "answerTe": "జెర్సీ",
+    "answerEn": "Jersey",
+    "hint": "2019 Gowtam Tinnanuri",
+    "difficulty": 1,
+    "tags": [
+      "drama"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-011",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "❤️ 🚲",
+    "en": "❤️ 🚲",
+    "answerTe": "ఆర్య",
+    "answerEn": "Arya",
+    "hint": "2004 Sukumar",
+    "difficulty": 1,
+    "tags": [
+      "romance"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-012",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "🌧️ ☂️",
+    "en": "🌧️ ☂️",
+    "answerTe": "వర్షం",
+    "answerEn": "Varsham",
+    "hint": "2004 Sobhan",
+    "difficulty": 1,
+    "tags": [
+      "romance"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-013",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "🎯 🔫",
+    "en": "🎯 🔫",
+    "answerTe": "అతడు",
+    "answerEn": "Athadu",
+    "hint": "2005 Trivikram",
+    "difficulty": 1,
+    "tags": [
+      "thriller"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-014",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "🩺 💊",
+    "en": "🩺 💊",
+    "answerTe": "శంకర్ దాదా ఎంబీబీఎస్",
+    "answerEn": "Shankar Dada MBBS",
+    "hint": "2004 Jayanth C Paranjee",
+    "difficulty": 1,
+    "tags": [
+      "comedy"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-015",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "🐴 ⚔️",
+    "en": "🐴 ⚔️",
+    "answerTe": "మగధీర",
+    "answerEn": "Magadheera",
+    "hint": "2009 SS Rajamouli",
+    "difficulty": 1,
+    "tags": [
+      "epic"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-016",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "🏢 💼",
+    "en": "🏢 💼",
+    "answerTe": "బిజినెస్‌మ్యాన్",
+    "answerEn": "Businessman",
+    "hint": "2012 Puri Jagannadh",
+    "difficulty": 1,
+    "tags": [
+      "action"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-017",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "🐅 🌳",
+    "en": "🐅 🌳",
+    "answerTe": "ఆర్ఆర్ఆర్",
+    "answerEn": "RRR",
+    "hint": "2022 SS Rajamouli",
+    "difficulty": 1,
+    "tags": [
+      "action"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-018",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "👮 🥊",
+    "en": "👮 🥊",
+    "answerTe": "గబ్బర్ సింగ్",
+    "answerEn": "Gabbar Singh",
+    "hint": "2012 Harish Shankar",
+    "difficulty": 1,
+    "tags": [
+      "action"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-019",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "🎓 📚",
+    "en": "🎓 📚",
+    "answerTe": "హ్యాపీ డేస్",
+    "answerEn": "Happy Days",
+    "hint": "2007 Sekhar Kammula",
+    "difficulty": 1,
+    "tags": [
+      "youth"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-020",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "👻 🏰",
+    "en": "👻 🏰",
+    "answerTe": "అరుంధతి",
+    "answerEn": "Arundhati",
+    "hint": "2009 Kodi Ramakrishna",
+    "difficulty": 1,
+    "tags": [
+      "fantasy"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-021",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "💰 🏦",
+    "en": "💰 🏦",
+    "answerTe": "కిక్",
+    "answerEn": "Kick",
+    "hint": "2009 Surender Reddy",
+    "difficulty": 1,
+    "tags": [
+      "comedy"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-022",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "💍 👰",
+    "en": "💍 👰",
+    "answerTe": "మురారి",
+    "answerEn": "Murari",
+    "hint": "2001 Krishna Vamsi",
+    "difficulty": 1,
+    "tags": [
+      "family"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-023",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "🚕 💨",
+    "en": "🚕 💨",
+    "answerTe": "టాక్సీవాలా",
+    "answerEn": "Taxiwaala",
+    "hint": "2018 Rahul Sankrityan",
+    "difficulty": 2,
+    "tags": [
+      "comedy"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-024",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "🌊 ⛵",
+    "en": "🌊 ⛵",
+    "answerTe": "ఉప్పెన",
+    "answerEn": "Uppena",
+    "hint": "2021 Buchi Babu Sana",
+    "difficulty": 1,
+    "tags": [
+      "romance"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-025",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "👨‍👧 ❤️",
+    "en": "👨‍👧 ❤️",
+    "answerTe": "నాన్నకు ప్రేమతో",
+    "answerEn": "Nannaku Prematho",
+    "hint": "2016 Sukumar",
+    "difficulty": 2,
+    "tags": [
+      "action"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-026",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "🍫 🥤",
+    "en": "🍫 🥤",
+    "answerTe": "ఖుషి",
+    "answerEn": "Khushi",
+    "hint": "2001 SJ Suryah",
+    "difficulty": 1,
+    "tags": [
+      "romance"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-027",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "🥊 🏆",
+    "en": "🥊 🏆",
+    "answerTe": "అమ్మ నాన్న ఓ తమిళ అమ్మాయి",
+    "answerEn": "Amma Nanna O Tamila Ammayi",
+    "hint": "2003 Puri Jagannadh",
+    "difficulty": 1,
+    "tags": [
+      "action"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-028",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "⚖️ 👨‍⚖️",
+    "en": "⚖️ 👨‍⚖️",
+    "answerTe": "వకీల్ సాబ్",
+    "answerEn": "Vakeel Saab",
+    "hint": "2021 Venu Sriram",
+    "difficulty": 1,
+    "tags": [
+      "courtroom"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-029",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "🎪 🤹",
+    "en": "🎪 🤹",
+    "answerTe": "ఛత్రపతి",
+    "answerEn": "Chatrapathi",
+    "hint": "2005 SS Rajamouli",
+    "difficulty": 1,
+    "tags": [
+      "action"
+    ],
+    "verified": false
+  },
+  {
+    "id": "emj-030",
+    "deck": "emoji-cinema-movies",
+    "game": "emoji-cinema",
+    "te": "🌾 🚜",
+    "en": "🌾 🚜",
+    "answerTe": "శ్రీమంతుడు",
+    "answerEn": "Srimanthudu",
+    "hint": "2015 Koratala Siva",
+    "difficulty": 1,
+    "tags": [
+      "drama"
+    ],
+    "verified": false
+  }
+]

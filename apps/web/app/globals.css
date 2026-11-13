@@ -17,6 +17,14 @@
   --font-sans: 'Plus Jakarta Sans';
   --font-mono: 'Space Mono';
   --font-telugu: 'Noto Sans Telugu';
+
+  /* Font roles: swapping a font is a one-line change */
+  --font-display: var(--font-anton);
+  --font-accent: var(--font-marker);
+  --font-body: var(--font-sans);
+  --font-mono-role: var(--font-mono);
+  --font-telugu-role: var(--font-telugu);
+  --font-telugu-display: var(--font-telugu);
 }
 
 /* Self-hosted fonts: zero external Google requests at runtime */
@@ -124,18 +132,31 @@ html[lang="te"] body * {
 
 /* The brand stays English letters, uppercase Anton, in both languages. */
 html[lang="te"] .keep-case {
+  font-family: 'Anton', sans-serif !important;
   text-transform: uppercase !important;
   letter-spacing: 0.01em !important;
   line-height: 1.1 !important;
 }
 
-/* Telugu glyphs inside headline / marker / mono elements fall back to Noto Sans Telugu. */
+/*
+ * TELUGU MODE DISPLAY FIX:
+ * Headings use the Telugu display font in weight 800, never uppercase,
+ * visually matching Anton's presence without falling back to system serif/sans.
+ */
 html[lang="te"] .anton-title {
-  font-family: 'Anton', 'Noto Sans Telugu', sans-serif;
+  font-family: 'Noto Sans Telugu', sans-serif !important;
+  font-weight: 800 !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
 }
+
 html[lang="te"] .marker-accent {
-  font-family: 'Permanent Marker', 'Noto Sans Telugu', cursive;
+  font-family: 'Noto Sans Telugu', sans-serif !important;
+  font-weight: 800 !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
 }
+
 html[lang="te"] .mono-num {
   font-family: 'Space Mono', 'Noto Sans Telugu', monospace;
 }
