@@ -1,0 +1,31 @@
+id,game,deck,en,te,difficulty,tags,verified
+ml-001,most-likely,most-likely-party,Most likely to cry in a sentiment scene,సెంటిమెంట్ సీన్‌లో కళ్ళనీళ్ళు పెట్టుకునే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,theatre,false
+ml-002,most-likely,most-likely-party,Most likely to dance in the theatre aisle,థియేటర్ నడవలో డ్యాన్స్ చేసే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,theatre,false
+ml-003,most-likely,most-likely-party,Most likely to book first-day-first-show,ఫస్ట్-డే-ఫస్ట్-షో టికెట్లు బుక్ చేసే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,fdfs,false
+ml-004,most-likely,most-likely-party,Most likely to explain the whole plot of a film nobody asked about,ఎవరూ అడగకపోయినా సినిమా కథ మొత్తం చెప్పే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,banter,false
+ml-005,most-likely,most-likely-party,Most likely to whistle louder than the theatre speakers,థియేటర్ స్పీకర్ల కంటే గట్టిగా ఈల వేసే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,theatre,false
+ml-006,most-likely,most-likely-party,Most likely to finish their popcorn before the title card,టైటిల్ కార్డ్ పడకముందే పాప్‌కార్న్ ఖాళీ చేసే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,theatre,false
+ml-007,most-likely,most-likely-party,Most likely to guess the climax twist in the first 15 minutes,మొదటి 15 నిమిషాల్లోనే క్లైమాక్స్ ట్విస్ట్ ఊహించే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,story,false
+ml-008,most-likely,most-likely-party,Most likely to watch the same blockbuster five times in theatres,ఒకే బ్లాక్‌బస్టర్ సినిమాను థియేటర్లో ఐదుసార్లు చూసే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,fdfs,false
+ml-009,most-likely,most-likely-party,Most likely to know the release year of every classic hit,ప్రతి క్లాసిక్ హిట్ సినిమా విడుదలైన సంవత్సరం చెప్పే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,trivia,false
+ml-010,most-likely,most-likely-party,Most likely to fall asleep during a slow second half,సెకండాఫ్ నెమ్మదిగా ఉంటే నిద్రపోయే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,theatre,false
+ml-011,most-likely,most-likely-party,Most likely to arrive after the opening credits have already rolled,ఓపెనింగ్ క్రెడిట్స్ అయిపోయాక థియేటర్‌కి వచ్చే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,theatre,false
+ml-012,most-likely,most-likely-party,Most likely to sing along to every song at full volume,ప్రతి పాటను పూర్తి వాల్యూమ్‌లో పాడే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,music,false
+ml-013,most-likely,most-likely-party,Most likely to quote movie lines during normal conversations,మామూలు మాటల్లో కూడా సినిమా డైలాగులు వాడే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,banter,false
+ml-014,most-likely,most-likely-party,Most likely to check reviews before buying any ticket,టికెట్ కొనే ముందు రివ్యూలు చూసే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,fdfs,false
+ml-015,most-likely,most-likely-party,Most likely to bring extra snacks hidden in a backpack,బ్యాగ్‌లో అదనపు స్నాక్స్ తీసుకొచ్చే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,theatre,false
+ml-016,most-likely,most-likely-party,Most likely to buy the most expensive tub of nachos at the interval,ఇంటర్వల్‌లో ఖరీదైన నాచోస్ కొనే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,theatre,false
+ml-017,most-likely,most-likely-party,Most likely to memorize an entire album on release day,పాటలు విడుదలైన రోజే మొత్తం ఆల్బమ్ కంఠస్థం చేసే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,music,false
+ml-018,most-likely,most-likely-party,Most likely to recreate a hero's slow-motion walk in real life,నిజ జీవితంలో హీరో స్లో-మోషన్ నడకను అనుకరించే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,banter,false
+ml-019,most-likely,most-likely-party,Most likely to become a film critic on social media,సోషల్ మీడియాలో సినిమా రివ్యూలు రాసే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,banter,false
+ml-020,most-likely,most-likely-party,Most likely to debate box-office numbers for two hours straight,రెండు గంటల పాటు బాక్స్ ఆఫీస్ లెక్కలపై చర్చించే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,banter,false
+ml-021,most-likely,most-likely-party,Most likely to watch a midnight show on a workday,పని ఉన్న రోజు కూడా మిడ్‌నైట్ షోకు వెళ్ళే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,fdfs,false
+ml-022,most-likely,most-likely-party,Most likely to cheer loudest when the title card appears,టైటిల్ కార్డ్ పడగానే అందరికంటే గట్టిగా అరిచే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,theatre,false
+ml-023,most-likely,most-likely-party,Most likely to recognize a background score within two seconds,రెండు సెకన్లలోనే బ్యాక్‌గ్రౌండ్ స్కోర్ ఏ సినిమాదో పట్టే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,music,false
+ml-024,most-likely,most-likely-party,Most likely to plan a whole group movie outing and cancel last minute,గ్రూప్ అంతా సినిమాకి వెళ్ళేలా ప్లాన్ చేసి చివర్లో ఆగిపోయే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,banter,false
+ml-025,most-likely,most-likely-party,Most likely to watch only comedy scenes on repeat at home,ఇంట్లో ఖాళీగా ఉన్నప్పుడల్లా కామెడీ సీన్లు మళ్ళీ మళ్ళీ చూసే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,comedy,false
+ml-026,most-likely,most-likely-party,Most likely to spot a cameo appearance before anyone else,ఇతరుల కంటే ముందే గెస్ట్ రోల్‌ని గుర్తుపట్టే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,trivia,false
+ml-027,most-likely,most-likely-party,Most likely to stay until the very last post-credits frame,పోస్ట్-క్రెడిట్స్ చివరి ఫ్రేమ్ వరకు సీట్లోనే కూర్చునే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,theatre,false
+ml-028,most-likely,most-likely-party,Most likely to accidentally spoil a movie in the group chat,గ్రూప్ చాట్‌లో పొరపాటున సినిమా కథ చెప్పేసే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,banter,false
+ml-029,most-likely,most-likely-party,Most likely to insist on the exact center row seats,సరిగ్గా మధ్య వరుస సీట్లే కావాలని పట్టుబట్టే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,theatre,false
+ml-030,most-likely,most-likely-party,Most likely to direct a short film with this friend group,ఈ ఫ్రెండ్స్ గ్యాంగ్‌తో ఒక షార్ట్ ఫిల్మ్ తీసే అవకాశం ఎక్కువగా ఉన్నది ఎవరికి?,1,banter,false

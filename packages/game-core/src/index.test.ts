@@ -87,7 +87,7 @@ describe("GAME_REGISTRY", () => {
     expect(getGameById("nonexistent")).toBeUndefined();
 
     const readyGames = getGamesByStatus("ready");
-    expect(readyGames.length).toBe(6); // Head Set Go + Transify + Emoji Cinema + Rapid Fire + Cricket IQ (MVP) + Dumb Charades
+    expect(readyGames.length).toBe(7); // Head Set Go + Transify + Emoji Cinema + Rapid Fire + Cricket IQ (MVP) + Dumb Charades + Most Likely
 
     const cinemaGames = getGamesByCategory("Cinema");
     expect(cinemaGames.length).toBeGreaterThan(0);
@@ -535,5 +535,106 @@ describe("charadesMachine", () => {
     saveCharadesRecent(["c1", "c2"]);
     expect(loadCharadesRecent()).toContain("c1");
     expect(getCharadesWinners([])).toEqual([]);
+  });
+});
+
+
+import {
+  voteMachine,
+  computeCrownTitles,
+  getMostCrownedWinners,
+  tallyPromptVotes,
+  loadVoteRecent,
+  saveVoteRecent,
+} from "./vote-machine";
+
+const VOTE_DECK = [
+  { id: "ml-1", game: "most-likely", deck: "most-likely-party", en: "Cry at sentiment", te: "ఏడవడం", difficulty: 1 as const, tags: [], verified: false },
+  { id: "ml-2", game: "most-likely", deck: "most-likely-party", en: "Book FDFS", te: "ఎఫ్‌డిఎఫ్‌ఎస్", difficulty: 1 as const, tags: [], verified: false },
+];
+
+describe("voteMachine", () => {
+  it("enforces privacy step, blocks self-vote, and tallies winner & ties", () => {
+    const players = [
+      { id: "p1", name: "Anu" },
+      { id: "p2", name: "Bala" },
+      { id: "p3", name: "Charan" },
+    ];
+    const actor = createActor(voteMachine, {
+      input: {
+        players,
+        totalPrompts: 2,
+        deck: VOTE_DECK,
+        recentlyPlayed: [],
+      },
+    });
+    actor.start();
+    expect(actor.getSnapshot().value).toBe("setup");
+
+    actor.send({ type: "START" });
+    expect(actor.getSnapshot().value).toBe("privacy");
+    expect(actor.getSnapshot().context.currentVoterIndex).toBe(0);
+
+    actor.send({ type: "READY_TO_VOTE" });
+    expect(actor.getSnapshot().value).toBe("voting");
+
+    // Self-vote must be blocked
+    actor.send({ type: "CAST_VOTE", targetId: "p1" });
+    expect(actor.getSnapshot().value).toBe("voting");
+    expect(actor.getSnapshot().context.currentVoterIndex).toBe(0);
+
+    // Valid vote from p1 -> p2
+    actor.send({ type: "CAST_VOTE", targetId: "p2" });
+    expect(actor.getSnapshot().value).toBe("privacy");
+    expect(actor.getSnapshot().context.currentVoterIndex).toBe(1);
+
+    // p2 -> p3
+    actor.send({ type: "READY_TO_VOTE" });
+    actor.send({ type: "CAST_VOTE", targetId: "p3" });
+    expect(actor.getSnapshot().value).toBe("privacy");
+
+    // p3 -> p2 (so p2 wins 2-1)
+    actor.send({ type: "READY_TO_VOTE" });
+    actor.send({ type: "CAST_VOTE", targetId: "p2" });
+    expect(actor.getSnapshot().value).toBe("reveal");
+    expect(actor.getSnapshot().context.promptResults[0]?.winnerIds).toEqual(["p2"]);
+    expect(actor.getSnapshot().context.promptResults[0]?.isTie).toBe(false);
+
+    // Next prompt: 3-way tie (p1->p2, p2->p3, p3->p1)
+    actor.send({ type: "NEXT_PROMPT" });
+    expect(actor.getSnapshot().value).toBe("privacy");
+    actor.send({ type: "READY_TO_VOTE" });
+    actor.send({ type: "CAST_VOTE", targetId: "p2" });
+    actor.send({ type: "READY_TO_VOTE" });
+    actor.send({ type: "CAST_VOTE", targetId: "p3" });
+    actor.send({ type: "READY_TO_VOTE" });
+    actor.send({ type: "CAST_VOTE", targetId: "p1" });
+    expect(actor.getSnapshot().value).toBe("reveal");
+    expect(actor.getSnapshot().context.promptResults[1]?.isTie).toBe(true);
+
+    actor.send({ type: "NEXT_PROMPT" });
+    expect(actor.getSnapshot().value).toBe("results");
+
+    const titles = computeCrownTitles(players, actor.getSnapshot().context.promptResults);
+    const crowned = getMostCrownedWinners(titles);
+    expect(crowned[0]?.player.id).toBe("p2");
+    expect(crowned[0]?.crowns).toBe(2);
+
+    actor.send({ type: "PLAY_AGAIN" });
+    expect(actor.getSnapshot().value).toBe("setup");
+    actor.stop();
+  });
+
+  it("handles recent vote storage and empty winners", () => {
+    saveVoteRecent(["ml-1"]);
+    expect(loadVoteRecent()).toContain("ml-1");
+    expect(getMostCrownedWinners([])).toEqual([]);
+    const res = tallyPromptVotes(
+      VOTE_DECK[0]!,
+      [{ id: "p1", name: "A" }, { id: "p2", name: "B" }],
+      { p1: "p2", p2: "p1" },
+    );
+    expect(res.isTie).toBe(true);
+    expect(res.topVotes).toBe(1);
   });
 });

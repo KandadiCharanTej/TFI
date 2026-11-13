@@ -29,6 +29,7 @@ The source CSVs are at:
 - `packages/content/sheets/emoji-cinema-movies.csv` (30 cards, refs `films.csv`)
 - `packages/content/sheets/dumb-charades-movies.csv` (80 cards, refs `films.csv`)
 - `packages/content/sheets/rapid-fire-party.csv` (30 movie-edition cards)
+- `packages/content/sheets/most-likely-party.csv` (30 movie-edition prompts)
 - `packages/content/sheets/cricket-iq-trivia.csv` (30 cards, MVP-only / hidden in beta)
 
 ### Telugu translations in `lib/i18n.ts`

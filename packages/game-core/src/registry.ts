@@ -210,7 +210,7 @@ export const GAME_REGISTRY: readonly GameRegistryEntry[] = [
     defaultTimerSec: 30,
     timerOptions: [30, 45],
     iconId: "most",
-    status: "coming-soon",
+    status: "ready",
     release: "beta",
     wave: 1,
   },
