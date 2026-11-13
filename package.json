@@ -1,0 +1,20 @@
+{
+  "name": "tfi-and-pitch",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.9.0",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "test:e2e": "pnpm --filter @tfi/web test:e2e",
+    "format:check": "prettier --check \"**/*.{ts,tsx,md,json}\""
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3",
+    "turbo": "^2.5.0",
+    "typescript": "^5.8.2"
+  }
+}

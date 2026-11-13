@@ -1,0 +1,10 @@
+# OPEN_QUESTIONS.md
+
+Items for the team to review and decide before public launch.
+
+- **Reference Exports**: `TFI & Pitch Landing and App Preview – Landing page.html` was found in the project root and copied into `/reference/landing-preview.html`. The separate HTML exports for `Home.dc.html` (`/play`), `Auction.dc.html`, and `HeadSetGo.dc.html` were not in `/reference`, so `/play` in Phase 1 was built directly from the written layout spec in prompt #2. Drop those exports into `/reference` if any fine-tuning is needed before Phase 2/6.
+- **Final Product Name**: `"TFI & Pitch"` is currently configured as the working name in `brand.name` (English letters only). What is the final legally cleared product name before beta launch?
+- **Telugu Titles for Cricket & Party Games**: In the landing HTML export, the 5 Cricket/Party games (`Cricket IQ`, `Dream XI Challenge`, `Cricket Auction`, `Rapid Fire`, `Most Likely`) had empty `te` strings, whereas Non-Negotiable Rule 1 requires Telugu script to lead on every card and title. We populated Telugu script titles (`క్రికెట్ ఐక్యూ`, `డ్రీమ్ XI ఛాలెంజ్`, `క్రికెట్ ఆక్షన్`, `ర్యాపిడ్ ఫైర్`, `మోస్ట్ లైక్లీ`) in the translation dictionary—please confirm if the team prefers native Telugu phrases over transliterated Telugu for these 5 game names.
+- **Party-Color Sensitivity Check**: Confirm with regional reviewers that the category color assignments (`--yellow #F6BE18` for Cinema, `--green #00C853` for Cricket, `--magenta #EC1276` for Party) never appear alongside any political symbol, flag, or party-like phrasing in upcoming Wave 1 card decks.
+- **Legal Disclaimer Review**: Confirm whether the footer and `/about` disclaimer ("Unofficial fan-made game. Not affiliated with any film, actor, studio, cricket league or team.") needs a Telugu translation alongside the English text on `/about` and `/terms`.
+- **Content Fact-Check Pipeline (Phase 2)**: All initial 30 sample cards per deck will be marked `verified: false` until reviewed by the content team; who on the team will sign off on flipping `verified: true` before launch?
