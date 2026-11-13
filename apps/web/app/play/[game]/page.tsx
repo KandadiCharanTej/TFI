@@ -1,16 +1,18 @@
 import { notFound, redirect } from "next/navigation";
-import { CATEGORY_COLORS } from "@tfi/config/tokens";
+import { MODE_COLORS } from "@tfi/config/tokens";
 import { GAME_REGISTRY, getGameById } from "@tfi/game-core";
 import { AppFrame } from "@/components/app-frame";
 import { GameTitle } from "@/components/game-title";
 import { WallIcon } from "@/components/icons";
 import { Tx } from "@/components/lang-provider";
 import { Badge, Sticker, WallLinkButton } from "@/components/sticker-kit";
+import { readShowMvpFlag } from "@/lib/games";
 import { GAMES_CATALOG, TRANSLATIONS } from "@/lib/i18n";
 import SetupClient from "./setup-client";
 
 export function generateStaticParams() {
-  return GAME_REGISTRY.map((g) => ({ game: g.id }));
+  const showMvp = readShowMvpFlag(process.env.SHOW_MVP_GAMES);
+  return GAME_REGISTRY.filter((g) => showMvp || g.release === "beta").map((g) => ({ game: g.id }));
 }
 
 const RULES_MAP: Record<string, { en: string; te: string }> = {
@@ -35,6 +37,8 @@ export default async function GameSetupPage({
   const regGame = getGameById(slug);
   const catalogGame = GAMES_CATALOG.find((g) => g.slug === slug);
   if (!regGame || !catalogGame) notFound();
+  // MVP games (cricket etc.) are hidden in the beta: no page unless SHOW_MVP_GAMES=true.
+  if (regGame.release === "mvp" && !readShowMvpFlag(process.env.SHOW_MVP_GAMES)) notFound();
 
   // If the game is ready and uses the Judge template:
   if (regGame.status === "ready" && regGame.template === "Judge") {
@@ -50,7 +54,7 @@ export default async function GameSetupPage({
   }
 
   // Otherwise, it's a Coming Soon game (Phase 3b or Wave 2)
-  const panelColor = CATEGORY_COLORS[regGame.category];
+  const panelColor = MODE_COLORS[regGame.mode === "Online" ? "online" : "onePhone"];
 
   return (
     <AppFrame>

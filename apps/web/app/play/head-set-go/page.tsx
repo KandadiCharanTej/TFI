@@ -66,7 +66,7 @@ export default function HsgSetupPage() {
                   onClick={() => setDeck(d.id)}
                   aria-pressed={active}
                   className={`flex items-center gap-4 rounded-[14px] border-[2.5px] border-ink p-4 text-left transition-all ${
-                    active ? "shadow-[4px_4px_0px_#141313]" : "opacity-70"
+                    active ? "shadow-[4px_4px_0px_#141313]" : ""
                   }`}
                   style={{ backgroundColor: active ? d.color : "#F5F0E8" }}
                 >
@@ -78,7 +78,7 @@ export default function HsgSetupPage() {
                   </div>
                   <div>
                     <p className="anton-title m-0 text-[20px] leading-[1.1] text-ink">{d.label.en}</p>
-                    <p className="m-0 text-[13px] font-bold text-ink opacity-70">{d.count} cards</p>
+                    <p className="m-0 text-[13px] font-bold text-ink">{d.count} cards</p>
                   </div>
                   {active && (
                     <span className="ml-auto text-xl" aria-hidden>

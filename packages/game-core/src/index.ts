@@ -25,3 +25,5 @@ export function isValidRoomCode(code: string): boolean {
 export * from "./registry";
 export * from "./judge-machine";
 export * from "./hsg-machine";
+export * from "./charades-machine";
+export * from "./vote-machine";

@@ -2,6 +2,7 @@ export type GameTemplate = "Forehead" | "Judge" | "Charades" | "Vote" | "Auction
 export type GameCategory = "Cinema" | "Cricket" | "Party";
 export type GameMode = "One phone" | "Phone or online" | "Online";
 export type GameStatus = "ready" | "coming-soon";
+export type GameRelease = "beta" | "mvp";
 
 export interface GameRegistryEntry {
   readonly id: string; // slug, e.g. "transify"
@@ -27,6 +28,7 @@ export interface GameRegistryEntry {
     | "rapid"
     | "most";
   readonly status: GameStatus;
+  readonly release: GameRelease;
   readonly wave: 1 | 2 | 3;
   readonly number: string;
 }
@@ -47,6 +49,7 @@ export const GAME_REGISTRY: readonly GameRegistryEntry[] = [
     timerOptions: [30, 60, 90, 120, 150, 180],
     iconId: "head",
     status: "ready",
+    release: "beta",
     wave: 1,
   },
   {
@@ -64,6 +67,7 @@ export const GAME_REGISTRY: readonly GameRegistryEntry[] = [
     timerOptions: [30, 45, 60, 90],
     iconId: "trans",
     status: "ready",
+    release: "beta",
     wave: 1,
   },
   {
@@ -75,12 +79,13 @@ export const GAME_REGISTRY: readonly GameRegistryEntry[] = [
     mode: "One phone",
     template: "Charades",
     deckIds: ["dumb-charades-movies"],
-    playerMin: 4,
-    playerMax: 10,
-    defaultTimerSec: 60,
-    timerOptions: [45, 60, 90],
+    playerMin: 2,
+    playerMax: 4,
+    defaultTimerSec: 90,
+    timerOptions: [60, 90, 120],
     iconId: "charades",
-    status: "coming-soon",
+    status: "ready",
+    release: "beta",
     wave: 1,
   },
   {
@@ -98,6 +103,7 @@ export const GAME_REGISTRY: readonly GameRegistryEntry[] = [
     timerOptions: [30, 45, 60, 90],
     iconId: "emoji",
     status: "ready",
+    release: "beta",
     wave: 1,
   },
   {
@@ -115,6 +121,7 @@ export const GAME_REGISTRY: readonly GameRegistryEntry[] = [
     timerOptions: [30, 45, 60],
     iconId: "auction",
     status: "coming-soon",
+    release: "beta",
     wave: 2,
   },
   {
@@ -132,6 +139,7 @@ export const GAME_REGISTRY: readonly GameRegistryEntry[] = [
     timerOptions: [30, 45, 60, 90],
     iconId: "cricketiq",
     status: "ready",
+    release: "mvp",
     wave: 1,
   },
   {
@@ -149,6 +157,7 @@ export const GAME_REGISTRY: readonly GameRegistryEntry[] = [
     timerOptions: [180, 300],
     iconId: "dream",
     status: "coming-soon",
+    release: "mvp",
     wave: 3,
   },
   {
@@ -166,6 +175,7 @@ export const GAME_REGISTRY: readonly GameRegistryEntry[] = [
     timerOptions: [30, 45, 60],
     iconId: "cricketauction",
     status: "coming-soon",
+    release: "mvp",
     wave: 2,
   },
   {
@@ -183,6 +193,7 @@ export const GAME_REGISTRY: readonly GameRegistryEntry[] = [
     timerOptions: [20, 30, 45, 60],
     iconId: "rapid",
     status: "ready",
+    release: "beta",
     wave: 1,
   },
   {
@@ -199,7 +210,8 @@ export const GAME_REGISTRY: readonly GameRegistryEntry[] = [
     defaultTimerSec: 30,
     timerOptions: [30, 45],
     iconId: "most",
-    status: "coming-soon",
+    status: "ready",
+    release: "beta",
     wave: 1,
   },
 ] as const;
@@ -218,4 +230,17 @@ export function getGamesByCategory(category: GameCategory): readonly GameRegistr
 
 export function getGameRoute(id: string): string {
   return `/play/${id}`;
+}
+
+
+/**
+ * Games visible in the UI. Beta shows only release:"beta" games.
+ * Pass showMvp=true (driven by SHOW_MVP_GAMES=true) to include MVP games.
+ */
+export function getVisibleGames(showMvp = false): readonly GameRegistryEntry[] {
+  return GAME_REGISTRY.filter((g) => showMvp || g.release === "beta");
+}
+
+export function getGamesByRelease(release: GameRelease): readonly GameRegistryEntry[] {
+  return GAME_REGISTRY.filter((g) => g.release === release);
 }

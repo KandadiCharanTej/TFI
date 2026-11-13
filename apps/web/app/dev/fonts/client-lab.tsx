@@ -88,6 +88,11 @@ export default function ClientFontLab() {
 
   return (
     <div className="min-h-screen bg-[#EAE6DF] p-4 text-[#141313] md:p-8" data-testid="font-lab-page">
+      {/* The Baseline (Noto Sans Telugu) is no longer in production; it stays here for comparison only. */}
+      <style>{`
+        @font-face { font-family: 'Noto Sans Telugu'; font-weight: 700 800; font-display: swap; src: url('/fonts/noto-sans-telugu.woff2') format('woff2'); unicode-range: U+0C00-0C7F, U+200C-200D, U+25CC; }
+        @font-face { font-family: 'Noto Sans Telugu'; font-weight: 700 800; font-display: swap; src: url('/fonts/noto-sans-telugu-latin.woff2') format('woff2'); unicode-range: U+0000-00FF; }
+      `}</style>
       {/* External font stylesheet injection for dev testing */}
       <link
         rel="stylesheet"
@@ -170,7 +175,7 @@ export default function ClientFontLab() {
                   <>
                     Movies.
                     <br />
-                    Cricket.
+                    Mayhem.
                     <br />
                     The{" "}
                     <span
@@ -323,7 +328,7 @@ export default function ClientFontLab() {
                 </p>
                 <p className="text-[14px] leading-[1.5]">
                   {lang === "en"
-                    ? "14px: Fast party games built around Telugu cinema and cricket banter."
+                    ? "14px: Fast party games built around Telugu cinema and friend banter."
                     : "14px: తెలుగు సినిమా, క్రికెట్ కబుర్లపై సరదా పార్టీ గేమ్స్."}
                 </p>
                 <p className="text-[12px] leading-[1.5] text-[#141313]/70">

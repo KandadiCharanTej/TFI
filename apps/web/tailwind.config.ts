@@ -19,9 +19,9 @@ const config: Config = {
     fontFamily: {
       anton: ["var(--font-anton)", "Anton", "sans-serif"],
       marker: ["var(--font-marker)", "Permanent Marker", "cursive"],
-      sans: ["var(--font-sans)", "Plus Jakarta Sans", "Noto Sans Telugu", "system-ui", "sans-serif"],
+      sans: ["var(--font-sans)", "Plus Jakarta Sans", "Anek Telugu", "system-ui", "sans-serif"],
       mono: ["var(--font-mono)", "Space Mono", "monospace"],
-      telugu: ["var(--font-telugu)", "Noto Sans Telugu", "Plus Jakarta Sans", "sans-serif"],
+      telugu: ["var(--font-telugu)", "Anek Telugu", "Plus Jakarta Sans", "sans-serif"],
     },
     extend: {
       borderRadius: {

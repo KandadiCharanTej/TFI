@@ -88,13 +88,13 @@ describe("translation file", () => {
 
   it("keeps the working brand name in one key, in English letters", () => {
     expect(TRANSLATIONS.brand.name.en).toBe("TFI & Pitch");
-    expect(TRANSLATIONS.brand.tagline.en).toBe("Our movies. Our cricket. Our gang.");
-    expect(TRANSLATIONS.brand.tagline.te).toBe("మన సినిమా, మన క్రికెట్, మన గ్యాంగ్");
+    expect(TRANSLATIONS.brand.tagline.en).toBe("Our movies. Our mayhem. Our gang.");
+    expect(TRANSLATIONS.brand.tagline.te).toBe("మన సినిమా, మన సరదా, మన గ్యాంగ్");
   });
 
   it("includes the exact unofficial disclaimer", () => {
     expect(TRANSLATIONS.brand.unofficialDisclaimer.en).toBe(
-      "Unofficial fan-made game. Not affiliated with any film, actor, studio, cricket league or team.",
+      "Unofficial fan-made game. Not affiliated with any film, actor, studio or team.",
     );
   });
 

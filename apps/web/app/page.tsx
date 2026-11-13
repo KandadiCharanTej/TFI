@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { CATEGORY_COLORS } from "@tfi/config/tokens";
+import { MODE_COLORS } from "@tfi/config/tokens";
 import { WallIcon } from "@/components/icons";
 import { GameTitle } from "@/components/game-title";
 import { LangSwitch } from "@/components/lang-switch";
@@ -15,28 +15,86 @@ import {
   TapeStrip,
   WallLinkButton,
 } from "@/components/sticker-kit";
-import { BRAND_NAME, FAN_VIBES, GAMES_CATALOG, TRANSLATIONS } from "@/lib/i18n";
+import { useVisibleGames } from "@/components/flags-provider";
+import { MODE_FILTERS, filterByMode, panelModeKey, type ModeFilter } from "@/lib/games";
+import { BRAND_NAME, FAN_VIBES, TRANSLATIONS } from "@/lib/i18n";
 
-type CategoryFilter = "All" | "Cinema" | "Cricket" | "Party";
-
-const FILTER_DOTS: Record<CategoryFilter, string> = {
+const FILTER_DOTS: Record<ModeFilter, string> = {
   All: "#FFFFFF",
-  Cinema: CATEGORY_COLORS.Cinema,
-  Cricket: CATEGORY_COLORS.Cricket,
-  Party: CATEGORY_COLORS.Party,
+  onePhone: MODE_COLORS.onePhone,
+  online: MODE_COLORS.online,
 };
 
 const STICKER_ROTS = [-1, 0.8, -0.6, 1, -0.8] as const;
 const L = TRANSLATIONS.landing;
 
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+}
+
+const FAQ_ITEMS = [
+  {
+    q: { en: "Do I need to sign in or create an account?", te: "సైన్-ఇన్ లేదా అకౌంట్ అవసరమా?" },
+    a: {
+      en: "Never. Pick a game and start playing immediately on one phone.",
+      te: "అవసరం లేదు. ఆట ఎంచుకుని వెంటనే ఒక ఫోన్‌లో ఆడొచ్చు.",
+    },
+  },
+  {
+    q: { en: "Does it work without internet?", te: "ఇంటర్నెట్ లేకపోయినా పనిచేస్తుందా?" },
+    a: {
+      en: "Yes. Every one-phone game works offline once opened.",
+      te: "అవును. ఒక ఫోన్ ఆటలన్నీ ఆఫ్‌లైన్‌లోనూ ఆడొచ్చు.",
+    },
+  },
+  {
+    q: { en: "Is there any real money involved?", te: "నిజమైన డబ్బు ఏమైనా ఉంటుందా?" },
+    a: {
+      en: "No. All scores, crowns, and virtual budgets are for fun only.",
+      te: "లేదు. స్కోర్లు, క్రౌన్లు, బడ్జెట్లు అన్నీ సరదా కోసమే.",
+    },
+  },
+  {
+    q: { en: "Can we switch between English and Telugu?", te: "ఇంగ్లీష్ మరియు తెలుగు మధ్య మారొచ్చా?" },
+    a: {
+      en: "Yes. Tap the language switch in the top bar anytime, even mid-setup.",
+      te: "అవును. పై బార్‌లో తె / EN నొక్కి ఎప్పుడైనా మారొచ్చు.",
+    },
+  },
+  {
+    q: { en: "How many people can play on one phone?", te: "ఒక ఫోన్‌లో ఎంతమంది ఆడొచ్చు?" },
+    a: {
+      en: "2 to 10 players or up to 4 teams, depending on the game.",
+      te: "ఆటను బట్టి 2 నుండి 10 మంది లేదా 4 జట్లు ఆడొచ్చు.",
+    },
+  },
+] as const;
+
 export default function LandingPage() {
-  const [filter, setFilter] = useState<CategoryFilter>("All");
+  const [filter, setFilter] = useState<ModeFilter>("All");
   const [vibe, setVibe] = useState<string>("bhAAi");
+  const [showStickyCta, setShowStickyCta] = useState(false);
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const { lang } = useLang();
   const t = useT();
 
-  const filteredGames = GAMES_CATALOG.filter((g) => filter === "All" || g.category === filter);
-  const tapeItems = GAMES_CATALOG.map((g) => g.title[lang]);
+  useEffect(() => {
+    const onScroll = () => setShowStickyCta(window.scrollY > 420);
+    const onPrompt = (e: Event) => {
+      e.preventDefault();
+      setInstallPrompt(e as BeforeInstallPromptEvent);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("beforeinstallprompt", onPrompt);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("beforeinstallprompt", onPrompt);
+    };
+  }, []);
+
+  const visibleGames = useVisibleGames();
+  const filteredGames = filterByMode(visibleGames, filter);
+  const tapeItems = visibleGames.map((g) => g.title[lang]);
 
   return (
     <div className="w-full overflow-x-hidden text-ink" data-label="Landing page">
@@ -95,35 +153,35 @@ export default function LandingPage() {
             <polygon points="170,0 600,0 600,700 0,700" fill="#F6BE18" />
           </svg>
 
-          <div className="relative mx-auto flex max-w-[1200px] flex-wrap items-center gap-12 px-4 pb-16 pt-10 md:px-10 md:pb-20 md:pt-16">
+          <div className="relative mx-auto flex max-w-[1200px] flex-wrap items-center gap-8 px-4 pb-10 pt-5 md:gap-12 md:px-10 md:pb-20 md:pt-14">
             {/* Hero left column */}
             <div className="min-w-0 flex-1 basis-[480px]">
-              <p className="wall-chip mb-6 text-[13px]">
+              <p className="wall-chip mb-4 text-[12px] md:mb-6 md:text-[13px]">
                 <Tx v={L.betaPill} />
               </p>
 
-              <h1 className="anton-title m-0 text-[clamp(52px,9.6vw,120px)] leading-[0.94] text-ink">
+              <h1 className="anton-title m-0 text-[clamp(42px,8.5vw,112px)] leading-[0.94] text-ink">
                 <Tx v={L.heroLine1} />
                 <br />
                 <Tx v={L.heroLine2} />
                 <br />
                 <Tx v={L.heroLead} />{" "}
                 <span
-                  className="marker-accent inline-block rounded-[14px] border-[3px] border-ink bg-sticker px-[18px] text-[0.74em] leading-[1.25] text-magenta"
+                  className="marker-accent inline-block rounded-[14px] border-[3px] border-ink bg-sticker px-[14px] text-[0.74em] leading-[1.25] text-magenta md:px-[18px]"
                   style={{ transform: "rotate(-1.5deg)", boxShadow: "5px 5px 0 #141313" }}
                 >
                   <Tx v={L.heroMarker} />
                 </span>
               </h1>
 
-              <p className="mt-6 text-[24px] font-extrabold leading-[1.6] text-ink">
+              <p className="mt-4 text-[19px] font-extrabold leading-[1.45] text-ink md:mt-6 md:text-[24px] md:leading-[1.6]">
                 <Tx v={TRANSLATIONS.brand.tagline} />
               </p>
-              <p className="mt-1.5 max-w-[500px] text-[18px] font-bold leading-[1.55] text-ink">
+              <p className="wall-prose mt-1.5 text-[15px] font-bold leading-[1.5] text-ink md:text-[18px] md:leading-[1.55]">
                 <Tx v={L.heroSubline} />
               </p>
 
-              <div className="mt-7 flex flex-wrap gap-[18px]">
+              <div className="mt-5 flex flex-wrap gap-3.5 md:mt-7 md:gap-[18px]">
                 <WallLinkButton href="/play" variant="yellow">
                   <Tx v={TRANSLATIONS.nav.playNow} /> →
                 </WallLinkButton>
@@ -177,12 +235,13 @@ export default function LandingPage() {
                 />
               </svg>
 
-              <Sticker
-                tilt={1.5}
-                className="relative mt-8 h-fit w-[300px] p-[18px]"
-                role="group"
-                aria-label={t(L.mock.judgeCardLabel)}
-              >
+              <div className="mt-8 flex flex-col items-end gap-4">
+                <Sticker
+                  tilt={1.5}
+                  className="relative h-fit w-[300px] p-[18px]"
+                  role="group"
+                  aria-label={t(L.mock.judgeCardLabel)}
+                >
                 <div className="flex items-center justify-between">
                   <span className="mono-num text-[15px] text-ink">
                     <Tx v={L.mock.score} />
@@ -222,33 +281,34 @@ export default function LandingPage() {
                 </div>
               </Sticker>
 
-              <Sticker
-                tilt={-1.5}
-                className="absolute bottom-1.5 left-0 w-[236px] p-3.5"
-                role="group"
-                aria-label={t(L.mock.auctionCardLabel)}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="mono-num text-[12px] text-ink">
-                    <Tx v={L.mock.lot} />
-                  </span>
-                  <Badge tone="cyan" mono className="px-2.5 py-0.5 text-[12px]">
-                    K7QM
-                  </Badge>
-                </div>
-                <p className="m-0 mt-2 text-[13px] font-extrabold text-ink">
-                  <Tx v={L.mock.jerseyBase} />
-                </p>
-                <div className="mt-2 rounded-[12px] border-[2.5px] border-ink bg-yellow px-3 py-1.5">
-                  <span className="mono-num text-[28px] leading-[1.2] text-ink">20 Cr</span>
-                </div>
-                <span
-                  className="wall-btn mt-2.5 min-h-[46px] w-full bg-magenta px-0 text-ink"
-                  style={{ fontSize: "19px" }}
+                <Sticker
+                  tilt={-1.5}
+                  className="w-[244px] self-start p-3.5"
+                  role="group"
+                  aria-label={t(L.mock.auctionCardLabel)}
                 >
-                  ▲ <Tx v={L.mock.bid25} />
-                </span>
-              </Sticker>
+                  <div className="flex items-center justify-between">
+                    <span className="mono-num text-[12px] text-ink">
+                      <Tx v={L.mock.lot} />
+                    </span>
+                    <Badge tone="cyan" mono className="px-2.5 py-0.5 text-[12px]">
+                      K7QM
+                    </Badge>
+                  </div>
+                  <p className="m-0 mt-2 text-[13px] font-extrabold text-ink">
+                    <Tx v={L.mock.lotBase} />
+                  </p>
+                  <div className="mt-2 rounded-[12px] border-[2.5px] border-ink bg-yellow px-3 py-1.5">
+                    <span className="mono-num text-[28px] leading-[1.2] text-ink">20 Cr</span>
+                  </div>
+                  <span
+                    className="wall-btn mt-2.5 min-h-[46px] w-full bg-magenta px-0 text-ink"
+                    style={{ fontSize: "19px" }}
+                  >
+                    ▲ <Tx v={L.mock.bid25} />
+                  </span>
+                </Sticker>
+              </div>
             </div>
           </div>
         </section>
@@ -276,17 +336,17 @@ export default function LandingPage() {
 
             <div
               role="group"
-              aria-label={t(TRANSLATIONS.categories.filterLabel)}
+              aria-label={t(TRANSLATIONS.modeFilter.filterLabel)}
               className="flex flex-wrap gap-3"
             >
-              {(["All", "Cinema", "Cricket", "Party"] as const).map((cat) => (
+              {MODE_FILTERS.map((cat) => (
                 <Chip
                   key={cat}
                   active={filter === cat}
                   dotColor={FILTER_DOTS[cat]}
                   onClick={() => setFilter(cat)}
                 >
-                  <Tx v={TRANSLATIONS.categories[cat]} />
+                  <Tx v={TRANSLATIONS.modeFilter[cat]} />
                 </Chip>
               ))}
             </div>
@@ -311,7 +371,7 @@ export default function LandingPage() {
 
                   <div
                     className="mt-3 flex h-[108px] items-center justify-center rounded-[14px] border-[2.5px] border-ink text-ink"
-                    style={{ backgroundColor: CATEGORY_COLORS[game.category] }}
+                    style={{ backgroundColor: MODE_COLORS[panelModeKey(game)] }}
                   >
                     <div className="h-[72px] w-[72px]">
                       <WallIcon kind={game.iconKind} />
@@ -419,13 +479,13 @@ export default function LandingPage() {
                 <div className="mt-3.5">
                   <GameTitle
                     as="p"
-                    title={L.mock.jerseyWord}
+                    title={L.mock.lotWord}
                     teClassName="text-[34px]"
                     enClassName="text-[36px]"
                   />
                 </div>
                 <p className="m-0 mt-1 text-[14px] font-bold text-ink">
-                  <Tx v={L.mock.jerseyFacts} />
+                  <Tx v={L.mock.lotFacts} />
                 </p>
 
                 <div className="mt-3.5 flex gap-2">
@@ -507,10 +567,89 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* Mini CSS-only round demo + FAQ */}
+        <section
+          aria-labelledby="faq-heading"
+          className="mx-auto max-w-[1200px] px-4 pt-12 md:px-10"
+        >
+          <div className="mb-10 grid gap-6 md:grid-cols-[1fr_1.4fr] md:items-center">
+            <Sticker bg="card" tilt={-0.8} className="p-5">
+              <span className="wall-chip min-h-[32px] bg-yellow text-[11px]">
+                {lang === "te" ? "ఒక రౌండ్ ఎలా ఉంటుంది?" : "How a round feels"}
+              </span>
+              <div className="wall-demo-card mt-4 rounded-[14px] border-[2.5px] border-ink bg-sticker p-4 shadow-[4px_4px_0_#141313]">
+                <div className="flex items-center justify-between text-[12px] font-extrabold">
+                  <span>{lang === "te" ? "రౌండ్ 1 / 5" : "ROUND 1 / 5"}</span>
+                  <span className="mono-num rounded-full border-2 border-ink bg-yellow px-2.5 py-0.5">
+                    0:45
+                  </span>
+                </div>
+                <p className="anton-title m-0 mt-3 text-[28px] text-ink">
+                  {lang === "te" ? "మగధీర" : "MAGADHEERA"}
+                </p>
+                <div className="mt-3 grid grid-cols-2 gap-2 text-center text-[12px] font-extrabold">
+                  <span className="rounded-lg border-2 border-ink bg-sticker py-1.5">
+                    ✕ {lang === "te" ? "పాస్" : "PASS"}
+                  </span>
+                  <span className="rounded-lg border-2 border-ink bg-green py-1.5">
+                    ✓ {lang === "te" ? "సరి" : "GOT IT"}
+                  </span>
+                </div>
+              </div>
+            </Sticker>
+
+            <div>
+              <h2
+                id="faq-heading"
+                className="anton-title m-0 text-[clamp(30px,5vw,48px)] leading-none text-ink"
+              >
+                {lang === "te" ? "తరచుగా అడిగే ప్రశ్నలు" : "Quick answers"}
+              </h2>
+              <div className="mt-4 space-y-2.5">
+                {FAQ_ITEMS.map((item, idx) => (
+                  <details
+                    key={idx}
+                    className="rounded-[14px] border-[2.5px] border-ink bg-sticker px-4 py-3 shadow-[3px_3px_0_#141313]"
+                  >
+                    <summary className="cursor-pointer text-[15px] font-extrabold text-ink">
+                      {item.q[lang]}
+                    </summary>
+                    <p className="wall-prose m-0 mt-2 text-[14px] font-semibold text-ink/80">
+                      {item.a[lang]}
+                    </p>
+                  </details>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {installPrompt ? (
+            <Sticker bg="white" className="mb-8 flex flex-wrap items-center justify-between gap-4 bg-cyan p-5">
+              <div>
+                <p className="anton-title m-0 text-[24px] text-ink">
+                  {lang === "te" ? "హోమ్ స్క్రీన్‌కు జోడించండి" : "Add to home screen"}
+                </p>
+                <p className="m-0 text-[14px] font-bold text-ink">
+                  {lang === "te"
+                    ? "ఆఫ్‌లైన్ పార్టీ కోసం యాప్ లాగా సేవ్ చేయండి."
+                    : "Save for instant offline party rounds."}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => void installPrompt.prompt()}
+                className="wall-btn bg-sticker text-[14px] text-ink"
+              >
+                {lang === "te" ? "ఇన్‌స్టాల్" : "Install app"}
+              </button>
+            </Sticker>
+          ) : null}
+        </section>
+
         {/* Closing block */}
         <section
           aria-labelledby="closing-heading"
-          className="mx-auto max-w-[1200px] px-4 pb-14 pt-16 md:px-10"
+          className="mx-auto max-w-[1200px] px-4 pb-14 pt-6 md:px-10"
         >
           <Sticker bg="yellow" className="mx-2 px-6 py-12 text-center">
             <h2
@@ -527,6 +666,18 @@ export default function LandingPage() {
           </Sticker>
         </section>
       </main>
+
+      {/* Sticky mobile Play Now CTA after scrolling past hero */}
+      {showStickyCta ? (
+        <div className="fixed bottom-3 left-4 right-4 z-40 md:hidden">
+          <Link
+            href="/play"
+            className="wall-btn w-full bg-yellow text-[15px] text-ink"
+          >
+            <Tx v={TRANSLATIONS.nav.playNow} /> →
+          </Link>
+        </div>
+      ) : null}
 
       {/* Footer with the unofficial disclaimer */}
       <footer className="bg-ink text-concrete">

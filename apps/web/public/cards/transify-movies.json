@@ -7,7 +7,9 @@
     "en": "Rogue",
     "answerTe": "పోకిరి",
     "answerEn": "Pokiri",
-    "hint": "2006 Puri Jagannadh",
+    "hint": "2006 · Puri Jagannadh",
+    "year": 2006,
+    "filmId": "pokiri",
     "difficulty": 1,
     "tags": [
       "classic"
@@ -22,7 +24,9 @@
     "en": "Fly",
     "answerTe": "ఈగ",
     "answerEn": "Eega",
-    "hint": "2012 SS Rajamouli",
+    "hint": "2012 · S. S. Rajamouli",
+    "year": 2012,
+    "filmId": "eega",
     "difficulty": 1,
     "tags": [
       "action"
@@ -37,7 +41,9 @@
     "en": "One Man",
     "answerTe": "ఒక్కడు",
     "answerEn": "Okkadu",
-    "hint": "2003 Gunasekhar",
+    "hint": "2003 · Gunasekhar",
+    "year": 2003,
+    "filmId": "okkadu",
     "difficulty": 1,
     "tags": [
       "classic"
@@ -52,7 +58,9 @@
     "en": "Doll House",
     "answerTe": "బొమ్మరిల్లు",
     "answerEn": "Bommarillu",
-    "hint": "2006 Bhaskar",
+    "hint": "2006 · Bhaskar",
+    "year": 2006,
+    "filmId": "bommarillu",
     "difficulty": 1,
     "tags": [
       "family"
@@ -67,7 +75,9 @@
     "en": "Him",
     "answerTe": "అతడు",
     "answerEn": "Athadu",
-    "hint": "2005 Trivikram",
+    "hint": "2005 · Trivikram Srinivas",
+    "year": 2005,
+    "filmId": "athadu",
     "difficulty": 1,
     "tags": [
       "thriller"
@@ -82,7 +92,9 @@
     "en": "Celebration",
     "answerTe": "జల్సా",
     "answerEn": "Jalsa",
-    "hint": "2008 Trivikram",
+    "hint": "2008 · Trivikram Srinivas",
+    "year": 2008,
+    "filmId": "jalsa",
     "difficulty": 1,
     "tags": [
       "comedy"
@@ -97,7 +109,9 @@
     "en": "Great Warrior",
     "answerTe": "మగధీర",
     "answerEn": "Magadheera",
-    "hint": "2009 SS Rajamouli",
+    "hint": "2009 · S. S. Rajamouli",
+    "year": 2009,
+    "filmId": "magadheera",
     "difficulty": 1,
     "tags": [
       "epic"
@@ -112,7 +126,9 @@
     "en": "Aggression",
     "answerTe": "దూకుడు",
     "answerEn": "Dookudu",
-    "hint": "2011 Srinu Vaitla",
+    "hint": "2011 · Srinu Vaitla",
+    "year": 2011,
+    "filmId": "dookudu",
     "difficulty": 1,
     "tags": [
       "action"
@@ -127,7 +143,9 @@
     "en": "Leader",
     "answerTe": "లీడర్",
     "answerEn": "Leader",
-    "hint": "2010 Sekhar Kammula",
+    "hint": "2010 · Sekhar Kammula",
+    "year": 2010,
+    "filmId": "leader",
     "difficulty": 2,
     "tags": [
       "drama"
@@ -141,8 +159,10 @@
     "te": "ఖుషి",
     "en": "Happiness",
     "answerTe": "ఖుషి",
-    "answerEn": "Khushi",
-    "hint": "2001 SJ Suryah",
+    "answerEn": "Kushi",
+    "hint": "2001 · S. J. Suryah",
+    "year": 2001,
+    "filmId": "kushi",
     "difficulty": 1,
     "tags": [
       "romance"
@@ -157,7 +177,9 @@
     "en": "Lion Mountain",
     "answerTe": "సింహాద్రి",
     "answerEn": "Simhadri",
-    "hint": "2003 SS Rajamouli",
+    "hint": "2003 · S. S. Rajamouli",
+    "year": 2003,
+    "filmId": "simhadri",
     "difficulty": 1,
     "tags": [
       "action"
@@ -172,7 +194,9 @@
     "en": "Courage",
     "answerTe": "ఖలేజా",
     "answerEn": "Khaleja",
-    "hint": "2010 Trivikram",
+    "hint": "2010 · Trivikram Srinivas",
+    "year": 2010,
+    "filmId": "khaleja",
     "difficulty": 2,
     "tags": [
       "action"
@@ -187,7 +211,9 @@
     "en": "Storm",
     "answerTe": "తూఫాన్",
     "answerEn": "Thoofan",
-    "hint": "2013 Apoorva Lakhia",
+    "hint": "2013 · Apoorva Lakhia",
+    "year": 2013,
+    "filmId": "thoofan",
     "difficulty": 2,
     "tags": [
       "action"
@@ -202,7 +228,9 @@
     "en": "Gentleman",
     "answerTe": "జెంటిల్‌మన్",
     "answerEn": "Gentleman",
-    "hint": "2016 Mohan Krishna Indraganti",
+    "hint": "2016 · Mohan Krishna Indraganti",
+    "year": 2016,
+    "filmId": "gentleman",
     "difficulty": 2,
     "tags": [
       "thriller"
@@ -217,7 +245,9 @@
     "en": "Racer",
     "answerTe": "రేసు గుర్రం",
     "answerEn": "Race Gurram",
-    "hint": "2014 Surender Reddy",
+    "hint": "2014 · Surender Reddy",
+    "year": 2014,
+    "filmId": "race-gurram",
     "difficulty": 1,
     "tags": [
       "comedy"
@@ -232,7 +262,9 @@
     "en": "King",
     "answerTe": "బాద్‌షా",
     "answerEn": "Baadshah",
-    "hint": "2013 Srinu Vaitla",
+    "hint": "2013 · Srinu Vaitla",
+    "year": 2013,
+    "filmId": "baadshah",
     "difficulty": 1,
     "tags": [
       "comedy"
@@ -247,7 +279,9 @@
     "en": "Wave",
     "answerTe": "అల వైకుంఠపురములో",
     "answerEn": "Ala Vaikunthapurramuloo",
-    "hint": "2020 Trivikram",
+    "hint": "2020 · Trivikram Srinivas",
+    "year": 2020,
+    "filmId": "ala-vaikunthapurramuloo",
     "difficulty": 1,
     "tags": [
       "family"
@@ -262,7 +296,9 @@
     "en": "Surge",
     "answerTe": "ఉప్పెన",
     "answerEn": "Uppena",
-    "hint": "2021 Buchi Babu Sana",
+    "hint": "2021 · Buchi Babu Sana",
+    "year": 2021,
+    "filmId": "uppena",
     "difficulty": 1,
     "tags": [
       "romance"
@@ -277,7 +313,9 @@
     "en": "Flower",
     "answerTe": "పుష్ప",
     "answerEn": "Pushpa",
-    "hint": "2021 Sukumar",
+    "hint": "2021 · Sukumar",
+    "year": 2021,
+    "filmId": "pushpa",
     "difficulty": 1,
     "tags": [
       "action"
@@ -292,7 +330,9 @@
     "en": "Roar",
     "answerTe": "సింహ",
     "answerEn": "Simha",
-    "hint": "2010 Boyapati Srinu",
+    "hint": "2010 · Boyapati Srinu",
+    "year": 2010,
+    "filmId": "simha",
     "difficulty": 2,
     "tags": [
       "action"
@@ -307,7 +347,9 @@
     "en": "Miracle",
     "answerTe": "అదుర్స్",
     "answerEn": "Adhurs",
-    "hint": "2010 VV Vinayak",
+    "hint": "2010 · V. V. Vinayak",
+    "year": 2010,
+    "filmId": "adhurs",
     "difficulty": 1,
     "tags": [
       "comedy"
@@ -322,7 +364,9 @@
     "en": "Hero",
     "answerTe": "నాయక్",
     "answerEn": "Nayak",
-    "hint": "2013 VV Vinayak",
+    "hint": "2013 · V. V. Vinayak",
+    "year": 2013,
+    "filmId": "nayak",
     "difficulty": 2,
     "tags": [
       "action"
@@ -337,7 +381,9 @@
     "en": "Golden Lotus",
     "answerTe": "స్వర్ణకమలం",
     "answerEn": "Swarnakamalam",
-    "hint": "1988 K Viswanath",
+    "hint": "1988 · K. Viswanath",
+    "year": 1988,
+    "filmId": "swarnakamalam",
     "difficulty": 2,
     "tags": [
       "classic"
@@ -352,7 +398,9 @@
     "en": "Prisoner",
     "answerTe": "ఖైదీ",
     "answerEn": "Khaidi",
-    "hint": "1983 A Kodandarami Reddy",
+    "hint": "1983 · A. Kodandarami Reddy",
+    "year": 1983,
+    "filmId": "khaidi",
     "difficulty": 1,
     "tags": [
       "classic"
@@ -367,7 +415,9 @@
     "en": "Noble Man",
     "answerTe": "ఆర్య",
     "answerEn": "Arya",
-    "hint": "2004 Sukumar",
+    "hint": "2004 · Sukumar",
+    "year": 2004,
+    "filmId": "arya",
     "difficulty": 1,
     "tags": [
       "romance"
@@ -382,7 +432,9 @@
     "en": "Temper",
     "answerTe": "టెంపర్",
     "answerEn": "Temper",
-    "hint": "2015 Puri Jagannadh",
+    "hint": "2015 · Puri Jagannadh",
+    "year": 2015,
+    "filmId": "temper",
     "difficulty": 1,
     "tags": [
       "action"
@@ -397,7 +449,9 @@
     "en": "Shining Star",
     "answerTe": "ధ్రువ",
     "answerEn": "Dhruva",
-    "hint": "2016 Surender Reddy",
+    "hint": "2016 · Surender Reddy",
+    "year": 2016,
+    "filmId": "dhruva",
     "difficulty": 2,
     "tags": [
       "thriller"
@@ -412,7 +466,9 @@
     "en": "Mirror",
     "answerTe": "బింబిసార",
     "answerEn": "Bimbisara",
-    "hint": "2022 Mallidi Vassishta",
+    "hint": "2022 · Mallidi Vassishta",
+    "year": 2022,
+    "filmId": "bimbisara",
     "difficulty": 2,
     "tags": [
       "fantasy"
@@ -427,7 +483,9 @@
     "en": "Love Path",
     "answerTe": "ప్రేమికుడు",
     "answerEn": "Premikudu",
-    "hint": "1994 Shankar",
+    "hint": "1994 · Shankar",
+    "year": 1994,
+    "filmId": "premikudu",
     "difficulty": 2,
     "tags": [
       "romance"
@@ -442,7 +500,9 @@
     "en": "Strong One",
     "answerTe": "బాహుబలి",
     "answerEn": "Baahubali",
-    "hint": "2015 SS Rajamouli",
+    "hint": "2015 · S. S. Rajamouli",
+    "year": 2015,
+    "filmId": "baahubali",
     "difficulty": 1,
     "tags": [
       "epic"
