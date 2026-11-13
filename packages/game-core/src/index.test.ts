@@ -371,3 +371,33 @@ describe("judgeMachine", () => {
     expect(shuffled).toHaveLength(DECK_5.length);
   });
 });
+
+
+import { getVisibleGames, getGamesByRelease } from "./registry";
+
+describe("registry release filtering", () => {
+  it("shows exactly the 7 beta games by default", () => {
+    const ids = getVisibleGames().map((g) => g.id).sort();
+    expect(ids).toEqual(
+      [
+        "box-office-auction",
+        "dumb-charades",
+        "emoji-cinema",
+        "head-set-go",
+        "most-likely",
+        "rapid-fire",
+        "transify",
+      ].sort(),
+    );
+  });
+  it("hides every cricket and MVP game by default", () => {
+    const ids = getVisibleGames().map((g) => g.id);
+    expect(ids).not.toContain("cricket-iq");
+    expect(ids).not.toContain("cricket-auction");
+    expect(ids).not.toContain("dream-xi-challenge");
+  });
+  it("includes MVP games when the flag is on", () => {
+    expect(getVisibleGames(true)).toHaveLength(10);
+    expect(getGamesByRelease("mvp")).toHaveLength(3);
+  });
+});
