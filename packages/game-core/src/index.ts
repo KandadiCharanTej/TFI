@@ -1,3 +1,5 @@
+export type { GameCard } from "@tfi/content";
+
 export type RoundPhase = "setup" | "ready" | "playing" | "roundEnd" | "results";
 
 export const ROUND_PHASES: readonly RoundPhase[] = [

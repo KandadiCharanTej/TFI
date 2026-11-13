@@ -10,7 +10,8 @@
     "lint": "turbo run lint",
     "test": "turbo run test",
     "test:e2e": "pnpm --filter @tfi/web test:e2e",
-    "format:check": "prettier --check \"**/*.{ts,tsx,md,json}\""
+    "format:check": "prettier --check \"**/*.{ts,tsx,md,json}\"",
+    "content:build": "pnpm --filter @tfi/content build:content"
   },
   "devDependencies": {
     "prettier": "^3.5.3",

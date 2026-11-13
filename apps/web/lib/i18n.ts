@@ -1,9 +1,18 @@
-export type Locale = "te" | "en";
+import type { Bi } from "./lang";
 
-export interface BilingualEntry {
-  readonly te: string;
-  readonly en: string;
-}
+/**
+ * THE one translation file (rule 8). Every user-facing string is a pair
+ * { en, te }. English is the default; Telugu script shows only when the user
+ * switches the language (see lib/lang.ts). Review the two columns side by side.
+ *
+ * Rules for writing strings:
+ *  - `en` must never contain Telugu script. A unit test enforces this.
+ *  - `te` is shown in Telugu mode with Telugu typography (no uppercase,
+ *    no letter-spacing, line height 1.5+).
+ *  - Names of games, films and people also keep their English letters in `en`
+ *    so Telugu mode can show them small beneath the Telugu.
+ */
+export type BilingualEntry = Bi;
 
 export interface GameCatalogItem {
   readonly slug: string;
@@ -23,247 +32,334 @@ export interface GameCatalogItem {
     | "most";
   readonly modeKey: "onePhone" | "phoneOrOnline" | "online";
   readonly isOnlineOnly: boolean;
-  readonly title: BilingualEntry;
-  readonly description: BilingualEntry;
+  readonly title: Bi;
+  readonly description: Bi;
 }
 
-/**
- * Single side-by-side translation dictionary (Rule 8).
- * Telugu script leads on every card, title and clue, with English letters beside/under it (Rule 1).
- * Logo brand.name is English letters only ("TFI & Pitch") in one translation key (Override 2).
- */
 export const TRANSLATIONS = {
   brand: {
-    name: "TFI & Pitch",
+    /** Working name. One key, one-line change later. English letters in both languages. */
+    name: { en: "TFI & Pitch", te: "TFI & Pitch" },
     tagline: {
+      en: "Our movies. Our cricket. Our gang.",
       te: "మన సినిమా, మన క్రికెట్, మన గ్యాంగ్",
-      en: "Movies, cricket, and party games for friends, on one phone or online. Guess, act, bid, compete, repeat.",
     },
     unofficialDisclaimer: {
-      te: "అనధికారిక అభిమానుల గేమ్. ఏ సినిమా, నటుడు, స్టూడియో, క్రికెట్ లీగ్ లేదా జట్టుతో సంబంధం లేదు.",
       en: "Unofficial fan-made game. Not affiliated with any film, actor, studio, cricket league or team.",
+      te: "అనధికారిక అభిమానుల ఆట. ఏ సినిమా, నటుడు, స్టూడియో, క్రికెట్ లీగ్ లేదా జట్టుతో సంబంధం లేదు.",
+    },
+    pageTitle: {
+      en: "TFI & Pitch | Our movies. Our cricket. Our gang.",
+      te: "TFI & Pitch | మన సినిమా, మన క్రికెట్, మన గ్యాంగ్",
+    },
+    pageDescription: {
+      en: "Party games for friends about movies, cricket and banter. One phone or online. Guess, act, bid, compete, repeat.",
+      te: "సినిమా, క్రికెట్, సరదా కబుర్లపై ఫ్రెండ్స్ కోసం పార్టీ గేమ్స్. ఒకే ఫోన్ లేదా ఆన్‌లైన్. ఊహించండి, నటించండి, వేలం వేయండి, పోటీ పడండి.",
+    },
+  },
+  lang: {
+    /** Language names are the one allowed exception for Telugu script in English mode. */
+    switchVisibleTe: { en: "తె", te: "తె" },
+    switchVisibleEn: { en: "EN", te: "EN" },
+    switchHidden: { en: "Switch language", te: "భాష మార్చండి" },
+    nameTelugu: { en: "తెలుగు", te: "తెలుగు" },
+    nameEnglish: { en: "English", te: "English" },
+  },
+  common: {
+    skipToContent: { en: "Skip to main content", te: "ప్రధాన కంటెంట్‌కు వెళ్ళండి" },
+    back: { en: "Back", te: "వెనక్కి" },
+    backToPlay: { en: "Back to Play", te: "ఆట పేజీకి వెళ్ళండి" },
+    backToPlayHome: { en: "Back to Play Home", te: "ఆట హోమ్‌కు వెళ్ళండి" },
+    goToPlayHome: { en: "Go to Play Home", te: "ఆట హోమ్‌కు వెళ్ళండి" },
+    skip: { en: "Skip", te: "వదిలేయి" },
+    correct: { en: "Correct", te: "సరైనది" },
+    pass: { en: "Pass", te: "పాస్" },
+    cards: { en: "{n} cards", te: "{n} కార్డులు" },
+    seconds: { en: "{n} sec", te: "{n} సెకన్లు" },
+    coinsOnly: {
+      en: "Game coins only. There is no real-money betting.",
+      te: "ఆట నాణేలు మాత్రమే. నిజమైన డబ్బుతో పందెం ఉండదు.",
     },
   },
   nav: {
-    skipToContent: {
-      te: "ప్రధాన కంటెంట్‌కు వెళ్ళండి",
-      en: "Skip to main content",
-    },
-    games: {
-      te: "గేమ్స్",
-      en: "Games",
-    },
-    howItPlays: {
-      te: "ఎలా ఆడాలి",
-      en: "How it plays",
-    },
-    auction: {
-      te: "ఆక్షన్",
-      en: "Auction",
-    },
-    playNow: {
-      te: "ఇప్పుడే ఆడండి",
-      en: "Play now",
-    },
-    playTab: {
-      te: "ఆడు",
-      en: "Play",
-    },
-    joinTab: {
-      te: "చేరు",
-      en: "Join",
-    },
-    meTab: {
-      te: "నేను",
-      en: "Me",
-    },
-    langToggleLabel: {
-      te: "తె / EN భాష మార్చండి",
-      en: "తె / EN Switch language",
-    },
+    games: { en: "Games", te: "గేమ్స్" },
+    howItPlays: { en: "How it plays", te: "ఎలా ఆడాలి" },
+    auction: { en: "Auction", te: "ఆక్షన్" },
+    playNow: { en: "Play now", te: "ఇప్పుడే ఆడండి" },
+    playTab: { en: "Play", te: "ఆడు" },
+    joinTab: { en: "Join", te: "చేరు" },
+    meTab: { en: "Me", te: "నేను" },
+    mainNav: { en: "Main", te: "ప్రధాన మెనూ" },
+    appNav: { en: "App navigation", te: "యాప్ మెనూ" },
+    mobileNav: { en: "Bottom navigation", te: "కింది మెనూ" },
+    footerNav: { en: "Footer links", te: "ఫుటర్ లింకులు" },
+    about: { en: "About", te: "మా గురించి" },
+    privacy: { en: "Privacy", te: "గోప్యత" },
+    terms: { en: "Terms", te: "నిబంధనలు" },
   },
   modes: {
-    onePhone: {
-      te: "ఒకే ఫోన్",
-      en: "One phone",
-    },
-    phoneOrOnline: {
-      te: "ఫోన్ లేదా ఆన్‌లైన్",
-      en: "Phone or online",
-    },
-    online: {
-      te: "ఆన్‌లైన్",
-      en: "Online",
-    },
+    onePhone: { en: "One phone", te: "ఒకే ఫోన్" },
+    phoneOrOnline: { en: "Phone or online", te: "ఫోన్ లేదా ఆన్‌లైన్" },
+    online: { en: "Online", te: "ఆన్‌లైన్" },
   },
   categories: {
-    All: {
-      te: "అన్నీ",
-      en: "All",
-    },
-    Cinema: {
-      te: "సినిమా",
-      en: "Cinema",
-    },
-    Cricket: {
-      te: "క్రికెట్",
-      en: "Cricket",
-    },
-    Party: {
-      te: "పార్టీ",
-      en: "Party",
-    },
+    All: { en: "All", te: "అన్నీ" },
+    Cinema: { en: "Cinema", te: "సినిమా" },
+    Cricket: { en: "Cricket", te: "క్రికెట్" },
+    Party: { en: "Party", te: "పార్టీ" },
+    filterLabel: { en: "Filter games by category", te: "వర్గం ప్రకారం గేమ్స్ వడపోయండి" },
   },
   landing: {
-    betaPill: {
-      te: "బీటా · 10 గేమ్స్ · తెలుగు ఫస్ట్",
-      en: "Beta · 10 games · Telugu first",
-    },
+    betaPill: { en: "Beta · 10 games · Telugu first", te: "బీటా · 10 గేమ్స్ · తెలుగు ఫస్ట్" },
+    heroLine1: { en: "Movies.", te: "సినిమా." },
+    heroLine2: { en: "Cricket.", te: "క్రికెట్." },
+    heroLead: { en: "The", te: "మన" },
+    heroMarker: { en: "Gang", te: "గ్యాంగ్" },
     heroSubline: {
-      te: "ఒకే ఫోన్‌లో లేదా ఆన్‌లైన్ రూమ్‌లో ఫ్రెండ్స్‌తో ఆడుకోండి.",
       en: "Party games for friends, on one phone or online. Guess, act, bid, compete, repeat.",
+      te: "ఫ్రెండ్స్ కోసం పార్టీ గేమ్స్, ఒకే ఫోన్‌లో లేదా ఆన్‌లైన్‌లో. ఊహించండి, నటించండి, వేలం వేయండి, పోటీ పడండి, మళ్ళీ ఆడండి.",
     },
-    seeGames: {
-      te: "గేమ్స్ చూడండి",
-      en: "See the games",
-    },
+    seeGames: { en: "See the games", te: "గేమ్స్ చూడండి" },
+    heroLabel: { en: "Hero", te: "ప్రధాన భాగం" },
     facts: {
-      noSignup: {
-        te: "సైన్-అప్ అవసరం లేదు",
-        en: "No sign-up",
-      },
-      onePhoneOrOnline: {
-        te: "ఒకే ఫోన్ లేదా ఆన్‌లైన్",
-        en: "One phone or online",
-      },
-      teluguAndEnglish: {
-        te: "తెలుగు + ఇంగ్లీష్",
-        en: "Telugu + English",
-      },
+      noSignup: { en: "No sign-up", te: "సైన్-అప్ అవసరం లేదు" },
+      onePhoneOrOnline: { en: "One phone or online", te: "ఒకే ఫోన్ లేదా ఆన్‌లైన్" },
+      teluguAndEnglish: { en: "Telugu + English", te: "తెలుగు + ఇంగ్లీష్" },
     },
-    pickYourGameHeading: {
-      te: "మీ గేమ్ ఎంచుకోండి",
-      en: "Pick your game",
+    mock: {
+      score: { en: "SCORE 4/6", te: "స్కోర్ 4/6" },
+      judgeReads: { en: "THE JUDGE READS", te: "జడ్జ్ చదువుతారు" },
+      clue: { en: "Rogue", te: "రోగ్" },
+      answerLabel: { en: "ANSWER", te: "జవాబు" },
+      answerWord: { en: "Pokiri", te: "పోకిరి" },
+      judgeCardLabel: { en: "Sample Judge card", te: "జడ్జ్ కార్డ్ నమూనా" },
+      auctionCardLabel: { en: "Sample auction card", te: "ఆక్షన్ కార్డ్ నమూనా" },
+      lot: { en: "LOT 3/10", te: "లాట్ 3/10" },
+      lotLong: { en: "LOT 3 / 10", te: "లాట్ 3 / 10" },
+      jerseyBase: { en: "JERSEY · base 5 Cr", te: "జెర్సీ · బేస్ 5 Cr" },
+      jerseyWord: { en: "Jersey", te: "జెర్సీ" },
+      jerseyFacts: {
+        en: "2019 · Gowtam Tinnanuri · base 5 Cr",
+        te: "2019 · గౌతమ్ తిన్ననూరి · బేస్ 5 Cr",
+      },
+      bid25: { en: "Bid 25 Cr", te: "వేలం 25 Cr" },
+      currentBid: { en: "CURRENT BID", te: "ప్రస్తుత వేలం" },
+      boxOffice: { en: "BOX OFFICE", te: "బాక్స్ ఆఫీస్" },
+      talk: { en: "TALK", te: "టాక్" },
+      cult: { en: "CULT", te: "కల్ట్" },
     },
+    pickYourGameHeading: { en: "Pick your game", te: "మీ గేమ్ ఎంచుకోండి" },
     pickYourGameSub: {
-      te: "పది గేమ్స్. ఒకే ఫోన్ లేదా ఒకే రూమ్ కోడ్.",
       en: "Ten games. One phone or one room code.",
+      te: "పది గేమ్స్. ఒకే ఫోన్ లేదా ఒకే రూమ్ కోడ్.",
     },
-    howHeading: {
-      te: "మూడు స్టెప్స్. మాన్యువల్ అవసరం లేదు.",
-      en: "Three steps. No manual.",
-    },
+    howHeading: { en: "Three steps. No manual.", te: "మూడు స్టెప్స్. మాన్యువల్ అవసరం లేదు." },
     steps: [
       {
         num: "01",
-        title: {
-          te: "గేమ్ ఎంచుకోండి",
-          en: "Pick a game",
-        },
+        title: { en: "Pick a game", te: "గేమ్ ఎంచుకోండి" },
         body: {
-          te: "డెక్ ఎంచుకోండి, పెద్ద ప్లస్ మైనస్ బటన్లతో టైమర్ సెట్ చేయండి, మీ గ్యాంగ్‌ని చేర్చండి.",
           en: "Choose a deck, set the timer with the big plus and minus buttons, and add your gang.",
+          te: "డెక్ ఎంచుకోండి, పెద్ద ప్లస్ మైనస్ బటన్లతో టైమర్ సెట్ చేయండి, మీ గ్యాంగ్‌ని చేర్చండి.",
         },
       },
       {
         num: "02",
-        title: {
-          te: "కలిసి ఆడండి",
-          en: "Play together",
-        },
+        title: { en: "Play together", te: "కలిసి ఆడండి" },
         body: {
-          te: "నుదుటిపై ఫోన్ పెట్టండి, జడ్జ్ చేతిలో ఫోన్ ఉంచండి, లేదా రూమ్ కోడ్‌తో వేలం వేయండి.",
           en: "Phone on the forehead, phone in the Judge's hand, or bids flying across a room code.",
+          te: "నుదుటిపై ఫోన్, జడ్జ్ చేతిలో ఫోన్, లేదా రూమ్ కోడ్‌తో వేలాల జోరు.",
         },
       },
       {
         num: "03",
-        title: {
-          te: "ఫలితం షేర్ చేయండి",
-          en: "Share the result",
-        },
+        title: { en: "Share the result", te: "ఫలితం షేర్ చేయండి" },
         body: {
-          te: "ఎవరు ఎంత స్కోర్ చేశారో చూడండి, వాట్సాప్‌లో స్టిక్కర్ షేర్ చేసి మళ్ళీ ఆడండి.",
           en: "See who scored what, send the result sticker to WhatsApp, and go again.",
+          te: "ఎవరు ఎంత స్కోర్ చేశారో చూడండి, వాట్సాప్‌కు స్టిక్కర్ పంపండి, మళ్ళీ ఆడండి.",
         },
       },
     ],
-    auctionBadge: {
-      te: "ఆన్‌లైన్ · 2 నుండి 10 మంది ఫ్రెండ్స్",
-      en: "Online · 2 to 10 friends",
-    },
+    auctionBadge: { en: "Online · 2 to 10 friends", te: "ఆన్‌లైన్ · 2 నుండి 10 మంది ఫ్రెండ్స్" },
     auctionHeading: {
-      te: "సినిమాలపై వేలం వేయండి. దాగి ఉన్న స్కోర్లు విజేతను నిర్ణయిస్తాయి.",
       en: "Bid on films. Hidden scores pick the winner.",
+      te: "సినిమాలపై వేలం వేయండి. దాగిన స్కోర్లు విజేతను తేలుస్తాయి.",
     },
     auctionBullets: [
       {
-        te: "అందరికీ సమానమైన ఆట నాణేల పర్స్ వస్తుంది.",
         en: "Everyone gets the same pretend purse.",
+        te: "అందరికీ ఒకే విధమైన ఆట నాణేల పర్స్ ఉంటుంది.",
       },
       {
-        te: "బాక్స్ ఆఫీస్, టాక్ మరియు కల్ట్ విలువ చివరి వరకు దాగి ఉంటాయి.",
         en: "Box office, word of mouth and cult value stay hidden until the end.",
+        te: "బాక్స్ ఆఫీస్, టాక్, కల్ట్ విలువ చివరి వరకు దాగి ఉంటాయి.",
       },
       {
-        te: "చివరి 5 సెకన్లలో వేలం వేస్తే టైమర్ రీసెట్ అవుతుంది, ఎవరూ స్నైప్ చేయలేరు.",
         en: "A late bid resets the clock, so nobody can snipe.",
+        te: "చివర్లో వేలం వేస్తే గడియారం రీసెట్ అవుతుంది, ఎవరూ దొంగదెబ్బ తీయలేరు.",
       },
     ],
-    noRealMoneyNote: {
-      te: "ఆట నాణేలు మాత్రమే. నిజమైన డబ్బు పందెం ఎప్పుడూ ఉండదు.",
-      en: "Game coins only. There is no real-money betting.",
+    tryAuctionBtn: { en: "Try the auction room", te: "ఆక్షన్ రూమ్ చూడండి" },
+    teluguHeading: {
+      en: "Telugu when you want it.",
+      te: "తెలుగు ఫస్ట్. ప్రతి కార్డుపై తెలుగు పెద్దగా.",
     },
-    tryAuctionBtn: {
-      te: "ఆక్షన్ రూమ్ ప్రయత్నించండి",
-      en: "Try the auction room",
+    teluguHeadingSecond: {
+      en: "One tap switches every card.",
+      te: "ఒక్క నొక్కుతో అన్నీ మారతాయి.",
     },
-    teluguFirstHeading: {
-      te: "తెలుగు ఫస్ట్. ప్రతి కార్డుపై రెండు లిపులు.",
-      en: "Telugu first. Two scripts on every card.",
+    teluguBody: {
+      en: "Tap the language switch at the top. Every title, clue and button changes to Telugu script, with the English letters small beneath each card.",
+      te: "పైన ఉన్న భాష బటన్ నొక్కండి. ప్రతి పేరు, క్లూ, బటన్ తెలుగు లిపిలోకి మారుతుంది. ప్రతి కార్డు కింద ఇంగ్లీష్ అక్షరాలు చిన్నగా కనిపిస్తాయి.",
     },
-    teluguFirstBody: {
-      te: "ప్రతి సినిమా పేరు, డైలాగ్ మరియు క్లూ తెలుగు లిపిలో పెద్దగా, కింద ఇంగ్లీష్ అక్షరాలతో కనిపిస్తాయి.",
-      en: "Every title, dialogue and clue shows in Telugu script with English letters underneath, so the whole room can read it.",
-    },
-    fanVibeLabel: {
-      te: "మీ ఫ్యాన్ వైబ్ (ఐచ్ఛికం)",
-      en: "YOUR FAN VIBE (OPTIONAL)",
-    },
-    playingAs: {
-      te: "ఆడుతున్న వైబ్:",
-      en: "Playing as",
-    },
-    closingHeading: {
-      te: "ఆడుకుందాం",
-      en: "Your gang is waiting.",
-    },
+    fanVibeLabel: { en: "YOUR FAN VIBE (OPTIONAL)", te: "మీ ఫ్యాన్ వైబ్ (ఐచ్ఛికం)" },
+    fanVibeGroup: { en: "Fan vibe", te: "ఫ్యాన్ వైబ్" },
+    playingAs: { en: "Playing as", te: "ఆడుతున్న వైబ్:" },
+    pokiriFacts: { en: "2006 · Puri Jagannadh", te: "2006 · పూరి జగన్నాథ్" },
+    pokiriWord: { en: "Pokiri", te: "పోకిరి" },
+    closingHeading: { en: "Your gang is waiting.", te: "మీ గ్యాంగ్ ఎదురు చూస్తోంది." },
   },
   playHome: {
-    todaysPickBadge: {
-      te: "ఈరోజు పిక్",
-      en: "TODAY'S PICK",
-    },
+    todaysPickBadge: { en: "TODAY'S PICK", te: "ఈరోజు ఎంపిక" },
     roomBannerTitle: {
-      te: "రూమ్ కోడ్ ఉందా? మీ ఫ్రెండ్స్‌తో చేరండి",
       en: "Got a room code? Join your friends",
+      te: "రూమ్ కోడ్ ఉందా? మీ ఫ్రెండ్స్‌తో చేరండి",
     },
-    roomBannerSub: {
-      te: "4-అక్షరాల కోడ్ ఎంటర్ చేసి వెంటనే ఆడండి",
-      en: "Enter a 4-letter code to jump right in",
+    joinBtn: { en: "Enter code", te: "కోడ్ ఇవ్వండి" },
+    allGamesHeading: { en: "All 10 games", te: "మొత్తం 10 గేమ్స్" },
+    playAction: { en: "PLAY", te: "ఆడు" },
+    joinRoomRegion: { en: "Join a room", te: "రూమ్‌లో చేరండి" },
+  },
+  gameSetup: {
+    gameNumber: { en: "GAME #{n}", te: "గేమ్ #{n}" },
+    placeholder: {
+      en: "Deck and timer setup arrives with this game's round engine.",
+      te: "ఈ గేమ్ రౌండ్ ఇంజిన్‌తో పాటు డెక్, టైమర్ సెటప్ వస్తుంది.",
     },
-    joinBtn: {
-      te: "కోడ్ ఎంటర్ చేయండి",
-      en: "Enter code",
+    createRoom: { en: "Create online room", te: "ఆన్‌లైన్ రూమ్ తయారు చేయండి" },
+  },
+  hsg: {
+    name: { en: "Head Set Go", te: "హెడ్ సెట్ గో" },
+    rules: {
+      en: "Put the phone on your forehead. Friends shout clues. Tap right when you get it, left to pass.",
+      te: "ఫోన్ నుదుటిపై పెట్టుకోండి. ఫ్రెండ్స్ క్లూస్ అరుస్తారు. సరైనదైతే కుడివైపు, వదిలేయాలంటే ఎడమవైపు నొక్కండి.",
     },
-    allGamesHeading: {
-      te: "అన్ని గేమ్స్ (10)",
-      en: "All 10 games",
+    tip: {
+      en: "Put the phone on your forehead, friends shout clues.",
+      te: "ఫోన్ నుదుటిపై పెట్టండి, ఫ్రెండ్స్ క్లూస్ అరుస్తారు.",
     },
-    playAction: {
-      te: "ఆడు",
-      en: "PLAY",
+    pickDeck: { en: "Pick a deck", te: "డెక్ ఎంచుకోండి" },
+    deckGroup: { en: "Deck", te: "డెక్" },
+    deckMovies: { en: "Movies", te: "సినిమాలు" },
+    deckMoviesNote: { en: "Telugu film titles", te: "తెలుగు సినిమా పేర్లు" },
+    deckActors: { en: "Actors", te: "నటీనటులు" },
+    deckActorsNote: { en: "Well-known Telugu film actors", te: "ప్రముఖ తెలుగు సినీ నటీనటులు" },
+    timerHeading: { en: "Round time", te: "రౌండ్ సమయం" },
+    timerLess: { en: "Less time", te: "సమయం తగ్గించు" },
+    timerMore: { en: "More time", te: "సమయం పెంచు" },
+    start: { en: "Start", te: "మొదలుపెట్టు" },
+    getReady: { en: "Get ready", te: "సిద్ధంగా ఉండండి" },
+    turnSideways: { en: "Turn your phone sideways", te: "మీ ఫోన్‌ను పక్కకు తిప్పండి" },
+    turnSidewaysNote: { en: "Sideways is easier to play.", te: "పక్కకు తిప్పితే ఆడటం తేలిక." },
+    pause: { en: "Pause", te: "ఆపు" },
+    paused: { en: "Paused", te: "ఆగింది" },
+    resume: { en: "Resume", te: "కొనసాగించు" },
+    quit: { en: "Quit", te: "నిష్క్రమించు" },
+    soundOn: { en: "Sound on", te: "శబ్దం ఉంది" },
+    soundOff: { en: "Sound off", te: "శబ్దం లేదు" },
+    muteAction: { en: "Turn sound off", te: "శబ్దం ఆపండి" },
+    unmuteAction: { en: "Turn sound on", te: "శబ్దం పెట్టండి" },
+    timeLeft: { en: "Time left", te: "మిగిలిన సమయం" },
+    correctCount: { en: "Correct answers", te: "సరైన జవాబులు" },
+    roundRegion: { en: "Head Set Go round", te: "హెడ్ సెట్ గో రౌండ్" },
+    currentCard: { en: "Current card", te: "ప్రస్తుత కార్డ్" },
+    passStamp: { en: "PASS", te: "పాస్" },
+    correctStamp: { en: "CORRECT", te: "సరైనది" },
+    backgroundPaused: { en: "Paused while you were away.", te: "మీరు లేనప్పుడు ఆగింది." },
+    timesUp: { en: "Time's up!", te: "సమయం అయిపోయింది!" },
+    deckDone: { en: "Deck finished!", te: "డెక్ పూర్తయింది!" },
+    scoreLabel: { en: "Score", te: "స్కోర్" },
+    gotIt: { en: "Got it", te: "సరైనవి" },
+    passedList: { en: "Passed", te: "వదిలేసినవి" },
+    emptyList: { en: "Nothing here", te: "ఇక్కడ ఏమీ లేవు" },
+    playAgain: { en: "Play again", te: "మళ్ళీ ఆడండి" },
+    changeDeck: { en: "Change deck", te: "డెక్ మార్చండి" },
+    share: { en: "Share", te: "షేర్ చేయండి" },
+    home: { en: "Home", te: "హోమ్" },
+    shareSaved: { en: "Sticker saved to your device.", te: "స్టిక్కర్ మీ ఫోన్‌లో సేవ్ అయింది." },
+    shareDone: { en: "Sticker shared.", te: "స్టిక్కర్ షేర్ అయింది." },
+    shareFailed: { en: "Could not make the sticker. Try again.", te: "స్టిక్కర్ తయారు కాలేదు. మళ్ళీ ప్రయత్నించండి." },
+    shareTitle: { en: "I scored {n} on Head Set Go", te: "హెడ్ సెట్ గోలో నా స్కోర్ {n}" },
+    shareScoreLine: { en: "{n} correct", te: "{n} సరైనవి" },
+    shareDeckLine: { en: "Deck: {deck}", te: "డెక్: {deck}" },
+    noRound: { en: "No round in progress. Pick a deck first.", te: "రౌండ్ జరగడం లేదు. ముందు డెక్ ఎంచుకోండి." },
+  },
+  pages: {
+    aboutTitle: { en: "About", te: "మా గురించి" },
+    aboutBody1: {
+      en: "TFI & Pitch is a set of short party games about Telugu cinema, Indian cricket and friend-group banter.",
+      te: "TFI & Pitch అంటే తెలుగు సినిమా, భారత క్రికెట్, ఫ్రెండ్స్ కబుర్లపై చిన్న పార్టీ గేమ్స్.",
     },
+    aboutBody2: {
+      en: "All auctions use pretend game coins only. There are no payments, wallets, prizes or real-money wagers of any kind.",
+      te: "అన్ని వేలాలు ఆట నాణేలతో మాత్రమే. చెల్లింపులు, వాలెట్లు, బహుమతులు, నిజమైన డబ్బు పందేలు ఏమీ ఉండవు.",
+    },
+    privacyTitle: { en: "Privacy Policy", te: "గోప్యతా విధానం" },
+    privacyBody: {
+      en: "There is no sign-in in the beta. A guest gets an automatic device name, for example \"Guest Tiger\", saved only on your device. No email, no password, no personal-data forms, and no tracking of children.",
+      te: "బీటాలో సైన్-ఇన్ లేదు. అతిథికి \"Guest Tiger\" లాంటి ఆటోమేటిక్ పరికరం పేరు వస్తుంది, అది మీ ఫోన్‌లో మాత్రమే ఉంటుంది. ఈమెయిల్, పాస్‌వర్డ్, వ్యక్తిగత వివరాల ఫారాలు ఉండవు, పిల్లలను ట్రాక్ చేయం.",
+    },
+    termsTitle: { en: "Terms of Play", te: "ఆట నిబంధనలు" },
+    termsBody: {
+      en: "All games are free party games for friends. Auctions use pretend coins only. No real money, payments, wallets or prizes ever exist here.",
+      te: "అన్ని గేమ్స్ ఫ్రెండ్స్ కోసం ఉచిత పార్టీ గేమ్స్. వేలాలు ఆట నాణేలతో మాత్రమే. నిజమైన డబ్బు, చెల్లింపులు, వాలెట్లు, బహుమతులు ఇక్కడ ఎప్పుడూ ఉండవు.",
+    },
+    offlineTitle: { en: "You are offline", te: "మీరు ఆఫ్‌లైన్‌లో ఉన్నారు" },
+    offlineBody: {
+      en: "Pass-around-phone games keep working without internet once you have opened them.",
+      te: "ఒకే ఫోన్ గేమ్స్ ఒకసారి తెరిచిన తర్వాత ఇంటర్నెట్ లేకుండానే పనిచేస్తాయి.",
+    },
+    joinBadge: { en: "ONLINE ROOMS · 4-LETTER CODE", te: "ఆన్‌లైన్ రూమ్స్ · 4 అక్షరాల కోడ్" },
+    joinTitle: { en: "Enter a 4-letter code", te: "4 అక్షరాల కోడ్ ఇవ్వండి" },
+    joinLabel: { en: "Room code (no I, O, 0, 1)", te: "రూమ్ కోడ్ (I, O, 0, 1 ఉండవు)" },
+    joinButton: { en: "Join room {code}", te: "{code} రూమ్‌లో చేరండి" },
+    joinInvalid: { en: "Enter a valid 4-letter code", te: "సరైన 4 అక్షరాల కోడ్ ఇవ్వండి" },
+    meTitle: { en: "Device profile and preferences", te: "పరికరం ప్రొఫైల్, ఇష్టాలు" },
+    meNoSignIn: { en: "No sign-in needed", te: "సైన్-ఇన్ అవసరం లేదు" },
+    meDeviceName: { en: "Guest device name (saved on this phone)", te: "అతిథి పరికరం పేరు (ఈ ఫోన్‌లో సేవ్ అవుతుంది)" },
+    meLanguage: { en: "Language", te: "భాష" },
+    meAccessibility: { en: "Accessibility and sound", te: "సౌలభ్యం, శబ్దం" },
+    meSound: { en: "Sound", te: "శబ్దం" },
+    meReducedMotion: { en: "Reduced motion", te: "తక్కువ కదలిక" },
+    on: { en: "ON", te: "ఉంది" },
+    off: { en: "OFF", te: "లేదు" },
+    roomNewBadge: { en: "WAVE 2 · ONLINE ROOMS", te: "వేవ్ 2 · ఆన్‌లైన్ రూమ్స్" },
+    roomNewTitle: { en: "Create an online room", te: "ఆన్‌లైన్ రూమ్ తయారు చేయండి" },
+    roomNewBody: {
+      en: "Online rooms arrive in a later phase.",
+      te: "ఆన్‌లైన్ రూమ్స్ తర్వాతి దశలో వస్తాయి.",
+    },
+    roomPreview: { en: "Preview room K7QM", te: "K7QM రూమ్ చూడండి" },
+    roomTitle: { en: "Box Office Auction · Room {code}", te: "బాక్స్ ఆఫీస్ ఆక్షన్ · రూమ్ {code}" },
+    lotOf: { en: "LOT 3 OF 10", te: "లాట్ 3 / 10" },
+    bidLabel: { en: "CURRENT BID (GAME COINS)", te: "ప్రస్తుత వేలం (ఆట నాణేలు)" },
+  },
+  health: {
+    title: { en: "SYSTEM HEALTH", te: "సిస్టమ్ ఆరోగ్యం" },
+    status: { en: "STATUS: HEALTHY", te: "స్థితి: బాగుంది" },
+    backToWall: { en: "Back to the wall", te: "వాల్‌కు వెళ్ళండి" },
+    tokens: { en: "1. Locked Wall color tokens (8 colors only)", te: "1. లాక్ చేసిన వాల్ రంగులు (8 రంగులు మాత్రమే)" },
+    fonts: { en: "2. Self-hosted fonts", te: "2. సొంతంగా హోస్ట్ చేసిన ఫాంట్లు" },
+    teluguTest: { en: "Telugu stress test", te: "తెలుగు పరీక్ష" },
+    teluguOnlyNote: {
+      en: "Switch the language to Telugu to see the long-conjunct stress test.",
+      te: "పొడవైన సంయుక్తాక్షరాల పరీక్ష కోసం భాషను తెలుగుకు మార్చండి.",
+    },
+    kit: { en: "3. Sticker kit primitives", te: "3. స్టిక్కర్ కిట్ భాగాలు" },
+    playNow: { en: "Play now", te: "ఇప్పుడే ఆడండి" },
+    seeGames: { en: "See the games", te: "గేమ్స్ చూడండి" },
+    passBid: { en: "Pass / Bid 25 Cr", te: "పాస్ / వేలం 25 Cr" },
+    roundTimer: { en: "Round timer", te: "రౌండ్ టైమర్" },
   },
 } as const;
 
@@ -286,13 +382,10 @@ export const GAMES_CATALOG: readonly GameCatalogItem[] = [
     iconKind: "head",
     modeKey: "onePhone",
     isOnlineOnly: false,
-    title: {
-      te: "హెడ్ సెట్ గో",
-      en: "Head Set Go",
-    },
+    title: { en: "Head Set Go", te: "హెడ్ సెట్ గో" },
     description: {
-      te: "ఫోన్ నుదుటిపై పెట్టండి. ఫ్రెండ్స్ క్లూస్ అరుస్తారు.",
       en: "Phone on your forehead. Friends shout clues.",
+      te: "ఫోన్ నుదుటిపై. ఫ్రెండ్స్ క్లూస్ అరుస్తారు.",
     },
   },
   {
@@ -303,13 +396,10 @@ export const GAMES_CATALOG: readonly GameCatalogItem[] = [
     iconKind: "trans",
     modeKey: "onePhone",
     isOnlineOnly: false,
-    title: {
-      te: "ట్రాన్సిఫై",
-      en: "Transify",
-    },
+    title: { en: "Transify", te: "ట్రాన్సిఫై" },
     description: {
-      te: "తమాషా ఇంగ్లీష్ అనువాదం నుండి తెలుగు సినిమా పట్టండి.",
       en: "Decode funny broken-English movie titles.",
+      te: "తమాషా ఇంగ్లీష్ అనువాదాల నుండి సినిమా పేర్లు పట్టండి.",
     },
   },
   {
@@ -320,13 +410,10 @@ export const GAMES_CATALOG: readonly GameCatalogItem[] = [
     iconKind: "charades",
     modeKey: "onePhone",
     isOnlineOnly: false,
-    title: {
-      te: "డంబ్ షరాడ్స్",
-      en: "Dumb Charades",
-    },
+    title: { en: "Dumb Charades", te: "డంబ్ షరాడ్స్" },
     description: {
-      te: "మాటలు లేకుండా నటించండి. టీమ్ వర్సెస్ టీమ్.",
       en: "Act it out. Team against team.",
+      te: "నటించి చూపండి. టీమ్ వర్సెస్ టీమ్.",
     },
   },
   {
@@ -337,13 +424,10 @@ export const GAMES_CATALOG: readonly GameCatalogItem[] = [
     iconKind: "emoji",
     modeKey: "phoneOrOnline",
     isOnlineOnly: false,
-    title: {
-      te: "ఎమోజీ సినిమా",
-      en: "Emoji Cinema",
-    },
+    title: { en: "Emoji Cinema", te: "ఎమోజీ సినిమా" },
     description: {
-      te: "ఎమోజీల వరుస చూసి సినిమా పేరు చెప్పుకోండి.",
       en: "Guess the film from a string of emoji.",
+      te: "ఎమోజీల వరుస చూసి సినిమా పేరు చెప్పండి.",
     },
   },
   {
@@ -354,13 +438,10 @@ export const GAMES_CATALOG: readonly GameCatalogItem[] = [
     iconKind: "auction",
     modeKey: "online",
     isOnlineOnly: true,
-    title: {
-      te: "బాక్స్ ఆఫీస్ ఆక్షన్",
-      en: "Box Office Auction",
-    },
+    title: { en: "Box Office Auction", te: "బాక్స్ ఆఫీస్ ఆక్షన్" },
     description: {
-      te: "సినిమాలపై వేలం వేయండి. దాగి ఉన్న స్కోర్లు విజేతను నిర్ణయిస్తాయి.",
       en: "Bid on films. Hidden scores pick the winner.",
+      te: "సినిమాలపై వేలం వేయండి. దాగిన స్కోర్లు విజేతను తేలుస్తాయి.",
     },
   },
   {
@@ -371,13 +452,10 @@ export const GAMES_CATALOG: readonly GameCatalogItem[] = [
     iconKind: "cricketiq",
     modeKey: "phoneOrOnline",
     isOnlineOnly: false,
-    title: {
-      te: "క్రికెట్ ఐక్యూ",
-      en: "Cricket IQ",
-    },
+    title: { en: "Cricket IQ", te: "క్రికెట్ ఐక్యూ" },
     description: {
-      te: "క్రికెటర్లు, రికార్డులు మరియు మరపురాని క్షణాలు.",
       en: "Cricketers, records and iconic moments.",
+      te: "క్రికెటర్లు, రికార్డులు, మరపురాని క్షణాలు.",
     },
   },
   {
@@ -388,13 +466,10 @@ export const GAMES_CATALOG: readonly GameCatalogItem[] = [
     iconKind: "dream",
     modeKey: "online",
     isOnlineOnly: true,
-    title: {
-      te: "డ్రీమ్ XI ఛాలెంజ్",
-      en: "Dream XI Challenge",
-    },
+    title: { en: "Dream XI Challenge", te: "డ్రీమ్ XI ఛాలెంజ్" },
     description: {
-      te: "బడ్జెట్‌లో 11 మంది ఆటగాళ్లను ఎంచుకోండి.",
       en: "Pick eleven within a budget.",
+      te: "బడ్జెట్‌లో పదకొండు మందిని ఎంచుకోండి.",
     },
   },
   {
@@ -405,13 +480,10 @@ export const GAMES_CATALOG: readonly GameCatalogItem[] = [
     iconKind: "cricketauction",
     modeKey: "online",
     isOnlineOnly: true,
-    title: {
-      te: "క్రికెట్ ఆక్షన్",
-      en: "Cricket Auction",
-    },
+    title: { en: "Cricket Auction", te: "క్రికెట్ ఆక్షన్" },
     description: {
-      te: "ఆట నాణేలతో వేలం వేసి మీ జట్టును నిర్మించుకోండి.",
       en: "Spend a pretend purse and build your side.",
+      te: "ఆట నాణేల పర్స్‌తో మీ జట్టును తయారు చేసుకోండి.",
     },
   },
   {
@@ -422,13 +494,10 @@ export const GAMES_CATALOG: readonly GameCatalogItem[] = [
     iconKind: "rapid",
     modeKey: "onePhone",
     isOnlineOnly: false,
-    title: {
-      te: "ర్యాపిడ్ ఫైర్",
-      en: "Rapid Fire",
-    },
+    title: { en: "Rapid Fire", te: "ర్యాపిడ్ ఫైర్" },
     description: {
-      te: "గడియారంతో పోటీ పడుతూ సరదా తెలుగు ప్రశ్నలు.",
       en: "Funny Telugu questions against the clock.",
+      te: "గడియారంతో పోటీ పడుతూ సరదా తెలుగు ప్రశ్నలు.",
     },
   },
   {
@@ -439,18 +508,16 @@ export const GAMES_CATALOG: readonly GameCatalogItem[] = [
     iconKind: "most",
     modeKey: "phoneOrOnline",
     isOnlineOnly: false,
-    title: {
-      te: "మోస్ట్ లైక్లీ",
-      en: "Most Likely",
-    },
+    title: { en: "Most Likely", te: "మోస్ట్ లైక్లీ" },
     description: {
-      te: "ఎవరు అత్యంత ఫన్నీ పని చేస్తారో ఓటు వేయండి.",
       en: "Vote on which friend would do the silliest thing.",
+      te: "ఎవరు అత్యంత సరదా పని చేస్తారో ఓటు వేయండి.",
     },
   },
 ] as const;
 
-export const TELUGU_CONJUNCT_SAMPLES: readonly BilingualEntry[] = [
+/** Long Telugu conjuncts used by the Telugu-mode stress test on /health. */
+export const TELUGU_CONJUNCT_SAMPLES: readonly Bi[] = [
   {
     te: "శ్రీ సీతారాముల కళ్యాణం చూతము రారండి",
     en: "Sri Seetharamula Kalyanam Choothamu Rarandi",
@@ -464,3 +531,6 @@ export const TELUGU_CONJUNCT_SAMPLES: readonly BilingualEntry[] = [
     en: "Sri Krishnarjuna Vijayam · Shastrachikitsa · Prekshakulu",
   },
 ] as const;
+
+/** The brand always shows in English letters. */
+export const BRAND_NAME = TRANSLATIONS.brand.name.en;

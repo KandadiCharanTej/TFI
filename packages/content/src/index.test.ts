@@ -1,31 +1,40 @@
-import { describe, expect, it } from "vitest";
-import { CardSchema } from "./index";
+import { describe, it, expect } from "vitest";
+import { CardSchema } from "./index.js";
 
 describe("CardSchema", () => {
-  it("validates bilingual cards and requires both te and en scripts", () => {
-    const valid = CardSchema.safeParse({
-      id: "hsg-001",
-      deck: "classics",
-      game: "head-set-go",
-      te: "పోకిరి",
-      en: "Pokiri",
-      year: 2006,
-      difficulty: 1,
-      tags: ["Puri Jagannadh"],
-      verified: false,
-    });
-    expect(valid.success).toBe(true);
+  const validCard = {
+    id: "hsg-mov-001",
+    game: "head-set-go",
+    deck: "movies",
+    en: "Pokiri",
+    te: "పోకిరి",
+    difficulty: 1,
+    tags: ["action"],
+    verified: false,
+  };
 
-    const missingTelugu = CardSchema.safeParse({
-      id: "hsg-002",
-      deck: "classics",
-      game: "head-set-go",
-      te: "",
-      en: "Pokiri",
-      difficulty: 1,
-      tags: [],
-      verified: false,
-    });
-    expect(missingTelugu.success).toBe(false);
+  it("accepts a valid card", () => {
+    expect(CardSchema.safeParse(validCard).success).toBe(true);
+  });
+
+  it("rejects card with empty en", () => {
+    expect(CardSchema.safeParse({ ...validCard, en: "" }).success).toBe(false);
+  });
+
+  it("rejects card with empty te", () => {
+    expect(CardSchema.safeParse({ ...validCard, te: "" }).success).toBe(false);
+  });
+
+  it("rejects difficulty outside 1-3", () => {
+    expect(CardSchema.safeParse({ ...validCard, difficulty: 4 }).success).toBe(false);
+  });
+
+  it("accepts optional fields", () => {
+    const card = { ...validCard, answerEn: "Pokiri", year: 2006, hint: "Puri Jagannadh film" };
+    expect(CardSchema.safeParse(card).success).toBe(true);
+  });
+
+  it("rejects year outside sane range", () => {
+    expect(CardSchema.safeParse({ ...validCard, year: 1800 }).success).toBe(false);
   });
 });

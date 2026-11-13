@@ -99,19 +99,63 @@ body {
   background-color: var(--concrete);
   background-image: radial-gradient(rgba(20, 19, 19, 0.09) 1.3px, transparent 1.4px);
   background-size: 20px 20px;
-  font-family: 'Plus Jakarta Sans', 'Noto Sans Telugu', system-ui, sans-serif;
+  /* English default: Noto Sans Telugu is NOT in this stack, so it is never downloaded. */
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   font-weight: 500;
   color: var(--ink);
   text-align: start;
 }
 
-/* Non-negotiable Rule 1: Telugu typography rules */
-.te-script {
+/*
+ * TELUGU MODE (only when the user switches with the తె / EN switch).
+ * Noto Sans Telugu joins the font stack here, and only here.
+ * Telugu typography: never uppercase, never letter-spaced, line height 1.5+.
+ */
+html[lang="te"] body {
+  font-family: 'Noto Sans Telugu', 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 110%;
+}
+
+html[lang="te"] body * {
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  line-height: 1.55 !important;
+}
+
+/* The brand stays English letters, uppercase Anton, in both languages. */
+html[lang="te"] .keep-case {
+  text-transform: uppercase !important;
+  letter-spacing: 0.01em !important;
+  line-height: 1.1 !important;
+}
+
+/* Telugu glyphs inside headline / marker / mono elements fall back to Noto Sans Telugu. */
+html[lang="te"] .anton-title {
+  font-family: 'Anton', 'Noto Sans Telugu', sans-serif;
+}
+html[lang="te"] .marker-accent {
+  font-family: 'Permanent Marker', 'Noto Sans Telugu', cursive;
+}
+html[lang="te"] .mono-num {
+  font-family: 'Space Mono', 'Noto Sans Telugu', monospace;
+}
+
+/* Telugu lead (large) with English small beneath, used on game cards and big words. */
+.te-lead {
   font-family: 'Noto Sans Telugu', 'Plus Jakarta Sans', sans-serif;
   font-weight: 800;
-  text-transform: none !important;
-  letter-spacing: 0 !important;
-  line-height: 1.55;
+}
+
+.te-sub {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.72em;
+}
+
+/* Language names are the one allowed exception: the switch label uses the phone's own Telugu font. */
+.lang-switch-te {
+  font-family: system-ui, 'Noto Sans Telugu', sans-serif;
+  font-weight: 800;
 }
 
 .anton-title {

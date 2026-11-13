@@ -1,22 +1,24 @@
 import { AppFrame } from "@/components/app-frame";
+import { Tx } from "@/components/lang-provider";
 import { Badge, Sticker, WallLinkButton } from "@/components/sticker-kit";
+import { TRANSLATIONS } from "@/lib/i18n";
 
 export default function NewRoomPage() {
+  const P = TRANSLATIONS.pages;
   return (
     <AppFrame>
       <Sticker className="mx-auto max-w-[520px] space-y-4 p-6">
         <Badge tone="cyan" mono>
-          WAVE 2 · ONLINE ROOMS
+          <Tx v={P.roomNewBadge} />
         </Badge>
-        <p className="te-script m-0 text-[26px] leading-[1.55] text-ink" lang="te">
-          కొత్త ఆన్‌లైన్ రూమ్
-        </p>
-        <h1 className="anton-title m-0 text-[28px] text-ink">Create an Online Room</h1>
-        <p className="text-sm font-bold text-ink">
-          Realtime rooms powered by PartyKit Durable Objects arrive in Phase 5.
+        <h1 className="anton-title m-0 text-[28px] text-ink">
+          <Tx v={P.roomNewTitle} />
+        </h1>
+        <p className="m-0 text-sm font-bold text-ink">
+          <Tx v={P.roomNewBody} />
         </p>
         <WallLinkButton href="/room/K7QM" variant="yellow">
-          Preview Room K7QM →
+          <Tx v={P.roomPreview} /> →
         </WallLinkButton>
       </Sticker>
     </AppFrame>
