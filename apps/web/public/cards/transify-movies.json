@@ -1,0 +1,452 @@
+[
+  {
+    "id": "trans-001",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "రోగ్",
+    "en": "Rogue",
+    "answerTe": "పోకిరి",
+    "answerEn": "Pokiri",
+    "hint": "2006 Puri Jagannadh",
+    "difficulty": 1,
+    "tags": [
+      "classic"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-002",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "ఈగ",
+    "en": "Fly",
+    "answerTe": "ఈగ",
+    "answerEn": "Eega",
+    "hint": "2012 SS Rajamouli",
+    "difficulty": 1,
+    "tags": [
+      "action"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-003",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "ఒక్కడు",
+    "en": "One Man",
+    "answerTe": "ఒక్కడు",
+    "answerEn": "Okkadu",
+    "hint": "2003 Gunasekhar",
+    "difficulty": 1,
+    "tags": [
+      "classic"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-004",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "బొమ్మరిల్లు",
+    "en": "Doll House",
+    "answerTe": "బొమ్మరిల్లు",
+    "answerEn": "Bommarillu",
+    "hint": "2006 Bhaskar",
+    "difficulty": 1,
+    "tags": [
+      "family"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-005",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "అతడు",
+    "en": "Him",
+    "answerTe": "అతడు",
+    "answerEn": "Athadu",
+    "hint": "2005 Trivikram",
+    "difficulty": 1,
+    "tags": [
+      "thriller"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-006",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "జల్సా",
+    "en": "Celebration",
+    "answerTe": "జల్సా",
+    "answerEn": "Jalsa",
+    "hint": "2008 Trivikram",
+    "difficulty": 1,
+    "tags": [
+      "comedy"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-007",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "మగధీర",
+    "en": "Great Warrior",
+    "answerTe": "మగధీర",
+    "answerEn": "Magadheera",
+    "hint": "2009 SS Rajamouli",
+    "difficulty": 1,
+    "tags": [
+      "epic"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-008",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "దూకుడు",
+    "en": "Aggression",
+    "answerTe": "దూకుడు",
+    "answerEn": "Dookudu",
+    "hint": "2011 Srinu Vaitla",
+    "difficulty": 1,
+    "tags": [
+      "action"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-009",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "నాయకుడు",
+    "en": "Leader",
+    "answerTe": "లీడర్",
+    "answerEn": "Leader",
+    "hint": "2010 Sekhar Kammula",
+    "difficulty": 2,
+    "tags": [
+      "drama"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-010",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "ఖుషి",
+    "en": "Happiness",
+    "answerTe": "ఖుషి",
+    "answerEn": "Khushi",
+    "hint": "2001 SJ Suryah",
+    "difficulty": 1,
+    "tags": [
+      "romance"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-011",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "సింహాద్రి",
+    "en": "Lion Mountain",
+    "answerTe": "సింహాద్రి",
+    "answerEn": "Simhadri",
+    "hint": "2003 SS Rajamouli",
+    "difficulty": 1,
+    "tags": [
+      "action"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-012",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "ఖలేజా",
+    "en": "Courage",
+    "answerTe": "ఖలేజా",
+    "answerEn": "Khaleja",
+    "hint": "2010 Trivikram",
+    "difficulty": 2,
+    "tags": [
+      "action"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-013",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "తుఫాన్",
+    "en": "Storm",
+    "answerTe": "తూఫాన్",
+    "answerEn": "Thoofan",
+    "hint": "2013 Apoorva Lakhia",
+    "difficulty": 2,
+    "tags": [
+      "action"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-014",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "జెంటిల్‌మన్",
+    "en": "Gentleman",
+    "answerTe": "జెంటిల్‌మన్",
+    "answerEn": "Gentleman",
+    "hint": "2016 Mohan Krishna Indraganti",
+    "difficulty": 2,
+    "tags": [
+      "thriller"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-015",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "రేసుగుర్రం",
+    "en": "Racer",
+    "answerTe": "రేసు గుర్రం",
+    "answerEn": "Race Gurram",
+    "hint": "2014 Surender Reddy",
+    "difficulty": 1,
+    "tags": [
+      "comedy"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-016",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "బాద్‌షా",
+    "en": "King",
+    "answerTe": "బాద్‌షా",
+    "answerEn": "Baadshah",
+    "hint": "2013 Srinu Vaitla",
+    "difficulty": 1,
+    "tags": [
+      "comedy"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-017",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "అల",
+    "en": "Wave",
+    "answerTe": "అల వైకుంఠపురములో",
+    "answerEn": "Ala Vaikunthapurramuloo",
+    "hint": "2020 Trivikram",
+    "difficulty": 1,
+    "tags": [
+      "family"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-018",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "ఉప్పెన",
+    "en": "Surge",
+    "answerTe": "ఉప్పెన",
+    "answerEn": "Uppena",
+    "hint": "2021 Buchi Babu Sana",
+    "difficulty": 1,
+    "tags": [
+      "romance"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-019",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "పుష్ప",
+    "en": "Flower",
+    "answerTe": "పుష్ప",
+    "answerEn": "Pushpa",
+    "hint": "2021 Sukumar",
+    "difficulty": 1,
+    "tags": [
+      "action"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-020",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "గర్జన",
+    "en": "Roar",
+    "answerTe": "సింహ",
+    "answerEn": "Simha",
+    "hint": "2010 Boyapati Srinu",
+    "difficulty": 2,
+    "tags": [
+      "action"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-021",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "అద్భుతం",
+    "en": "Miracle",
+    "answerTe": "అదుర్స్",
+    "answerEn": "Adhurs",
+    "hint": "2010 VV Vinayak",
+    "difficulty": 1,
+    "tags": [
+      "comedy"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-022",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "నాయకుడు",
+    "en": "Hero",
+    "answerTe": "నాయక్",
+    "answerEn": "Nayak",
+    "hint": "2013 VV Vinayak",
+    "difficulty": 2,
+    "tags": [
+      "action"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-023",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "స్వర్ణకమలం",
+    "en": "Golden Lotus",
+    "answerTe": "స్వర్ణకమలం",
+    "answerEn": "Swarnakamalam",
+    "hint": "1988 K Viswanath",
+    "difficulty": 2,
+    "tags": [
+      "classic"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-024",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "ఖైదీ",
+    "en": "Prisoner",
+    "answerTe": "ఖైదీ",
+    "answerEn": "Khaidi",
+    "hint": "1983 A Kodandarami Reddy",
+    "difficulty": 1,
+    "tags": [
+      "classic"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-025",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "ఆర్య",
+    "en": "Noble Man",
+    "answerTe": "ఆర్య",
+    "answerEn": "Arya",
+    "hint": "2004 Sukumar",
+    "difficulty": 1,
+    "tags": [
+      "romance"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-026",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "కోపం",
+    "en": "Temper",
+    "answerTe": "టెంపర్",
+    "answerEn": "Temper",
+    "hint": "2015 Puri Jagannadh",
+    "difficulty": 1,
+    "tags": [
+      "action"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-027",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "ధ్రువ",
+    "en": "Shining Star",
+    "answerTe": "ధ్రువ",
+    "answerEn": "Dhruva",
+    "hint": "2016 Surender Reddy",
+    "difficulty": 2,
+    "tags": [
+      "thriller"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-028",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "బింబం",
+    "en": "Mirror",
+    "answerTe": "బింబిసార",
+    "answerEn": "Bimbisara",
+    "hint": "2022 Mallidi Vassishta",
+    "difficulty": 2,
+    "tags": [
+      "fantasy"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-029",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "ప్రేమకథ",
+    "en": "Love Path",
+    "answerTe": "ప్రేమికుడు",
+    "answerEn": "Premikudu",
+    "hint": "1994 Shankar",
+    "difficulty": 2,
+    "tags": [
+      "romance"
+    ],
+    "verified": false
+  },
+  {
+    "id": "trans-030",
+    "deck": "transify-movies",
+    "game": "transify",
+    "te": "బాహుబలి",
+    "en": "Strong One",
+    "answerTe": "బాహుబలి",
+    "answerEn": "Baahubali",
+    "hint": "2015 SS Rajamouli",
+    "difficulty": 1,
+    "tags": [
+      "epic"
+    ],
+    "verified": false
+  }
+]

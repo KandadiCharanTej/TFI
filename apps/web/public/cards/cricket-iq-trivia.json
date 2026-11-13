@@ -1,0 +1,452 @@
+[
+  {
+    "id": "crk-001",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "అంతర్జాతీయ క్రికెట్‌లో 100 సెంచరీలు సాధించిన ఏకైక క్రికెటర్ ఎవరు?",
+    "en": "Who is the only cricketer to score 100 international centuries?",
+    "answerTe": "సచిన్ టెండూల్కర్",
+    "answerEn": "Sachin Tendulkar",
+    "hint": "Master Blaster",
+    "difficulty": 1,
+    "tags": [
+      "records"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-002",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "1983 ప్రపంచకప్‌లో భారత జట్టుకు సారథ్యం వహించి కప్ గెలిపించిన కెప్టెన్ ఎవరు?",
+    "en": "Who captained India to victory in the 1983 World Cup?",
+    "answerTe": "కపిల్ దేవ్",
+    "answerEn": "Kapil Dev",
+    "hint": "Haryana Hurricane",
+    "difficulty": 1,
+    "tags": [
+      "history"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-003",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "2007 టీ20 ప్రపంచకప్‌లో ఇంగ్లాండ్‌పై ఒకే ఓవర్‌లో 6 సిక్సర్లు కొట్టిన భారత బ్యాటర్ ఎవరు?",
+    "en": "Who hit six sixes in an over during the 2007 T20 World Cup against England?",
+    "answerTe": "యువరాజ్ సింగ్",
+    "answerEn": "Yuvraj Singh",
+    "hint": "Durban 2007",
+    "difficulty": 1,
+    "tags": [
+      "iconic"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-004",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "1999లో పాకిస్తాన్‌పై ఒకే టెస్ట్ ఇన్నింగ్స్‌లో మొత్తం 10 వికెట్లు తీసిన భారత బౌలర్ ఎవరు?",
+    "en": "Which Indian bowler took all 10 wickets in a single Test innings against Pakistan in 1999?",
+    "answerTe": "అనిల్ కుంబ్లే",
+    "answerEn": "Anil Kumble",
+    "hint": "Feroz Shah Kotla",
+    "difficulty": 1,
+    "tags": [
+      "records"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-005",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "పురుషుల వన్డే ఇంటర్నేషనల్స్‌లో అత్యధిక వ్యక్తిగత స్కోరు (264 పరుగులు) సాధించిన బ్యాటర్ ఎవరు?",
+    "en": "Who holds the highest individual score in Men's One Day Internationals (264 runs)?",
+    "answerTe": "రోహిత్ శర్మ",
+    "answerEn": "Rohit Sharma",
+    "hint": "Eden Gardens 2014",
+    "difficulty": 1,
+    "tags": [
+      "records"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-006",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "తన తిరుగులేని డిఫెన్స్ కోసం 'ది వాల్' అని పిలవబడే భారత బ్యాట్స్‌మ్యాన్ ఎవరు?",
+    "en": "Which Indian batsman was famously nicknamed 'The Wall' for his resilient defense?",
+    "answerTe": "రాహుల్ ద్రవిడ్",
+    "answerEn": "Rahul Dravid",
+    "hint": "Former India head coach",
+    "difficulty": 1,
+    "tags": [
+      "legends"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-007",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "2001లో ఈడెన్ గార్డెన్స్‌లో ఆస్ట్రేలియాపై 281 పరుగుల చారిత్రాత్మక ఇన్నింగ్స్ ఆడిన హైదరాబాద్ బ్యాటర్ ఎవరు?",
+    "en": "Who scored a legendary 281 at Eden Gardens against Australia in 2001?",
+    "answerTe": "వివిఎస్ లక్ష్మణ్",
+    "answerEn": "VVS Laxman",
+    "hint": "Very Very Special",
+    "difficulty": 1,
+    "tags": [
+      "history"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-008",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "2007 టీ20 ప్రపంచకప్ మరియు 2011 వన్డే ప్రపంచకప్ రెండింటినీ గెలిపించిన భారత కెప్టెన్ ఎవరు?",
+    "en": "Which Indian captain led the team to win the 2007 T20 World Cup and 2011 ODI World Cup?",
+    "answerTe": "ఎంఎస్ ధోని",
+    "answerEn": "MS Dhoni",
+    "hint": "Captain Cool",
+    "difficulty": 1,
+    "tags": [
+      "legends"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-009",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "2007 టీ20 ప్రపంచకప్ ఫైనల్‌లో పాకిస్తాన్‌పై చివరి ఓవర్ వేసిన భారత బౌలర్ ఎవరు?",
+    "en": "Who bowled the final over in the 2007 T20 World Cup final against Pakistan?",
+    "answerTe": "జోగిందర్ శర్మ",
+    "answerEn": "Joginder Sharma",
+    "hint": "Misbah-ul-Haq wicket",
+    "difficulty": 2,
+    "tags": [
+      "iconic"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-010",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "క్యారమ్ బాల్ వేయడంలో ప్రసిద్ధి చెందిన భారత స్పిన్ మాంత్రికుడు ఎవరు?",
+    "en": "Which Indian bowler is famous for bowling the carrom ball?",
+    "answerTe": "ఆర్ అశ్విన్",
+    "answerEn": "R Ashwin",
+    "hint": "Off-spinner",
+    "difficulty": 1,
+    "tags": [
+      "bowling"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-011",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "హెలికాప్టర్ షాట్‌ను పరిచయం చేసి ప్రపంచవ్యాప్తంగా గుర్తింపు తెచ్చిన బ్యాటర్ ఎవరు?",
+    "en": "Who is known for introducing and popularizing the 'Helicopter Shot'?",
+    "answerTe": "ఎంఎస్ ధోని",
+    "answerEn": "MS Dhoni",
+    "hint": "Jharkhand legend",
+    "difficulty": 1,
+    "tags": [
+      "shots"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-012",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "అంతర్జాతీయంగా మూడు ఫార్మాట్లలోనూ (టెస్ట్ వన్డే టీ20) సెంచరీ చేసిన మొదటి భారతీయ బ్యాటర్ ఎవరు?",
+    "en": "Who was the first Indian cricketer to score a century in all three international formats?",
+    "answerTe": "సురేశ్ రైనా",
+    "answerEn": "Suresh Raina",
+    "hint": "Left-handed middle order",
+    "difficulty": 2,
+    "tags": [
+      "records"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-013",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "2011 ప్రపంచకప్ ఫైనల్‌లో ఎంఎస్ ధోని విన్నింగ్ సిక్స్ కొట్టిన ప్రసిద్ధ స్టేడియం ఏది?",
+    "en": "At which iconic venue did MS Dhoni hit the winning six in the 2011 World Cup final?",
+    "answerTe": "వాంఖడే స్టేడియం ముంబై",
+    "answerEn": "Wankhede Stadium Mumbai",
+    "hint": "April 2 2011",
+    "difficulty": 1,
+    "tags": [
+      "venues"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-014",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "సులువుగా సిక్సర్లు కొట్టే సామర్థ్యం వల్ల 'హిట్‌మ్యాన్' అని పిలవబడే భారత బ్యాటర్ ఎవరు?",
+    "en": "Which Indian batsman is fondly called 'Hitman' for his effortless six-hitting ability?",
+    "answerTe": "రోహిత్ శర్మ",
+    "answerEn": "Rohit Sharma",
+    "hint": "Current India captain",
+    "difficulty": 1,
+    "tags": [
+      "legends"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-015",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "1983 ప్రపంచకప్ ఫైనల్‌లో వివ్ రిచర్డ్స్ వికెట్ తీసేందుకు వెనక్కి పరిగెత్తి అద్భుతమైన క్యాచ్ పట్టిన కెప్టెన్ ఎవరు?",
+    "en": "Who took a match-winning catch to dismiss Viv Richards in the 1983 World Cup final?",
+    "answerTe": "కపిల్ దేవ్",
+    "answerEn": "Kapil Dev",
+    "hint": "Lord's 1983",
+    "difficulty": 1,
+    "tags": [
+      "history"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-016",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "2011 ఐసీసీ క్రికెట్ ప్రపంచకప్‌లో ప్లేయర్ ఆఫ్ ది టోర్నమెంట్ అవార్డు గెలుచుకున్న ఆల్‌రౌండర్ ఎవరు?",
+    "en": "Who was Player of the Tournament in the 2011 ICC Cricket World Cup?",
+    "answerTe": "యువరాజ్ సింగ్",
+    "answerEn": "Yuvraj Singh",
+    "hint": "Left-handed all-rounder",
+    "difficulty": 1,
+    "tags": [
+      "awards"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-017",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "2006లో పాకిస్తాన్‌పై టెస్ట్ మ్యాచ్ మొదటి ఓవర్‌లోనే హ్యాట్రిక్ సాధించిన భారత పేసర్ ఎవరు?",
+    "en": "Which Indian pacer took a famous hat-trick in the first over of a Test match against Pakistan in 2006?",
+    "answerTe": "ఇర్ఫాన్ పఠాన్",
+    "answerEn": "Irfan Pathan",
+    "hint": "Karachi 2006",
+    "difficulty": 2,
+    "tags": [
+      "records"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-018",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "టెస్ట్ క్రికెట్‌లో ట్రిపుల్ సెంచరీ (300 పరుగులు) సాధించిన మొదటి భారతీయ బ్యాటర్ ఎవరు?",
+    "en": "Who was the first Indian batsman to score a triple century in Test cricket?",
+    "answerTe": "వీరేంద్ర సెహ్వాగ్",
+    "answerEn": "Virender Sehwag",
+    "hint": "Multan 309",
+    "difficulty": 1,
+    "tags": [
+      "records"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-019",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "ప్రత్యేకమైన స్లింగీ యాక్షన్ మరియు కచ్చితమైన యార్కర్లకు ప్రసిద్ధి చెందిన భారత ఫాస్ట్ బౌలర్ ఎవరు?",
+    "en": "Which Indian fast bowler is known for his unique slingy action and lethal yorkers?",
+    "answerTe": "జస్ప్రీత్ బుమ్రా",
+    "answerEn": "Jasprit Bumrah",
+    "hint": "Boom Boom Bumrah",
+    "difficulty": 1,
+    "tags": [
+      "bowling"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-020",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "2002 నాట్‌వెస్ట్ సిరీస్ ఫైనల్ గెలిచిన తర్వాత లార్డ్స్ బాల్కనీలో తన జెర్సీని గాల్లో ఊపిన భారత కెప్టెన్ ఎవరు?",
+    "en": "Who famously waved his jersey on the Lord's balcony after India won the NatWest Series final in 2002?",
+    "answerTe": "సౌరవ్ గంగూలీ",
+    "answerEn": "Sourav Ganguly",
+    "hint": "Lord's London",
+    "difficulty": 1,
+    "tags": [
+      "iconic"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-021",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "2023 ఆసియా కప్ ఫైనల్‌లో శ్రీలంకపై అద్భుతంగా 6 వికెట్లు (ఒకే ఓవర్లో 4 వికెట్లు) తీసిన భారత పేసర్ ఎవరు?",
+    "en": "Which Indian bowler took 4 wickets in 4 balls against Sri Lanka in the 2023 Asia Cup final?",
+    "answerTe": "మహ్మద్ సిరాజ్",
+    "answerEn": "Mohammed Siraj",
+    "hint": "Hyderabad express",
+    "difficulty": 2,
+    "tags": [
+      "bowling"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-022",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "వన్డే ఇంటర్నేషనల్స్‌లో ఒక భారత బ్యాటర్‌గా వేగవంతమైన సెంచరీ (52 బంతుల్లో) రికార్డు ఎవరి పేరు మీద ఉంది?",
+    "en": "Who holds the record for the fastest century by an Indian in One Day Internationals (52 balls)?",
+    "answerTe": "విరాట్ కోహ్లీ",
+    "answerEn": "Virat Kohli",
+    "hint": "Jaipur 2013 vs Australia",
+    "difficulty": 2,
+    "tags": [
+      "records"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-023",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "టెస్ట్ క్రికెట్‌లో రెండు ట్రిపుల్ సెంచరీలు (309 మరియు 319) సాధించిన ఏకైక భారత బ్యాటర్ ఎవరు?",
+    "en": "Which Indian batsman scored two triple centuries in Test cricket?",
+    "answerTe": "వీరేంద్ర సెహ్వాగ్",
+    "answerEn": "Virender Sehwag",
+    "hint": "Multan and Chennai",
+    "difficulty": 2,
+    "tags": [
+      "records"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-024",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "2002 నాట్‌వెస్ట్ ఫైనల్‌లో మొహమ్మద్ కైఫ్‌తో కలిసి చివర్లో విజయవంతమైన భాగస్వామ్యం నెలకొల్పిన యువ ఆల్‌రౌండర్ ఎవరు?",
+    "en": "Who scored the winning boundary in the 2002 NatWest series final chase alongside Kaif?",
+    "answerTe": "యువరాజ్ సింగ్",
+    "answerEn": "Yuvraj Singh",
+    "hint": "Lord's 326 chase",
+    "difficulty": 2,
+    "tags": [
+      "history"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-025",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "తన వేగవంతమైన లెగ్ బ్రేక్ బౌలింగ్ వల్ల 'జంబో' అనే ముద్దుపేరు పొందిన దిగ్గజ స్పిన్నర్ ఎవరు?",
+    "en": "Which spinner was nicknamed 'Jumbo' for his fast-paced leg breaks?",
+    "answerTe": "అనిల్ కుంబ్లే",
+    "answerEn": "Anil Kumble",
+    "hint": "Former India captain",
+    "difficulty": 1,
+    "tags": [
+      "legends"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-026",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "2022 టీ20 ప్రపంచకప్‌లో మెల్‌బోర్న్ మైదానంలో పాకిస్తాన్‌పై 53 బంతుల్లో అజేయంగా 82 పరుగులు చేసిన స్టార్ బ్యాటర్ ఎవరు?",
+    "en": "Who scored 82 not out off 53 balls in the epic 2022 T20 World Cup chase against Pakistan at MCG?",
+    "answerTe": "విరాట్ కోహ్లీ",
+    "answerEn": "Virat Kohli",
+    "hint": "MCG 2022",
+    "difficulty": 1,
+    "tags": [
+      "iconic"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-027",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "అంతర్జాతీయ క్రికెట్‌లో అత్యధిక డిస్మిసల్స్ (క్యాచ్‌లు స్టంపింగ్‌లు) సాధించిన భారత వికెట్ కీపర్ ఎవరు?",
+    "en": "Who holds the record for most dismissals (catches and stumpings) by an Indian wicketkeeper in international cricket?",
+    "answerTe": "ఎంఎస్ ధోని",
+    "answerEn": "MS Dhoni",
+    "hint": "Legendary wicketkeeper",
+    "difficulty": 1,
+    "tags": [
+      "records"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-028",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "తన అరంగేట్రం టెస్ట్ మ్యాచ్‌లోనే కాకుండా తన ఆఖరి టెస్ట్ మ్యాచ్‌లోనూ సెంచరీ సాధించిన భారత కెప్టెన్ ఎవరు?",
+    "en": "Which Indian batsman scored a century on Test debut as well as in his final Test match?",
+    "answerTe": "మహ్మద్ అజారుద్దీన్",
+    "answerEn": "Mohammad Azharuddin",
+    "hint": "Wristy genius from Hyderabad",
+    "difficulty": 3,
+    "tags": [
+      "records"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-029",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "వన్డే ఇంటర్నేషనల్స్‌లో రెండు వేర్వేరు హ్యాట్రిక్‌లు సాధించిన భారత స్పిన్నర్ ఎవరు?",
+    "en": "Who is the only Indian bowler to take two hat-tricks in One Day Internationals?",
+    "answerTe": "కుల్‌దీప్ యాదవ్",
+    "answerEn": "Kuldeep Yadav",
+    "hint": "Left-arm wrist spinner",
+    "difficulty": 2,
+    "tags": [
+      "bowling"
+    ],
+    "verified": false
+  },
+  {
+    "id": "crk-030",
+    "deck": "cricket-iq-trivia",
+    "game": "cricket-iq",
+    "te": "2024 పురుషుల టీ20 ప్రపంచకప్ ఫైనల్ మ్యాచ్‌లో ప్లేయర్ ఆఫ్ ది మ్యాచ్ అవార్డు ఎవరు గెలుచుకున్నారు?",
+    "en": "Which Indian won Player of the Match in the 2024 Men's T20 World Cup final?",
+    "answerTe": "విరాట్ కోహ్లీ",
+    "answerEn": "Virat Kohli",
+    "hint": "76 runs off 59 balls in final",
+    "difficulty": 1,
+    "tags": [
+      "awards"
+    ],
+    "verified": false
+  }
+]
