@@ -3,14 +3,14 @@
     "id": "rf-001",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "ఎస్.ఎస్. రాజమౌళి దర్శకత్వం వహించిన 3 సినిమాల పేర్లు చెప్పండి",
-    "en": "Name 3 movies directed by SS Rajamouli",
-    "answerTe": "ఈగ, బాహుబలి, ఆర్ఆర్ఆర్, మగధీర",
+    "te": "ఎస్. ఎస్. రాజమౌళి దర్శకత్వం వహించిన 3 సినిమాల పేర్లు చెప్పండి",
+    "en": "Name 3 films directed by S. S. Rajamouli",
+    "answerTe": "ఈగ, బాహుబలి, ఆర్ఆర్ఆర్, మగధీర, సింహాద్రి",
     "answerEn": "Eega, Baahubali, RRR, Magadheera, Simhadri",
     "hint": "Any 3 valid titles",
     "difficulty": 1,
     "tags": [
-      "cinema"
+      "director"
     ],
     "verified": false
   },
@@ -18,14 +18,14 @@
     "id": "rf-002",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "A అక్షరంతో ప్రారంభమయ్యే 3 తెలుగు సినిమాల పేర్లు చెప్పండి",
-    "en": "Name 3 Telugu movies starting with the letter A",
-    "answerTe": "అతడు, ఆర్య, ఆనంద్, అర్జున్, అరుంధతి",
-    "answerEn": "Athadu, Arya, Anand, Arjun, Arundhati",
+    "te": "మహేష్ బాబు నటించిన 3 సినిమాల పేర్లు చెప్పండి",
+    "en": "Name 3 films starring Mahesh Babu",
+    "answerTe": "పోకిరి, దూకుడు, ఒక్కడు, అతడు, మురారి, శ్రీమంతుడు",
+    "answerEn": "Pokiri, Dookudu, Okkadu, Athadu, Murari, Srimanthudu",
     "hint": "Any 3 titles",
     "difficulty": 1,
     "tags": [
-      "cinema"
+      "hero"
     ],
     "verified": false
   },
@@ -33,14 +33,14 @@
     "id": "rf-003",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "మహేష్ బాబు నటించిన 3 సినిమాల పేర్లు చెప్పండి",
-    "en": "Name 3 movies starring Mahesh Babu",
-    "answerTe": "పోకిరి, దూకుడు, ఒక్కడు, అతడు, మురారి",
-    "answerEn": "Pokiri, Dookudu, Okkadu, Athadu, Murari",
+    "te": "అల్లు అర్జున్ నటించిన 3 సినిమాల పేర్లు చెప్పండి",
+    "en": "Name 3 films starring Allu Arjun",
+    "answerTe": "ఆర్య, పుష్ప, రేసు గుర్రం, జులాయి, సరైనోడు, అల వైకుంఠపురములో",
+    "answerEn": "Arya, Pushpa, Race Gurram, Julayi, Sarrainodu, Ala Vaikunthapurramuloo",
     "hint": "Any 3 titles",
     "difficulty": 1,
     "tags": [
-      "cinema"
+      "hero"
     ],
     "verified": false
   },
@@ -48,14 +48,14 @@
     "id": "rf-004",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "అల్లు అర్జున్ నటించిన 3 సినిమాల పేర్లు చెప్పండి",
-    "en": "Name 3 movies starring Allu Arjun",
-    "answerTe": "ఆర్య, పుష్ప, రేసు గుర్రం, జులాయి, దేశముదురు",
-    "answerEn": "Arya, Pushpa, Race Gurram, Julayi, Desamuduru",
+    "te": "పవన్ కళ్యాణ్ నటించిన 3 సినిమాల పేర్లు చెప్పండి",
+    "en": "Name 3 films starring Pawan Kalyan",
+    "answerTe": "జల్సా, గబ్బర్ సింగ్, అత్తారింటికి దారేది, ఖుషి, వకీల్ సాబ్, భీమ్లా నాయక్",
+    "answerEn": "Jalsa, Gabbar Singh, Attarintiki Daredi, Kushi, Vakeel Saab, Bheemla Nayak",
     "hint": "Any 3 titles",
     "difficulty": 1,
     "tags": [
-      "cinema"
+      "hero"
     ],
     "verified": false
   },
@@ -63,14 +63,14 @@
     "id": "rf-005",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "జూనియర్ ఎన్టీఆర్ నటించిన 3 సినిమాల పేర్లు చెప్పండి",
-    "en": "Name 3 movies starring Jr NTR",
-    "answerTe": "సింహాద్రి, ఆది, యమదొంగ, టెంపర్, ఆర్ఆర్ఆర్",
-    "answerEn": "Simhadri, Aadi, Yamadonga, Temper, RRR",
+    "te": "ప్రభాస్ నటించిన 3 సినిమాల పేర్లు చెప్పండి",
+    "en": "Name 3 films starring Prabhas",
+    "answerTe": "బాహుబలి, బాహుబలి 2, ఛత్రపతి, కల్కి 2898 ఏడీ",
+    "answerEn": "Baahubali, Baahubali 2, Chatrapathi, Kalki 2898 AD",
     "hint": "Any 3 titles",
     "difficulty": 1,
     "tags": [
-      "cinema"
+      "hero"
     ],
     "verified": false
   },
@@ -78,14 +78,14 @@
     "id": "rf-006",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "త్రివిక్రమ్ శ్రీనివాస్ దర్శకత్వం వహించిన 3 సినిమాల పేర్లు చెప్పండి",
-    "en": "Name 3 movies directed by Trivikram Srinivas",
-    "answerTe": "అతడు, జల్సా, ఖలేజా, జులాయి, అల వైకుంఠపురములో",
-    "answerEn": "Athadu, Jalsa, Khaleja, Julayi, Ala Vaikunthapurramuloo",
+    "te": "జూనియర్ ఎన్టీఆర్ నటించిన 3 సినిమాల పేర్లు చెప్పండి",
+    "en": "Name 3 films starring Jr NTR",
+    "answerTe": "సింహాద్రి, యమదొంగ, అదుర్స్, టెంపర్, జనతా గ్యారేజ్, ఆర్ఆర్ఆర్, దేవర",
+    "answerEn": "Simhadri, Yamadonga, Adhurs, Temper, Janatha Garage, RRR, Devara",
     "hint": "Any 3 titles",
     "difficulty": 1,
     "tags": [
-      "cinema"
+      "hero"
     ],
     "verified": false
   },
@@ -93,14 +93,14 @@
     "id": "rf-007",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "శీర్షికలో ఆహారం పేరున్న 3 తెలుగు సినిమాల పేర్లు చెప్పండి",
-    "en": "Name 3 Telugu movies with food in the title",
-    "answerTe": "మిర్చి, బిర్యానీ, గులాబీ",
-    "answerEn": "Mirchi, Biryani, Pulao, Gulabi",
-    "hint": "Any valid titles",
-    "difficulty": 2,
+    "te": "రామ్ చరణ్ నటించిన 3 సినిమాల పేర్లు చెప్పండి",
+    "en": "Name 3 films starring Ram Charan",
+    "answerTe": "మగధీర, రంగస్థలం, ధ్రువ, ఆర్ఆర్ఆర్",
+    "answerEn": "Magadheera, Rangasthalam, Dhruva, RRR",
+    "hint": "Any 3 titles",
+    "difficulty": 1,
     "tags": [
-      "food"
+      "hero"
     ],
     "verified": false
   },
@@ -108,14 +108,14 @@
     "id": "rf-008",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "ప్రభాస్ నటించిన 3 సినిమాల పేర్లు చెప్పండి",
-    "en": "Name 3 movies starring Prabhas",
-    "answerTe": "బాహుబలి, ఛత్రపతి, మిర్చి, డార్లింగ్, సలార్",
-    "answerEn": "Baahubali, Chatrapathi, Mirchi, Darling, Salaar",
+    "te": "చిరంజీవి నటించిన 3 సినిమాల పేర్లు చెప్పండి",
+    "en": "Name 3 films starring Chiranjeevi",
+    "answerTe": "ఖైదీ, ఇంద్ర, శంకర్ దాదా ఎంబీబీఎస్",
+    "answerEn": "Khaidi, Indra, Shankar Dada MBBS",
     "hint": "Any 3 titles",
-    "difficulty": 1,
+    "difficulty": 2,
     "tags": [
-      "cinema"
+      "hero"
     ],
     "verified": false
   },
@@ -123,14 +123,14 @@
     "id": "rf-009",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "దేవి శ్రీ ప్రసాద్ (DSP) సంగీతం అందించిన 3 సినిమాల పేర్లు చెప్పండి",
-    "en": "Name 3 movies with music composed by Devi Sri Prasad (DSP)",
-    "answerTe": "పుష్ప, ఆర్య, జల్సా, రంగస్థలం, గబ్బర్ సింగ్",
-    "answerEn": "Pushpa, Arya, Jalsa, Rangasthalam, Gabbar Singh",
+    "te": "నాని నటించిన 3 సినిమాల పేర్లు చెప్పండి",
+    "en": "Name 3 films starring Nani",
+    "answerTe": "ఈగ, జెర్సీ, దసరా",
+    "answerEn": "Eega, Jersey, Dasara",
     "hint": "Any 3 titles",
-    "difficulty": 1,
+    "difficulty": 2,
     "tags": [
-      "music"
+      "hero"
     ],
     "verified": false
   },
@@ -138,14 +138,14 @@
     "id": "rf-010",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "సమంత నటించిన 3 సినిమాల పేర్లు చెప్పండి",
-    "en": "Name 3 movies starring Samantha Ruth Prabhu",
-    "answerTe": "ఏ మాయ చేశావే, దూకుడు, ఈగ, రంగస్థలం, మజిలీ",
-    "answerEn": "Ye Maaya Chesave, Dookudu, Eega, Rangasthalam, Majili",
+    "te": "త్రివిక్రమ్ దర్శకత్వం వహించిన 3 సినిమాల పేర్లు చెప్పండి",
+    "en": "Name 3 films directed by Trivikram",
+    "answerTe": "అతడు, జులాయి, జల్సా, ఖలేజా, అత్తారింటికి దారేది, అల వైకుంఠపురములో, గుంటూరు కారం",
+    "answerEn": "Athadu, Julayi, Jalsa, Khaleja, Attarintiki Daredi, Ala Vaikunthapurramuloo, Guntur Kaaram",
     "hint": "Any 3 titles",
     "difficulty": 1,
     "tags": [
-      "cinema"
+      "director"
     ],
     "verified": false
   },
@@ -153,14 +153,14 @@
     "id": "rf-011",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "ఒకే ఒక్క పదం శీర్షికగా ఉన్న 3 తెలుగు సినిమాల పేర్లు చెప్పండి",
-    "en": "Name 3 Telugu movies where the title is just one word",
-    "answerTe": "పోకిరి, లీడర్, ఆర్య, జెర్సీ, పుష్ప, ఈగ",
-    "answerEn": "Pokiri, Leader, Arya, Jersey, Pushpa, Eega",
-    "hint": "Any 3 single-word titles",
-    "difficulty": 1,
+    "te": "సుకుమార్ దర్శకత్వం వహించిన 3 సినిమాల పేర్లు చెప్పండి",
+    "en": "Name 3 films directed by Sukumar",
+    "answerTe": "ఆర్య, రంగస్థలం, నాన్నకు ప్రేమతో, పుష్ప",
+    "answerEn": "Arya, Rangasthalam, Nannaku Prematho, Pushpa",
+    "hint": "Any 3 titles",
+    "difficulty": 2,
     "tags": [
-      "cinema"
+      "director"
     ],
     "verified": false
   },
@@ -168,14 +168,14 @@
     "id": "rf-012",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "శ్రీను వైట్ల దర్శకత్వం వహించిన 3 కామెడీ సినిమాల పేర్లు చెప్పండి",
-    "en": "Name 3 comedy movies directed by Srinu Vaitla",
-    "answerTe": "వెంకీ, ఢీ, రెడీ, దుబాయ్ శీను, దూకుడు",
-    "answerEn": "Venky, Dhee, Ready, Dubai Seenu, Dookudu",
+    "te": "పూరి జగన్నాథ్ దర్శకత్వం వహించిన 3 సినిమాల పేర్లు చెప్పండి",
+    "en": "Name 3 films directed by Puri Jagannadh",
+    "answerTe": "పోకిరి, బిజినెస్‌మ్యాన్, టెంపర్",
+    "answerEn": "Pokiri, Businessman, Temper",
     "hint": "Any 3 titles",
-    "difficulty": 1,
+    "difficulty": 2,
     "tags": [
-      "comedy"
+      "director"
     ],
     "verified": false
   },
@@ -183,14 +183,14 @@
     "id": "rf-013",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "క్రికెట్‌లో 3 రకాల షాట్ల పేర్లు చెప్పండి",
-    "en": "Name 3 cricket shots",
-    "answerTe": "కవర్ డ్రైవ్, పుల్ షాట్, హుక్ షాట్, హెలికాప్టర్ షాట్",
-    "answerEn": "Cover drive, Pull shot, Hook shot, Helicopter shot, Straight drive",
-    "hint": "Any 3 shots",
+    "te": "A అక్షరంతో మొదలయ్యే 3 తెలుగు సినిమాల పేర్లు చెప్పండి",
+    "en": "Name 3 Telugu films that start with the letter A",
+    "answerTe": "అతడు, ఆర్య, అరుంధతి, అఖండ, అర్జున్ రెడ్డి",
+    "answerEn": "Athadu, Arya, Arundhati, Akhanda, Arjun Reddy",
+    "hint": "Any 3 titles",
     "difficulty": 1,
     "tags": [
-      "cricket"
+      "letters"
     ],
     "verified": false
   },
@@ -198,14 +198,14 @@
     "id": "rf-014",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "భారత క్రికెట్ జట్టుకు నాయకత్వం వహించిన 3 కెప్టెన్ల పేర్లు చెప్పండి",
-    "en": "Name 3 Indian cricket captains",
-    "answerTe": "కపిల్ దేవ్, సౌరవ్ గంగూలీ, ఎంఎస్ ధోని, విరాట్ కోహ్లీ, రోహిత్ శర్మ",
-    "answerEn": "Kapil Dev, Sourav Ganguly, MS Dhoni, Virat Kohli, Rohit Sharma",
-    "hint": "Any 3 captains",
+    "te": "S అక్షరంతో మొదలయ్యే 3 తెలుగు సినిమాల పేర్లు చెప్పండి",
+    "en": "Name 3 Telugu films that start with the letter S",
+    "answerTe": "సింహాద్రి, శ్రీమంతుడు, సై, సరైనోడు, శివ, సీతా రామం",
+    "answerEn": "Simhadri, Srimanthudu, Sye, Sarrainodu, Shiva, Sita Ramam",
+    "hint": "Any 3 titles",
     "difficulty": 1,
     "tags": [
-      "cricket"
+      "letters"
     ],
     "verified": false
   },
@@ -213,14 +213,14 @@
     "id": "rf-015",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "అంతర్జాతీయ క్రికెట్ ఆడే 3 భారతీయ స్టేడియంల పేర్లు చెప్పండి",
-    "en": "Name 3 Indian stadiums where international cricket is played",
-    "answerTe": "వాంఖడే, ఈడెన్ గార్డెన్స్, ఉప్పల్ హైదరాబాద్, చిన్నస్వామి",
-    "answerEn": "Wankhede, Eden Gardens, Uppal Hyderabad, Chinnaswamy",
-    "hint": "Any 3 stadiums",
+    "te": "B అక్షరంతో మొదలయ్యే 3 తెలుగు సినిమాల పేర్లు చెప్పండి",
+    "en": "Name 3 Telugu films that start with the letter B",
+    "answerTe": "బాహుబలి, బొమ్మరిల్లు, బిజినెస్‌మ్యాన్, బింబిసార, భీమ్లా నాయక్, భారత్ అనే నేను",
+    "answerEn": "Baahubali, Bommarillu, Businessman, Bimbisara, Bheemla Nayak, Bharat Ane Nenu",
+    "hint": "Any 3 titles",
     "difficulty": 1,
     "tags": [
-      "cricket"
+      "letters"
     ],
     "verified": false
   },
@@ -228,14 +228,14 @@
     "id": "rf-016",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "నాని నటించిన 3 సినిమాల పేర్లు చెప్పండి",
-    "en": "Name 3 movies starring Nani",
-    "answerTe": "అష్టా చమ్మా, ఈగ, భలే భలే మగాడివోయ్, జెర్సీ",
-    "answerEn": "Ashta Chamma, Eega, Bhale Bhale Magadivoy, Jersey, Shyam Singha Roy",
+    "te": "ప్రేమకథే ప్రధానంగా ఉన్న 3 తెలుగు సినిమాల పేర్లు చెప్పండి",
+    "en": "Name 3 Telugu films with a love-story at the heart",
+    "answerTe": "ఆర్య, ఉప్పెన, సీతా రామం, ఫిదా, ఖుషి, బొమ్మరిల్లు",
+    "answerEn": "Arya, Uppena, Sita Ramam, Fidaa, Kushi, Bommarillu",
     "hint": "Any 3 titles",
     "difficulty": 1,
     "tags": [
-      "cinema"
+      "genre"
     ],
     "verified": false
   },
@@ -243,14 +243,14 @@
     "id": "rf-017",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "2000 కంటే ముందు విడుదలైన 3 తెలుగు సినిమాల పేర్లు చెప్పండి",
-    "en": "Name 3 Telugu movies released before 2000",
-    "answerTe": "శివ, గీతాంజలి, మాయాబజార్, శంకరాభరణం",
-    "answerEn": "Shiva, Geethanjali, Mayabazar, Sankarabharanam, Jagadeka Veerudu Athiloka Sundari",
-    "hint": "Any 3 pre-2000 titles",
+    "te": "ఫాంటసీ లేదా జానపద కథ తరహా 3 తెలుగు సినిమాల పేర్లు చెప్పండి",
+    "en": "Name 3 Telugu films with a fantasy or folk-tale feel",
+    "answerTe": "మగధీర, అరుంధతి, ఈగ, బింబిసార, బాహుబలి",
+    "answerEn": "Magadheera, Arundhati, Eega, Bimbisara, Baahubali",
+    "hint": "Any 3 titles",
     "difficulty": 2,
     "tags": [
-      "classic"
+      "genre"
     ],
     "verified": false
   },
@@ -258,14 +258,14 @@
     "id": "rf-018",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "తెలుగులో వచ్చిన 3 స్పోర్ట్స్ సినిమాల పేర్లు చెప్పండి",
-    "en": "Name 3 sports movies in Telugu",
-    "answerTe": "జెర్సీ, గోల్కొండ హైస్కూల్, సై, తమ్ముడు, గురు",
-    "answerEn": "Jersey, Golconda High School, Sye, Thammudu, Guru",
-    "hint": "Any 3 sports films",
-    "difficulty": 1,
+    "te": "పేరులో సంఖ్య లేదా సీక్వెల్ ఉన్న 3 తెలుగు సినిమాల పేర్లు చెప్పండి",
+    "en": "Name 3 Telugu films with a number or a sequel in the title",
+    "answerTe": "బాహుబలి 2, స్టూడెంట్ నం. 1, కల్కి 2898 ఏడీ, దేవర, పుష్ప",
+    "answerEn": "Baahubali 2, Student No. 1, Kalki 2898 AD, Devara (Part 1), Pushpa (The Rise)",
+    "hint": "Any 3 titles",
+    "difficulty": 2,
     "tags": [
-      "sports"
+      "title"
     ],
     "verified": false
   },
@@ -273,14 +273,14 @@
     "id": "rf-019",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "భారత క్రికెట్‌లోని 3 స్పిన్ బౌలర్ల పేర్లు చెప్పండి",
-    "en": "Name 3 Indian spin bowlers",
-    "answerTe": "అనిల్ కుంబ్లే, హర్భజన్ సింగ్, ఆర్ అశ్విన్, రవీంద్ర జడేజా",
-    "answerEn": "Anil Kumble, Harbhajan Singh, R Ashwin, Ravindra Jadeja, Kuldeep Yadav",
-    "hint": "Any 3 spinners",
-    "difficulty": 1,
+    "te": "3 తెలుగు సంగీత దర్శకుల పేర్లు చెప్పండి",
+    "en": "Name 3 Telugu music directors",
+    "answerTe": "దేవి శ్రీ ప్రసాద్, తమన్, ఎం. ఎం. కీరవాణి",
+    "answerEn": "Devi Sri Prasad, Thaman, M. M. Keeravani",
+    "hint": "Any 3 names",
+    "difficulty": 2,
     "tags": [
-      "cricket"
+      "music"
     ],
     "verified": false
   },
@@ -288,14 +288,14 @@
     "id": "rf-020",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "భారత క్రికెట్‌లోని 3 ఫాస్ట్ బౌలర్ల పేర్లు చెప్పండి",
-    "en": "Name 3 Indian fast bowlers",
-    "answerTe": "కపిల్ దేవ్, జహీర్ ఖాన్, జస్ప్రీత్ బుమ్రా, మహమ్మద్ షమీ",
-    "answerEn": "Kapil Dev, Zaheer Khan, Jasprit Bumrah, Mohammed Shami, Javagal Srinath",
-    "hint": "Any 3 pacers",
+    "te": "3 తెలుగు కథానాయికల పేర్లు చెప్పండి",
+    "en": "Name 3 Telugu heroines",
+    "answerTe": "సమంత, అనుష్క శెట్టి, సాయి పల్లవి, రష్మిక మందన్న, పూజా హెగ్డే, కాజల్ అగర్వాల్, తమన్నా",
+    "answerEn": "Samantha, Anushka Shetty, Sai Pallavi, Rashmika Mandanna, Pooja Hegde, Kajal Aggarwal, Tamannaah",
+    "hint": "Any 3 names",
     "difficulty": 1,
     "tags": [
-      "cricket"
+      "hero"
     ],
     "verified": false
   },
@@ -303,14 +303,14 @@
     "id": "rf-021",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "చిరంజీవి నటించిన 3 సినిమాల పేర్లు చెప్పండి",
-    "en": "Name 3 movies starring Chiranjeevi",
-    "answerTe": "ఖైదీ, గ్యాంగ్ లీడర్, ఇంద్ర, ఠాగూర్, శంకర్ దాదా ఎంబీబీఎస్",
-    "answerEn": "Khaidi, Gang Leader, Indra, Tagore, Shankar Dada MBBS",
-    "hint": "Any 3 titles",
+    "te": "నటన కాకుండా సినిమా సెట్‌లో ఉండే 3 పనుల పేర్లు చెప్పండి",
+    "en": "Name 3 jobs on a film set, other than acting",
+    "answerTe": "దర్శకుడు, నిర్మాత, ఛాయాగ్రాహకుడు, ఎడిటర్, నృత్య దర్శకుడు, సంగీత దర్శకుడు, గీత రచయిత",
+    "answerEn": "Director, producer, cinematographer, editor, choreographer, music director, lyricist",
+    "hint": "Any 3 jobs",
     "difficulty": 1,
     "tags": [
-      "cinema"
+      "film"
     ],
     "verified": false
   },
@@ -318,14 +318,14 @@
     "id": "rf-022",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "వెంకటేష్ నటించిన 3 సినిమాల పేర్లు చెప్పండి",
-    "en": "Name 3 movies starring Venkatesh",
-    "answerTe": "క్షణ క్షణం, చంటి, బొబ్బిలి రాజా, నువ్వు నాకు నచ్చావ్",
-    "answerEn": "Kshana Kshanam, Chanti, Bobbili Raja, Nuvvu Naaku Nachav, F2",
-    "hint": "Any 3 titles",
+    "te": "3 రకాల సినిమా పాటల పేర్లు చెప్పండి",
+    "en": "Name 3 kinds of film songs",
+    "answerTe": "యుగళ గీతం, హీరో ఇంట్రో పాట, ఐటమ్ సాంగ్, సెంటిమెంట్ పాట, జానపద గీతం, టైటిల్ సాంగ్",
+    "answerEn": "Duet, mass intro song, item song, sentiment song, folk song, title song",
+    "hint": "Any 3 kinds",
     "difficulty": 1,
     "tags": [
-      "cinema"
+      "music"
     ],
     "verified": false
   },
@@ -333,14 +333,14 @@
     "id": "rf-023",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "నాగార్జున నటించిన 3 సినిమాల పేర్లు చెప్పండి",
-    "en": "Name 3 movies starring Nagarjuna",
-    "answerTe": "శివ, గీతాంజలి, అన్నమయ్య, నిన్నే పెళ్ళాడతా, మనం",
-    "answerEn": "Shiva, Geethanjali, Annamayya, Ninne Pelladata, Manam",
-    "hint": "Any 3 titles",
+    "te": "మాస్ పాట మొదలవగానే థియేటర్‌లో జనం చేసే 3 పనులు చెప్పండి",
+    "en": "Name 3 things people do in the theatre when a mass song starts",
+    "answerTe": "ఈలలు వేయడం, నడవలో డాన్స్ చేయడం, చప్పట్లు కొట్టడం, లేచి నిలబడటం, కాగితాలు విసరడం, ఫోన్ లైట్ ఊపడం",
+    "answerEn": "Whistle, dance in the aisle, clap, stand up, throw paper, wave a phone light",
+    "hint": "Any 3 reasonable answers",
     "difficulty": 1,
     "tags": [
-      "cinema"
+      "theatre"
     ],
     "verified": false
   },
@@ -348,14 +348,14 @@
     "id": "rf-024",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "బాలకృష్ణ నటించిన 3 సినిమాల పేర్లు చెప్పండి",
-    "en": "Name 3 movies starring Balakrishna",
-    "answerTe": "సమరసింహారెడ్డి, నరసింహనాయుడు, సింహ, లెజెండ్, అఖండ",
-    "answerEn": "Samarasimha Reddy, Narasimha Naidu, Simha, Legend, Akhanda",
-    "hint": "Any 3 titles",
+    "te": "సినిమా థియేటర్‌లో కొనే 3 తినుబండారాల పేర్లు చెప్పండి",
+    "en": "Name 3 snacks people buy at the cinema",
+    "answerTe": "పాప్‌కార్న్, సమోసా, పఫ్, కూల్ డ్రింక్, ఐస్ క్రీమ్, నాచోస్",
+    "answerEn": "Popcorn, samosa, puff, cold drink, ice cream, nachos",
+    "hint": "Any 3 snacks",
     "difficulty": 1,
     "tags": [
-      "cinema"
+      "theatre"
     ],
     "verified": false
   },
@@ -363,14 +363,14 @@
     "id": "rf-025",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "భారత క్రికెట్‌లోని 3 వికెట్ కీపర్ల పేర్లు చెప్పండి",
-    "en": "Name 3 Indian wicketkeepers",
-    "answerTe": "సయ్యద్ కిర్మాణీ, నయన్ మోంగియా, ఎంఎస్ ధోని, రిషభ్ పంత్",
-    "answerEn": "Syed Kirmani, Nayan Mongia, MS Dhoni, Rishabh Pant, Dinesh Karthik",
-    "hint": "Any 3 wicketkeepers",
+    "te": "ఫస్ట్ డే ఫస్ట్ షో ముందు అభిమానులు చేసే 3 పనులు చెప్పండి",
+    "en": "Name 3 things fans do before a first-day-first-show",
+    "answerTe": "ముందే టికెట్లు బుక్ చేయడం, ముందుగానే చేరుకోవడం, కటౌట్ లేదా బ్యానర్ పెట్టడం, అభిమాన టీషర్ట్ వేసుకోవడం, ఫ్రెండ్స్‌తో సంబరం చేయడం",
+    "answerEn": "Book tickets early, reach early, put up a cutout or banner, wear a fan t-shirt, celebrate with friends",
+    "hint": "Any 3 reasonable answers",
     "difficulty": 1,
     "tags": [
-      "cricket"
+      "fdfs"
     ],
     "verified": false
   },
@@ -378,14 +378,14 @@
     "id": "rf-026",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "శీర్షికలో జంతువు లేదా కీటకం పేరున్న 3 తెలుగు సినిమాల పేర్లు చెప్పండి",
-    "en": "Name 3 Telugu movies with an animal or insect in the title",
-    "answerTe": "ఈగ, సింహాద్రి, పులి, రేసు గుర్రం",
-    "answerEn": "Eega, Simhadri, Puli, Race Gurram, Aagadu",
-    "hint": "Any 3 titles",
-    "difficulty": 2,
+    "te": "ఇంటర్వల్‌లో జరిగే 3 పనులు చెప్పండి",
+    "en": "Name 3 things that happen at the interval",
+    "answerTe": "తినుబండారాలు కొనడం, కథ గురించి మాట్లాడుకోవడం, ట్విస్ట్ ఊహించడం, వాష్‌రూమ్‌కి వెళ్ళడం, ఫోన్ చూసుకోవడం",
+    "answerEn": "Buy snacks, discuss the story, guess the twist, go to the restroom, check the phone",
+    "hint": "Any 3 reasonable answers",
+    "difficulty": 1,
     "tags": [
-      "fun"
+      "theatre"
     ],
     "verified": false
   },
@@ -393,14 +393,14 @@
     "id": "rf-027",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "కాలేజీ నేపథ్యంలో సాగే 3 తెలుగు సినిమాల పేర్లు చెప్పండి",
-    "en": "Name 3 Telugu college-themed movies",
-    "answerTe": "హ్యాపీ డేస్, శివ, ఆర్య, సై, ఖుషి",
-    "answerEn": "Happy Days, Siva, Arya, Sye, Kushi",
-    "hint": "Any 3 college films",
+    "te": "క్లాసిక్ మాస్ ఎంట్రీలో హీరో చేసే 3 పనులు చెప్పండి",
+    "en": "Name 3 things a hero does in a classic mass entry",
+    "answerTe": "స్లో మోషన్ నడక, కళ్ళద్దాలు తిప్పడం, కారు నుంచి దూకడం, కెమెరా వైపు స్టైల్ లుక్, జనం కేరింతలు",
+    "answerEn": "Slow-motion walk, sunglasses flip, jump from a car, dramatic look at the camera, crowd cheers",
+    "hint": "Any 3 reasonable answers",
     "difficulty": 1,
     "tags": [
-      "youth"
+      "hero"
     ],
     "verified": false
   },
@@ -408,14 +408,14 @@
     "id": "rf-028",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "క్రికెట్‌లో 3 ఫీల్డింగ్ స్థానాల పేర్లు చెప్పండి",
-    "en": "Name 3 famous cricket fielding positions",
-    "answerTe": "స్లిప్, మిడ్-వికెట్, లాంగ్-ఆన్, పాయింట్, గల్లీ",
-    "answerEn": "Slip, Mid-wicket, Long-on, Point, Gully, Cover",
-    "hint": "Any 3 fielding spots",
-    "difficulty": 1,
+    "te": "ఒక ప్రసిద్ధ తెలుగు సినిమా డైలాగ్‌ని పలకకుండా మీ మాటల్లో వివరించండి. ఫ్రెండ్స్ సినిమా ఊహించాలి.",
+    "en": "Describe a famous Telugu film dialogue in your own words, without saying it. Friends guess the film.",
+    "answerTe": "ఊహించిన ఏ సినిమా అయినా సరైనదే",
+    "answerEn": "Any film guessed correctly",
+    "hint": "Judge decides",
+    "difficulty": 2,
     "tags": [
-      "cricket"
+      "dialogue"
     ],
     "verified": false
   },
@@ -423,12 +423,12 @@
     "id": "rf-029",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "ఎం.ఎం. కీరవాణి స్వరపరిచిన 3 పాటల పేర్లు లేదా సినిమాల పేర్లు చెప్పండి",
-    "en": "Name 3 songs composed by MM Keeravani",
-    "answerTe": "నాటు నాటు, బాహుబలి, మగధీర, అన్నమయ్య",
-    "answerEn": "Naatu Naatu, Baahubali songs, Magadheera songs, Annamayya",
-    "hint": "Any 3 songs/films",
-    "difficulty": 1,
+    "te": "ఒక ప్రసిద్ధ తెలుగు సినిమా పాట బీట్‌ని హమ్ చేయండి లేదా తట్టండి. ఫ్రెండ్స్ సినిమా ఊహించాలి.",
+    "en": "Hum or tap the beat of a famous Telugu film song. Friends guess the film.",
+    "answerTe": "ఊహించిన ఏ సినిమా అయినా సరైనదే",
+    "answerEn": "Any film guessed correctly",
+    "hint": "Judge decides",
+    "difficulty": 2,
     "tags": [
       "music"
     ],
@@ -438,14 +438,14 @@
     "id": "rf-030",
     "deck": "rapid-fire-party",
     "game": "rapid-fire",
-    "te": "విదేశాల్లో షూట్ చేసిన 3 తెలుగు సినిమాల పేర్లు చెప్పండి",
-    "en": "Name 3 Telugu films shot abroad in USA or Europe",
-    "answerTe": "నువ్వు నాకు నచ్చావ్, మన్మథుడు, ఆరెంజ్, దూకుడు",
-    "answerEn": "Nuvvu Naaku Nachav, Manmadhudu, Orange, Dookudu, Baadshah",
+    "te": "ఎక్కువగా పల్లెటూరులో జరిగే 3 తెలుగు సినిమాల పేర్లు చెప్పండి",
+    "en": "Name 3 Telugu films set mostly in a village",
+    "answerTe": "రంగస్థలం, దసరా, ఉప్పెన, శ్రీమంతుడు",
+    "answerEn": "Rangasthalam, Dasara, Uppena, Srimanthudu",
     "hint": "Any 3 titles",
     "difficulty": 2,
     "tags": [
-      "cinema"
+      "genre"
     ],
     "verified": false
   }

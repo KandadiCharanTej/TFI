@@ -1,31 +1,31 @@
-id,game,deck,en,te,verified,difficulty,tags
-hsg-mov-001,head-set-go,movies,Pokiri,పోకిరి,false,1,action
-hsg-mov-002,head-set-go,movies,Magadheera,మగధీర,false,1,fantasy
-hsg-mov-003,head-set-go,movies,Baahubali,బాహుబలి,false,1,epic
-hsg-mov-004,head-set-go,movies,Arya,ఆర్య,false,1,romance
-hsg-mov-005,head-set-go,movies,Jalsa,జల్సా,false,1,action
-hsg-mov-006,head-set-go,movies,Okkadu,ఒక్కడు,false,1,action
-hsg-mov-007,head-set-go,movies,Athadu,అతడు,false,1,thriller
-hsg-mov-008,head-set-go,movies,Businessman,బిజినెస్‌మ్యాన్,false,2,action
-hsg-mov-009,head-set-go,movies,Dookudu,దూకుడు,false,1,action
-hsg-mov-010,head-set-go,movies,Julayi,జులాయి,false,2,thriller
-hsg-mov-011,head-set-go,movies,Brindavanam,బృందావనం,false,2,romance
-hsg-mov-012,head-set-go,movies,Gabbar Singh,గబ్బర్ సింగ్,false,1,action
-hsg-mov-013,head-set-go,movies,Kick,కిక్,false,2,action
-hsg-mov-014,head-set-go,movies,Balupu,బాలుపు,false,2,comedy
-hsg-mov-015,head-set-go,movies,Legend,లెజెండ్,false,2,action
-hsg-mov-016,head-set-go,movies,Attarintiki Daredi,అత్తారింటికి దారేది,false,2,comedy
-hsg-mov-017,head-set-go,movies,Race Gurram,రేస్ గుర్రం,false,1,action
-hsg-mov-018,head-set-go,movies,Srimanthudu,శ్రీమంతుడు,false,2,drama
-hsg-mov-019,head-set-go,movies,Bharat Ane Nenu,భారత్ అనే నేను,false,2,political
-hsg-mov-020,head-set-go,movies,Maharshi,మహర్షి,false,2,drama
-hsg-mov-021,head-set-go,movies,Jersey,జెర్సీ,false,2,sports
-hsg-mov-022,head-set-go,movies,Uppena,ఉప్పెన,false,2,romance
-hsg-mov-023,head-set-go,movies,Pushpa,పుష్ప,false,1,action
-hsg-mov-024,head-set-go,movies,Akhanda,అఖండ,false,2,action
-hsg-mov-025,head-set-go,movies,Bheemla Nayak,భీమ్లా నాయక్,false,2,action
-hsg-mov-026,head-set-go,movies,RRR,ఆర్ఆర్ఆర్,false,1,epic
-hsg-mov-027,head-set-go,movies,Dasara,దసరా,false,2,action
-hsg-mov-028,head-set-go,movies,Kushi,కుషీ,false,2,romance
-hsg-mov-029,head-set-go,movies,Guntur Kaaram,గుంటూర్ కారం,false,3,drama
-hsg-mov-030,head-set-go,movies,Devara,దేవర,false,2,action
+id,game,deck,filmId,difficulty,tags,verified
+hsg-mov-001,head-set-go,head-set-go-movies,pokiri,1,action,false
+hsg-mov-002,head-set-go,head-set-go-movies,magadheera,1,fantasy,false
+hsg-mov-003,head-set-go,head-set-go-movies,baahubali,1,epic,false
+hsg-mov-004,head-set-go,head-set-go-movies,arya,1,romance,false
+hsg-mov-005,head-set-go,head-set-go-movies,jalsa,1,action,false
+hsg-mov-006,head-set-go,head-set-go-movies,okkadu,1,action,false
+hsg-mov-007,head-set-go,head-set-go-movies,athadu,1,thriller,false
+hsg-mov-008,head-set-go,head-set-go-movies,businessman,2,action,false
+hsg-mov-009,head-set-go,head-set-go-movies,dookudu,1,action,false
+hsg-mov-010,head-set-go,head-set-go-movies,julayi,2,thriller,false
+hsg-mov-011,head-set-go,head-set-go-movies,brindavanam,2,romance,false
+hsg-mov-012,head-set-go,head-set-go-movies,gabbar-singh,1,action,false
+hsg-mov-013,head-set-go,head-set-go-movies,kick,2,action,false
+hsg-mov-014,head-set-go,head-set-go-movies,balupu,2,comedy,false
+hsg-mov-015,head-set-go,head-set-go-movies,legend,2,action,false
+hsg-mov-016,head-set-go,head-set-go-movies,attarintiki-daredi,2,comedy,false
+hsg-mov-017,head-set-go,head-set-go-movies,race-gurram,1,action,false
+hsg-mov-018,head-set-go,head-set-go-movies,srimanthudu,2,drama,false
+hsg-mov-019,head-set-go,head-set-go-movies,bharat-ane-nenu,2,political,false
+hsg-mov-020,head-set-go,head-set-go-movies,maharshi,2,drama,false
+hsg-mov-021,head-set-go,head-set-go-movies,jersey,2,sports,false
+hsg-mov-022,head-set-go,head-set-go-movies,uppena,2,romance,false
+hsg-mov-023,head-set-go,head-set-go-movies,pushpa,1,action,false
+hsg-mov-024,head-set-go,head-set-go-movies,akhanda,2,action,false
+hsg-mov-025,head-set-go,head-set-go-movies,bheemla-nayak,2,action,false
+hsg-mov-026,head-set-go,head-set-go-movies,rrr,1,epic,false
+hsg-mov-027,head-set-go,head-set-go-movies,dasara,2,action,false
+hsg-mov-028,head-set-go,head-set-go-movies,kushi,2,romance,false
+hsg-mov-029,head-set-go,head-set-go-movies,guntur-kaaram,3,drama,false
+hsg-mov-030,head-set-go,head-set-go-movies,devara,2,action,false

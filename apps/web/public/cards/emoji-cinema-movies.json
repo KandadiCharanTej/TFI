@@ -7,7 +7,9 @@
     "en": "🪰",
     "answerTe": "ఈగ",
     "answerEn": "Eega",
-    "hint": "2012 SS Rajamouli",
+    "hint": "2012 · S. S. Rajamouli",
+    "year": 2012,
+    "filmId": "eega",
     "difficulty": 1,
     "tags": [
       "fantasy"
@@ -22,7 +24,9 @@
     "en": "🏹 ⚔️",
     "answerTe": "బాహుబలి",
     "answerEn": "Baahubali",
-    "hint": "2015 SS Rajamouli",
+    "hint": "2015 · S. S. Rajamouli",
+    "year": 2015,
+    "filmId": "baahubali",
     "difficulty": 1,
     "tags": [
       "epic"
@@ -37,7 +41,9 @@
     "en": "🏠 🧸",
     "answerTe": "బొమ్మరిల్లు",
     "answerEn": "Bommarillu",
-    "hint": "2006 Bhaskar",
+    "hint": "2006 · Bhaskar",
+    "year": 2006,
+    "filmId": "bommarillu",
     "difficulty": 1,
     "tags": [
       "family"
@@ -52,7 +58,9 @@
     "en": "🌹 🪓",
     "answerTe": "పుష్ప",
     "answerEn": "Pushpa",
-    "hint": "2021 Sukumar",
+    "hint": "2021 · Sukumar",
+    "year": 2021,
+    "filmId": "pushpa",
     "difficulty": 1,
     "tags": [
       "action"
@@ -67,7 +75,9 @@
     "en": "🏍️ 💨",
     "answerTe": "రేసు గుర్రం",
     "answerEn": "Race Gurram",
-    "hint": "2014 Surender Reddy",
+    "hint": "2014 · Surender Reddy",
+    "year": 2014,
+    "filmId": "race-gurram",
     "difficulty": 1,
     "tags": [
       "comedy"
@@ -82,7 +92,9 @@
     "en": "🦁 🏔️",
     "answerTe": "సింహాద్రి",
     "answerEn": "Simhadri",
-    "hint": "2003 SS Rajamouli",
+    "hint": "2003 · S. S. Rajamouli",
+    "year": 2003,
+    "filmId": "simhadri",
     "difficulty": 1,
     "tags": [
       "action"
@@ -97,7 +109,9 @@
     "en": "👑 🐘",
     "answerTe": "బాహుబలి 2",
     "answerEn": "Baahubali 2",
-    "hint": "2017 SS Rajamouli",
+    "hint": "2017 · S. S. Rajamouli",
+    "year": 2017,
+    "filmId": "baahubali-2",
     "difficulty": 1,
     "tags": [
       "epic"
@@ -112,7 +126,9 @@
     "en": "🔫 🕶️",
     "answerTe": "పోకిరి",
     "answerEn": "Pokiri",
-    "hint": "2006 Puri Jagannadh",
+    "hint": "2006 · Puri Jagannadh",
+    "year": 2006,
+    "filmId": "pokiri",
     "difficulty": 1,
     "tags": [
       "action"
@@ -127,7 +143,9 @@
     "en": "🚂 💨",
     "answerTe": "వెంకీ",
     "answerEn": "Venky",
-    "hint": "2004 Srinu Vaitla",
+    "hint": "2004 · Srinu Vaitla",
+    "year": 2004,
+    "filmId": "venky",
     "difficulty": 1,
     "tags": [
       "comedy"
@@ -142,7 +160,9 @@
     "en": "🏏 👕",
     "answerTe": "జెర్సీ",
     "answerEn": "Jersey",
-    "hint": "2019 Gowtam Tinnanuri",
+    "hint": "2019 · Gowtam Tinnanuri",
+    "year": 2019,
+    "filmId": "jersey",
     "difficulty": 1,
     "tags": [
       "drama"
@@ -157,7 +177,9 @@
     "en": "❤️ 🚲",
     "answerTe": "ఆర్య",
     "answerEn": "Arya",
-    "hint": "2004 Sukumar",
+    "hint": "2004 · Sukumar",
+    "year": 2004,
+    "filmId": "arya",
     "difficulty": 1,
     "tags": [
       "romance"
@@ -172,7 +194,9 @@
     "en": "🌧️ ☂️",
     "answerTe": "వర్షం",
     "answerEn": "Varsham",
-    "hint": "2004 Sobhan",
+    "hint": "2004 · Sobhan",
+    "year": 2004,
+    "filmId": "varsham",
     "difficulty": 1,
     "tags": [
       "romance"
@@ -187,7 +211,9 @@
     "en": "🎯 🔫",
     "answerTe": "అతడు",
     "answerEn": "Athadu",
-    "hint": "2005 Trivikram",
+    "hint": "2005 · Trivikram Srinivas",
+    "year": 2005,
+    "filmId": "athadu",
     "difficulty": 1,
     "tags": [
       "thriller"
@@ -202,7 +228,9 @@
     "en": "🩺 💊",
     "answerTe": "శంకర్ దాదా ఎంబీబీఎస్",
     "answerEn": "Shankar Dada MBBS",
-    "hint": "2004 Jayanth C Paranjee",
+    "hint": "2004 · Jayanth C. Paranjee",
+    "year": 2004,
+    "filmId": "shankar-dada-mbbs",
     "difficulty": 1,
     "tags": [
       "comedy"
@@ -217,7 +245,9 @@
     "en": "🐴 ⚔️",
     "answerTe": "మగధీర",
     "answerEn": "Magadheera",
-    "hint": "2009 SS Rajamouli",
+    "hint": "2009 · S. S. Rajamouli",
+    "year": 2009,
+    "filmId": "magadheera",
     "difficulty": 1,
     "tags": [
       "epic"
@@ -232,7 +262,9 @@
     "en": "🏢 💼",
     "answerTe": "బిజినెస్‌మ్యాన్",
     "answerEn": "Businessman",
-    "hint": "2012 Puri Jagannadh",
+    "hint": "2012 · Puri Jagannadh",
+    "year": 2012,
+    "filmId": "businessman",
     "difficulty": 1,
     "tags": [
       "action"
@@ -247,7 +279,9 @@
     "en": "🐅 🌳",
     "answerTe": "ఆర్ఆర్ఆర్",
     "answerEn": "RRR",
-    "hint": "2022 SS Rajamouli",
+    "hint": "2022 · S. S. Rajamouli",
+    "year": 2022,
+    "filmId": "rrr",
     "difficulty": 1,
     "tags": [
       "action"
@@ -262,7 +296,9 @@
     "en": "👮 🥊",
     "answerTe": "గబ్బర్ సింగ్",
     "answerEn": "Gabbar Singh",
-    "hint": "2012 Harish Shankar",
+    "hint": "2012 · Harish Shankar",
+    "year": 2012,
+    "filmId": "gabbar-singh",
     "difficulty": 1,
     "tags": [
       "action"
@@ -277,7 +313,9 @@
     "en": "🎓 📚",
     "answerTe": "హ్యాపీ డేస్",
     "answerEn": "Happy Days",
-    "hint": "2007 Sekhar Kammula",
+    "hint": "2007 · Sekhar Kammula",
+    "year": 2007,
+    "filmId": "happy-days",
     "difficulty": 1,
     "tags": [
       "youth"
@@ -292,7 +330,9 @@
     "en": "👻 🏰",
     "answerTe": "అరుంధతి",
     "answerEn": "Arundhati",
-    "hint": "2009 Kodi Ramakrishna",
+    "hint": "2009 · Kodi Ramakrishna",
+    "year": 2009,
+    "filmId": "arundhati",
     "difficulty": 1,
     "tags": [
       "fantasy"
@@ -307,7 +347,9 @@
     "en": "💰 🏦",
     "answerTe": "కిక్",
     "answerEn": "Kick",
-    "hint": "2009 Surender Reddy",
+    "hint": "2009 · Surender Reddy",
+    "year": 2009,
+    "filmId": "kick",
     "difficulty": 1,
     "tags": [
       "comedy"
@@ -322,7 +364,9 @@
     "en": "💍 👰",
     "answerTe": "మురారి",
     "answerEn": "Murari",
-    "hint": "2001 Krishna Vamsi",
+    "hint": "2001 · Krishna Vamsi",
+    "year": 2001,
+    "filmId": "murari",
     "difficulty": 1,
     "tags": [
       "family"
@@ -337,7 +381,9 @@
     "en": "🚕 💨",
     "answerTe": "టాక్సీవాలా",
     "answerEn": "Taxiwaala",
-    "hint": "2018 Rahul Sankrityan",
+    "hint": "2018 · Rahul Sankrityan",
+    "year": 2018,
+    "filmId": "taxiwaala",
     "difficulty": 2,
     "tags": [
       "comedy"
@@ -352,7 +398,9 @@
     "en": "🌊 ⛵",
     "answerTe": "ఉప్పెన",
     "answerEn": "Uppena",
-    "hint": "2021 Buchi Babu Sana",
+    "hint": "2021 · Buchi Babu Sana",
+    "year": 2021,
+    "filmId": "uppena",
     "difficulty": 1,
     "tags": [
       "romance"
@@ -367,7 +415,9 @@
     "en": "👨‍👧 ❤️",
     "answerTe": "నాన్నకు ప్రేమతో",
     "answerEn": "Nannaku Prematho",
-    "hint": "2016 Sukumar",
+    "hint": "2016 · Sukumar",
+    "year": 2016,
+    "filmId": "nannaku-prematho",
     "difficulty": 2,
     "tags": [
       "action"
@@ -381,8 +431,10 @@
     "te": "🍫 🥤",
     "en": "🍫 🥤",
     "answerTe": "ఖుషి",
-    "answerEn": "Khushi",
-    "hint": "2001 SJ Suryah",
+    "answerEn": "Kushi",
+    "hint": "2001 · S. J. Suryah",
+    "year": 2001,
+    "filmId": "kushi",
     "difficulty": 1,
     "tags": [
       "romance"
@@ -397,7 +449,9 @@
     "en": "🥊 🏆",
     "answerTe": "అమ్మ నాన్న ఓ తమిళ అమ్మాయి",
     "answerEn": "Amma Nanna O Tamila Ammayi",
-    "hint": "2003 Puri Jagannadh",
+    "hint": "2003 · Puri Jagannadh",
+    "year": 2003,
+    "filmId": "amma-nanna-o-tamila-ammayi",
     "difficulty": 1,
     "tags": [
       "action"
@@ -412,7 +466,9 @@
     "en": "⚖️ 👨‍⚖️",
     "answerTe": "వకీల్ సాబ్",
     "answerEn": "Vakeel Saab",
-    "hint": "2021 Venu Sriram",
+    "hint": "2021 · Venu Sriram",
+    "year": 2021,
+    "filmId": "vakeel-saab",
     "difficulty": 1,
     "tags": [
       "courtroom"
@@ -427,7 +483,9 @@
     "en": "🎪 🤹",
     "answerTe": "ఛత్రపతి",
     "answerEn": "Chatrapathi",
-    "hint": "2005 SS Rajamouli",
+    "hint": "2005 · S. S. Rajamouli",
+    "year": 2005,
+    "filmId": "chatrapathi",
     "difficulty": 1,
     "tags": [
       "action"
@@ -442,7 +500,9 @@
     "en": "🌾 🚜",
     "answerTe": "శ్రీమంతుడు",
     "answerEn": "Srimanthudu",
-    "hint": "2015 Koratala Siva",
+    "hint": "2015 · Koratala Siva",
+    "year": 2015,
+    "filmId": "srimanthudu",
     "difficulty": 1,
     "tags": [
       "drama"

@@ -1,10 +1,13 @@
 [
   {
     "id": "hsg-mov-001",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "పోకిరి",
     "en": "Pokiri",
+    "hint": "2006 · Puri Jagannadh",
+    "year": 2006,
+    "filmId": "pokiri",
     "difficulty": 1,
     "tags": [
       "action"
@@ -13,10 +16,13 @@
   },
   {
     "id": "hsg-mov-002",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "మగధీర",
     "en": "Magadheera",
+    "hint": "2009 · S. S. Rajamouli",
+    "year": 2009,
+    "filmId": "magadheera",
     "difficulty": 1,
     "tags": [
       "fantasy"
@@ -25,10 +31,13 @@
   },
   {
     "id": "hsg-mov-003",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "బాహుబలి",
     "en": "Baahubali",
+    "hint": "2015 · S. S. Rajamouli",
+    "year": 2015,
+    "filmId": "baahubali",
     "difficulty": 1,
     "tags": [
       "epic"
@@ -37,10 +46,13 @@
   },
   {
     "id": "hsg-mov-004",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "ఆర్య",
     "en": "Arya",
+    "hint": "2004 · Sukumar",
+    "year": 2004,
+    "filmId": "arya",
     "difficulty": 1,
     "tags": [
       "romance"
@@ -49,10 +61,13 @@
   },
   {
     "id": "hsg-mov-005",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "జల్సా",
     "en": "Jalsa",
+    "hint": "2008 · Trivikram Srinivas",
+    "year": 2008,
+    "filmId": "jalsa",
     "difficulty": 1,
     "tags": [
       "action"
@@ -61,10 +76,13 @@
   },
   {
     "id": "hsg-mov-006",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "ఒక్కడు",
     "en": "Okkadu",
+    "hint": "2003 · Gunasekhar",
+    "year": 2003,
+    "filmId": "okkadu",
     "difficulty": 1,
     "tags": [
       "action"
@@ -73,10 +91,13 @@
   },
   {
     "id": "hsg-mov-007",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "అతడు",
     "en": "Athadu",
+    "hint": "2005 · Trivikram Srinivas",
+    "year": 2005,
+    "filmId": "athadu",
     "difficulty": 1,
     "tags": [
       "thriller"
@@ -85,10 +106,13 @@
   },
   {
     "id": "hsg-mov-008",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "బిజినెస్‌మ్యాన్",
     "en": "Businessman",
+    "hint": "2012 · Puri Jagannadh",
+    "year": 2012,
+    "filmId": "businessman",
     "difficulty": 2,
     "tags": [
       "action"
@@ -97,10 +121,13 @@
   },
   {
     "id": "hsg-mov-009",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "దూకుడు",
     "en": "Dookudu",
+    "hint": "2011 · Srinu Vaitla",
+    "year": 2011,
+    "filmId": "dookudu",
     "difficulty": 1,
     "tags": [
       "action"
@@ -109,10 +136,13 @@
   },
   {
     "id": "hsg-mov-010",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "జులాయి",
     "en": "Julayi",
+    "hint": "2012 · Trivikram Srinivas",
+    "year": 2012,
+    "filmId": "julayi",
     "difficulty": 2,
     "tags": [
       "thriller"
@@ -121,10 +151,13 @@
   },
   {
     "id": "hsg-mov-011",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "బృందావనం",
     "en": "Brindavanam",
+    "hint": "2010 · Vamsi Paidipally",
+    "year": 2010,
+    "filmId": "brindavanam",
     "difficulty": 2,
     "tags": [
       "romance"
@@ -133,10 +166,13 @@
   },
   {
     "id": "hsg-mov-012",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "గబ్బర్ సింగ్",
     "en": "Gabbar Singh",
+    "hint": "2012 · Harish Shankar",
+    "year": 2012,
+    "filmId": "gabbar-singh",
     "difficulty": 1,
     "tags": [
       "action"
@@ -145,10 +181,13 @@
   },
   {
     "id": "hsg-mov-013",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "కిక్",
     "en": "Kick",
+    "hint": "2009 · Surender Reddy",
+    "year": 2009,
+    "filmId": "kick",
     "difficulty": 2,
     "tags": [
       "action"
@@ -157,10 +196,13 @@
   },
   {
     "id": "hsg-mov-014",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
-    "te": "బాలుపు",
+    "te": "బలుపు",
     "en": "Balupu",
+    "hint": "2013 · Gopichand Malineni",
+    "year": 2013,
+    "filmId": "balupu",
     "difficulty": 2,
     "tags": [
       "comedy"
@@ -169,10 +211,13 @@
   },
   {
     "id": "hsg-mov-015",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "లెజెండ్",
     "en": "Legend",
+    "hint": "2014 · Boyapati Srinu",
+    "year": 2014,
+    "filmId": "legend",
     "difficulty": 2,
     "tags": [
       "action"
@@ -181,10 +226,13 @@
   },
   {
     "id": "hsg-mov-016",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "అత్తారింటికి దారేది",
     "en": "Attarintiki Daredi",
+    "hint": "2013 · Trivikram Srinivas",
+    "year": 2013,
+    "filmId": "attarintiki-daredi",
     "difficulty": 2,
     "tags": [
       "comedy"
@@ -193,10 +241,13 @@
   },
   {
     "id": "hsg-mov-017",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
-    "te": "రేస్ గుర్రం",
+    "te": "రేసు గుర్రం",
     "en": "Race Gurram",
+    "hint": "2014 · Surender Reddy",
+    "year": 2014,
+    "filmId": "race-gurram",
     "difficulty": 1,
     "tags": [
       "action"
@@ -205,10 +256,13 @@
   },
   {
     "id": "hsg-mov-018",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "శ్రీమంతుడు",
     "en": "Srimanthudu",
+    "hint": "2015 · Koratala Siva",
+    "year": 2015,
+    "filmId": "srimanthudu",
     "difficulty": 2,
     "tags": [
       "drama"
@@ -217,10 +271,13 @@
   },
   {
     "id": "hsg-mov-019",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "భారత్ అనే నేను",
     "en": "Bharat Ane Nenu",
+    "hint": "2018 · Koratala Siva",
+    "year": 2018,
+    "filmId": "bharat-ane-nenu",
     "difficulty": 2,
     "tags": [
       "political"
@@ -229,10 +286,13 @@
   },
   {
     "id": "hsg-mov-020",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "మహర్షి",
     "en": "Maharshi",
+    "hint": "2019 · Vamshi Paidipally",
+    "year": 2019,
+    "filmId": "maharshi",
     "difficulty": 2,
     "tags": [
       "drama"
@@ -241,10 +301,13 @@
   },
   {
     "id": "hsg-mov-021",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "జెర్సీ",
     "en": "Jersey",
+    "hint": "2019 · Gowtam Tinnanuri",
+    "year": 2019,
+    "filmId": "jersey",
     "difficulty": 2,
     "tags": [
       "sports"
@@ -253,10 +316,13 @@
   },
   {
     "id": "hsg-mov-022",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "ఉప్పెన",
     "en": "Uppena",
+    "hint": "2021 · Buchi Babu Sana",
+    "year": 2021,
+    "filmId": "uppena",
     "difficulty": 2,
     "tags": [
       "romance"
@@ -265,10 +331,13 @@
   },
   {
     "id": "hsg-mov-023",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "పుష్ప",
     "en": "Pushpa",
+    "hint": "2021 · Sukumar",
+    "year": 2021,
+    "filmId": "pushpa",
     "difficulty": 1,
     "tags": [
       "action"
@@ -277,10 +346,13 @@
   },
   {
     "id": "hsg-mov-024",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "అఖండ",
     "en": "Akhanda",
+    "hint": "2021 · Boyapati Srinu",
+    "year": 2021,
+    "filmId": "akhanda",
     "difficulty": 2,
     "tags": [
       "action"
@@ -289,10 +361,13 @@
   },
   {
     "id": "hsg-mov-025",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "భీమ్లా నాయక్",
     "en": "Bheemla Nayak",
+    "hint": "2022 · Saagar K. Chandra",
+    "year": 2022,
+    "filmId": "bheemla-nayak",
     "difficulty": 2,
     "tags": [
       "action"
@@ -301,10 +376,13 @@
   },
   {
     "id": "hsg-mov-026",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "ఆర్ఆర్ఆర్",
     "en": "RRR",
+    "hint": "2022 · S. S. Rajamouli",
+    "year": 2022,
+    "filmId": "rrr",
     "difficulty": 1,
     "tags": [
       "epic"
@@ -313,10 +391,13 @@
   },
   {
     "id": "hsg-mov-027",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "దసరా",
     "en": "Dasara",
+    "hint": "2023 · Srikanth Odela",
+    "year": 2023,
+    "filmId": "dasara",
     "difficulty": 2,
     "tags": [
       "action"
@@ -325,10 +406,13 @@
   },
   {
     "id": "hsg-mov-028",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
-    "te": "కుషీ",
+    "te": "ఖుషి",
     "en": "Kushi",
+    "hint": "2001 · S. J. Suryah",
+    "year": 2001,
+    "filmId": "kushi",
     "difficulty": 2,
     "tags": [
       "romance"
@@ -337,10 +421,13 @@
   },
   {
     "id": "hsg-mov-029",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
-    "te": "గుంటూర్ కారం",
+    "te": "గుంటూరు కారం",
     "en": "Guntur Kaaram",
+    "hint": "2024 · Trivikram Srinivas",
+    "year": 2024,
+    "filmId": "guntur-kaaram",
     "difficulty": 3,
     "tags": [
       "drama"
@@ -349,10 +436,13 @@
   },
   {
     "id": "hsg-mov-030",
-    "deck": "movies",
+    "deck": "head-set-go-movies",
     "game": "head-set-go",
     "te": "దేవర",
     "en": "Devara",
+    "hint": "2024 · Koratala Siva",
+    "year": 2024,
+    "filmId": "devara",
     "difficulty": 2,
     "tags": [
       "action"

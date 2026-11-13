@@ -34,3 +34,4 @@ next-env.d.ts
 
 # Keep reference HTML out of git noise if desired, or track reference
 TFI\ &\ Pitch\ Landing\ and\ App\ Preview\ –\ Landing\ page.html
+packages/content/review/
