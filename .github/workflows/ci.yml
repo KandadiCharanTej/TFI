@@ -40,7 +40,24 @@ jobs:
         run: pnpm build
 
       - name: Install Playwright browsers
-        run: pnpm --filter @tfi/web exec playwright install --with-deps chromium
+        run: pnpm --filter @tfi/web exec playwright install --with-deps chromium webkit
 
       - name: Run Playwright E2E and Accessibility gates
         run: pnpm test:e2e
+
+      - name: Lighthouse mobile gate (5 key routes >= 90 perf, 100 a11y)
+        run: |
+          pnpm --filter @tfi/web start &
+          SERVER_PID=$!
+          sleep 4
+          for route in "/" "/play" "/play/head-set-go" "/play/head-set-go/round" "/play/transify/round"; do
+            npx --yes lighthouse "http://localhost:3000${route}" --only-categories=performance,accessibility --output=json --output-path=/tmp/lh.json --chrome-flags="--headless --no-sandbox" --quiet
+            node -e '
+              const r = require("/tmp/lh.json");
+              const perf = Math.round(r.categories.performance.score * 100);
+              const a11y = Math.round(r.categories.accessibility.score * 100);
+              console.log(process.argv[1], "perf:", perf, "a11y:", a11y);
+              if (perf < 90 || a11y < 100) process.exit(1);
+            ' "$route"
+          done
+          kill $SERVER_PID

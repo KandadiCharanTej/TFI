@@ -51,6 +51,13 @@ This validates all cards with Zod, rejects duplicates, writes JSON to `packages/
 
 All 60 starter cards have `verified: false`. They need review by a Telugu cinema enthusiast before v1.
 
+## How to publish (Vercel)
+
+1. Import this repository in **Vercel** and set the **Root Directory** to the repo root (Turborepo / pnpm workspace is auto-detected).
+2. Set **Build Command** to `pnpm --filter @tfi/web build` and **Install Command** to `pnpm install --frozen-lockfile`.
+3. Copy variables from `ENV.example` into Vercel Project Settings → Environment Variables (`NEXT_PUBLIC_SITE_URL`, `SHOW_MVP_GAMES=false`, optional `FEEDBACK_URL`, `POSTHOG_KEY`, `SENTRY_DSN`).
+4. Deploy. Verify `/manifest.webmanifest`, `/robots.txt`, `/sitemap.xml`, and `/og-share.png` return HTTP 200.
+
 ## Legal
 
 Unofficial fan-made game. Not affiliated with any film, actor, studio, cricket league or team. All auctions use pretend game coins only — no real money, payments, wallets or prizes.
