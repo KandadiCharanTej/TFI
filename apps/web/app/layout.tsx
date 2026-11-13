@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { FlagsProvider } from "@/components/flags-provider";
 import { LangProvider } from "@/components/lang-provider";
 import { PrefsBootstrap } from "@/components/prefs-bootstrap";
 import { TRANSLATIONS } from "@/lib/i18n";
+import { readShowMvpFlag } from "@/lib/games";
 import { getServerLang } from "@/lib/lang-server";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -25,6 +27,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const lang = await getServerLang();
+  const showMvp = readShowMvpFlag(process.env.SHOW_MVP_GAMES);
 
   return (
     <html lang={lang}>
@@ -48,7 +51,7 @@ export default async function RootLayout({
         {lang === "te" ? (
           <link
             rel="preload"
-            href="/fonts/noto-sans-telugu.woff2"
+            href="/fonts/anek-telugu.woff2"
             as="font"
             type="font/woff2"
             crossOrigin="anonymous"
@@ -58,7 +61,7 @@ export default async function RootLayout({
       <body>
         <LangProvider initialLang={lang}>
           <PrefsBootstrap />
-          {children}
+          <FlagsProvider showMvp={showMvp}>{children}</FlagsProvider>
         </LangProvider>
       </body>
     </html>

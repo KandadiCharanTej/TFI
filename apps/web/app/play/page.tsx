@@ -2,31 +2,31 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { CATEGORY_COLORS } from "@tfi/config/tokens";
+import { MODE_COLORS } from "@tfi/config/tokens";
 import { AppFrame } from "@/components/app-frame";
 import { GameTitle } from "@/components/game-title";
 import { WallIcon } from "@/components/icons";
 import { Tx, useT } from "@/components/lang-provider";
 import { Badge, Chip, Sticker, WallLinkButton } from "@/components/sticker-kit";
-import { GAMES_CATALOG, TRANSLATIONS } from "@/lib/i18n";
+import { useVisibleGames } from "@/components/flags-provider";
+import { MODE_FILTERS, filterByMode, panelModeKey, type ModeFilter } from "@/lib/games";
+import { TRANSLATIONS } from "@/lib/i18n";
 
-type CategoryFilter = "All" | "Cinema" | "Cricket" | "Party";
-
-const FILTER_DOTS: Record<CategoryFilter, string> = {
+const FILTER_DOTS: Record<ModeFilter, string> = {
   All: "#FFFFFF",
-  Cinema: CATEGORY_COLORS.Cinema,
-  Cricket: CATEGORY_COLORS.Cricket,
-  Party: CATEGORY_COLORS.Party,
+  onePhone: MODE_COLORS.onePhone,
+  online: MODE_COLORS.online,
 };
 
 const P = TRANSLATIONS.playHome;
 
 export default function PlayHomePage() {
-  const [filter, setFilter] = useState<CategoryFilter>("All");
+  const [filter, setFilter] = useState<ModeFilter>("All");
   const t = useT();
+  const visibleGames = useVisibleGames();
 
-  const todaysPick = GAMES_CATALOG[0];
-  const filteredGames = GAMES_CATALOG.filter((g) => filter === "All" || g.category === filter);
+  const todaysPick = visibleGames[0];
+  const filteredGames = filterByMode(visibleGames, filter);
   if (!todaysPick) return null;
 
   return (
@@ -100,10 +100,10 @@ export default function PlayHomePage() {
             </h2>
             <div
               role="group"
-              aria-label={t(TRANSLATIONS.categories.filterLabel)}
+              aria-label={t(TRANSLATIONS.modeFilter.filterLabel)}
               className="flex flex-wrap gap-2"
             >
-              {(["All", "Cinema", "Cricket", "Party"] as const).map((cat) => (
+              {MODE_FILTERS.map((cat) => (
                 <Chip
                   key={cat}
                   active={filter === cat}
@@ -111,7 +111,7 @@ export default function PlayHomePage() {
                   onClick={() => setFilter(cat)}
                   className="px-3.5 text-[13px]"
                 >
-                  <Tx v={TRANSLATIONS.categories[cat]} />
+                  <Tx v={TRANSLATIONS.modeFilter[cat]} />
                 </Chip>
               ))}
             </div>
@@ -134,7 +134,7 @@ export default function PlayHomePage() {
 
                   <div
                     className="mt-2.5 flex h-[76px] items-center justify-center rounded-[12px] border-[2.5px] border-ink text-ink sm:h-[92px]"
-                    style={{ backgroundColor: CATEGORY_COLORS[game.category] }}
+                    style={{ backgroundColor: MODE_COLORS[panelModeKey(game)] }}
                   >
                     <div className="h-[48px] w-[48px] sm:h-[60px] sm:w-[60px]">
                       <WallIcon kind={game.iconKind} />

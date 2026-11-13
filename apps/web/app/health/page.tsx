@@ -5,7 +5,8 @@ import { Tx } from "@/components/lang-provider";
 import { TeluguOnly } from "@/components/te-only";
 import { BidDisplay, Badge, Chip, Sticker, TapeStrip, TimerBar, WallButton } from "@/components/sticker-kit";
 import { WallIcon } from "@/components/icons";
-import { BRAND_NAME, GAMES_CATALOG, TELUGU_CONJUNCT_SAMPLES, TRANSLATIONS } from "@/lib/i18n";
+import { getVisibleCatalog } from "@/lib/games";
+import { BRAND_NAME, TELUGU_CONJUNCT_SAMPLES, TRANSLATIONS } from "@/lib/i18n";
 import { getServerLang } from "@/lib/lang-server";
 
 export const metadata = {
@@ -146,10 +147,10 @@ export default async function HealthPage() {
                 ✕ <Tx v={H.passBid} />
               </WallButton>
               <Chip active dotColor="#F6BE18">
-                <Tx v={TRANSLATIONS.categories.Cinema} />
+                <Tx v={TRANSLATIONS.modeFilter.onePhone} />
               </Chip>
-              <Chip dotColor="#00C853">
-                <Tx v={TRANSLATIONS.categories.Cricket} />
+              <Chip dotColor="#00E5FF">
+                <Tx v={TRANSLATIONS.modeFilter.online} />
               </Chip>
               <Badge tone="cyan" mono>
                 K7QM
@@ -164,7 +165,7 @@ export default async function HealthPage() {
 
         <TapeStrip
           label={TRANSLATIONS.landing.pickYourGameHeading[lang]}
-          items={GAMES_CATALOG.map((g) => g.title[lang])}
+          items={getVisibleCatalog(false).map((g) => g.title[lang])}
         />
       </main>
     </div>

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CATEGORY_COLORS, WALL_COLORS, WALL_FONTS } from "./tokens";
+import { MODE_COLORS, WALL_COLORS, WALL_FONTS } from "./tokens";
 
 describe("The Wall Design System Tokens", () => {
   it("locks exact hex values for all 8 Wall colors and forbids purple", () => {
@@ -16,10 +16,9 @@ describe("The Wall Design System Tokens", () => {
     expect(Object.keys(WALL_COLORS)).toHaveLength(8);
   });
 
-  it("maps game categories strictly to Cinema=yellow, Cricket=green, Party=magenta", () => {
-    expect(CATEGORY_COLORS.Cinema).toBe("#F6BE18");
-    expect(CATEGORY_COLORS.Cricket).toBe("#00C853");
-    expect(CATEGORY_COLORS.Party).toBe("#EC1276");
+  it("maps game modes strictly to One phone=yellow, Online=cyan", () => {
+    expect(MODE_COLORS.onePhone).toBe("#F6BE18");
+    expect(MODE_COLORS.online).toBe("#00E5FF");
   });
 
   it("defines the 5 locked font families", () => {
@@ -27,6 +26,6 @@ describe("The Wall Design System Tokens", () => {
     expect(WALL_FONTS.marker).toContain("Permanent Marker");
     expect(WALL_FONTS.sans).toContain("Plus Jakarta Sans");
     expect(WALL_FONTS.mono).toContain("Space Mono");
-    expect(WALL_FONTS.telugu).toContain("Noto Sans Telugu");
+    expect(WALL_FONTS.telugu).toContain("Anek Telugu");
   });
 });

@@ -82,10 +82,10 @@ test.describe("Phase 0 & Phase 1 Quality Gates", () => {
     // English-mode heading
     await expect(page.getByRole("heading", { level: 1 })).toContainText("Movies.");
     // English tagline
-    await expect(page.getByText("Our movies. Our cricket. Our gang.")).toBeVisible();
+    await expect(page.getByText("Our movies. Our mayhem. Our gang.")).toBeVisible();
     await expect(
       page.getByText(
-        "Unofficial fan-made game. Not affiliated with any film, actor, studio, cricket league or team.",
+        "Unofficial fan-made game. Not affiliated with any film, actor, studio or team.",
       ),
     ).toBeVisible();
     await expect(
@@ -93,10 +93,10 @@ test.describe("Phase 0 & Phase 1 Quality Gates", () => {
     ).toBeVisible();
 
     // Filter games interaction
-    const cricketFilter = page.getByRole("button", { name: /Cricket/i });
-    await cricketFilter.click();
-    await expect(cricketFilter).toHaveAttribute("aria-pressed", "true");
-    await expect(page.getByRole("heading", { name: "Cricket IQ" })).toBeVisible();
+    const onlineFilter = page.getByRole("button", { name: "Online", exact: true });
+    await onlineFilter.click();
+    await expect(onlineFilter).toHaveAttribute("aria-pressed", "true");
+    await expect(page.getByRole("heading", { name: "Box Office Auction" })).toBeVisible();
 
     const allFilter = page.getByRole("button", { name: /All/i });
     await allFilter.click();

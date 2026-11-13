@@ -65,7 +65,7 @@ async function buildShareSticker(correct: number, deck: string): Promise<Blob | 
     ctx.fillStyle = "#141313";
     ctx.font = "24px sans-serif";
     ctx.fillText("Unofficial fan-made game. Not affiliated with any film,", W / 2, 1250);
-    ctx.fillText("actor, studio, cricket league or team.", W / 2, 1290);
+    ctx.fillText("actor, studio or team.", W / 2, 1290);
 
     return new Promise((res) => canvas.toBlob((b) => res(b), "image/png"));
   } catch {

@@ -113,7 +113,7 @@ async function buildShareSticker(
 
     ctx.font = "24px sans-serif";
     ctx.fillText("Unofficial fan-made game. Not affiliated with any film,", W / 2, 1240);
-    ctx.fillText("actor, studio, cricket league or team.", W / 2, 1280);
+    ctx.fillText("actor, studio or team.", W / 2, 1280);
 
     return new Promise((res) => canvas.toBlob((b) => res(b), "image/png"));
   } catch {

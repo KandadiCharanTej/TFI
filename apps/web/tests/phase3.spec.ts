@@ -79,7 +79,7 @@ test.describe("STEP 0: Font Lab at /dev/fonts", () => {
 // ─── STEP 0 item 4c: Computed font check in Telugu mode ───────────────────────
 
 test.describe("STEP 0 item 4c: Telugu Mode Computed Font Check", () => {
-  test("Telugu text nodes use Noto Sans Telugu without system fallback", async ({ page }) => {
+  test("Telugu text nodes use Anek Telugu without system fallback", async ({ page }) => {
     await setLang(page, "te");
     await page.goto(`${BASE}/play/transify`);
     await waitHydrated(page);
@@ -92,14 +92,14 @@ test.describe("STEP 0 item 4c: Telugu Mode Computed Font Check", () => {
         return {
           text: (el.textContent || "").trim().slice(0, 15),
           font: computed,
-          hasNoto: computed.includes("Noto Sans Telugu"),
+          hasTeluguFont: computed.includes("Anek Telugu"),
         };
       });
     });
 
     expect(fontCheck.length).toBeGreaterThan(0);
     for (const item of fontCheck) {
-      expect(item.hasNoto, `Element "${item.text}" did not compute to Noto Sans Telugu: ${item.font}`).toBe(true);
+      expect(item.hasTeluguFont, `Element "${item.text}" did not compute to Anek Telugu: ${item.font}`).toBe(true);
     }
   });
 });
@@ -111,8 +111,8 @@ test.describe("English mode has zero Telugu characters on new routes", () => {
     "/play/transify",
     "/play/emoji-cinema",
     "/play/rapid-fire",
-    "/play/cricket-iq",
     "/play/dumb-charades",
+    "/play/most-likely",
   ];
 
   for (const route of NEW_ROUTES) {
@@ -133,7 +133,8 @@ test.describe("Phase 3: Four One-Phone Games (390 x 844)", () => {
     { slug: "transify", title: "Transify" },
     { slug: "emoji-cinema", title: "Emoji Cinema" },
     { slug: "rapid-fire", title: "Rapid Fire" },
-    { slug: "cricket-iq", title: "Cricket IQ" },
+    // Cricket IQ is hidden in the beta; it is only tested when SHOW_MVP_GAMES=true.
+    ...(process.env.SHOW_MVP_GAMES === "true" ? [{ slug: "cricket-iq", title: "Cricket IQ" }] : []),
   ];
 
   for (const g of GAMES) {
@@ -327,12 +328,12 @@ test.describe("Phase 3: Four One-Phone Games (390 x 844)", () => {
     await setLang(page, "en");
 
     // First visit: loads and caches
-    await page.goto(`${BASE}/play/cricket-iq`);
+    await page.goto(`${BASE}/play/transify`);
     await waitHydrated(page);
 
     // Warm up cards in cache
     await page.evaluate(async () => {
-      await fetch("/cards/cricket-iq-trivia.json");
+      await fetch("/cards/transify-movies.json");
     });
 
     // Disconnect network
@@ -341,7 +342,7 @@ test.describe("Phase 3: Four One-Phone Games (390 x 844)", () => {
     // Verify offline fetch of cached card JSON succeeds
     const cachedData = await page.evaluate(async () => {
       try {
-        const res = await fetch("/cards/cricket-iq-trivia.json");
+        const res = await fetch("/cards/transify-movies.json");
         return await res.json();
       } catch {
         return null;

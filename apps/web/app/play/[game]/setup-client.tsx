@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { CATEGORY_COLORS } from "@tfi/config/tokens";
+import { MODE_COLORS } from "@tfi/config/tokens";
 import { AppFrame } from "@/components/app-frame";
 import { GameTitle } from "@/components/game-title";
 import { WallIcon } from "@/components/icons";
@@ -85,7 +85,7 @@ export default function SetupClient({ game, title, description, rule }: SetupCli
     router.push(`/play/${game.id}/round`);
   }
 
-  const panelColor = CATEGORY_COLORS[game.category];
+  const panelColor = MODE_COLORS[game.mode === "Online" ? "online" : "onePhone"];
 
   return (
     <AppFrame>

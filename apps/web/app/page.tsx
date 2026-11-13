@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { CATEGORY_COLORS } from "@tfi/config/tokens";
+import { MODE_COLORS } from "@tfi/config/tokens";
 import { WallIcon } from "@/components/icons";
 import { GameTitle } from "@/components/game-title";
 import { LangSwitch } from "@/components/lang-switch";
@@ -15,28 +15,28 @@ import {
   TapeStrip,
   WallLinkButton,
 } from "@/components/sticker-kit";
-import { BRAND_NAME, FAN_VIBES, GAMES_CATALOG, TRANSLATIONS } from "@/lib/i18n";
+import { useVisibleGames } from "@/components/flags-provider";
+import { MODE_FILTERS, filterByMode, panelModeKey, type ModeFilter } from "@/lib/games";
+import { BRAND_NAME, FAN_VIBES, TRANSLATIONS } from "@/lib/i18n";
 
-type CategoryFilter = "All" | "Cinema" | "Cricket" | "Party";
-
-const FILTER_DOTS: Record<CategoryFilter, string> = {
+const FILTER_DOTS: Record<ModeFilter, string> = {
   All: "#FFFFFF",
-  Cinema: CATEGORY_COLORS.Cinema,
-  Cricket: CATEGORY_COLORS.Cricket,
-  Party: CATEGORY_COLORS.Party,
+  onePhone: MODE_COLORS.onePhone,
+  online: MODE_COLORS.online,
 };
 
 const STICKER_ROTS = [-1, 0.8, -0.6, 1, -0.8] as const;
 const L = TRANSLATIONS.landing;
 
 export default function LandingPage() {
-  const [filter, setFilter] = useState<CategoryFilter>("All");
+  const [filter, setFilter] = useState<ModeFilter>("All");
   const [vibe, setVibe] = useState<string>("bhAAi");
   const { lang } = useLang();
   const t = useT();
 
-  const filteredGames = GAMES_CATALOG.filter((g) => filter === "All" || g.category === filter);
-  const tapeItems = GAMES_CATALOG.map((g) => g.title[lang]);
+  const visibleGames = useVisibleGames();
+  const filteredGames = filterByMode(visibleGames, filter);
+  const tapeItems = visibleGames.map((g) => g.title[lang]);
 
   return (
     <div className="w-full overflow-x-hidden text-ink" data-label="Landing page">
@@ -237,7 +237,7 @@ export default function LandingPage() {
                   </Badge>
                 </div>
                 <p className="m-0 mt-2 text-[13px] font-extrabold text-ink">
-                  <Tx v={L.mock.jerseyBase} />
+                  <Tx v={L.mock.lotBase} />
                 </p>
                 <div className="mt-2 rounded-[12px] border-[2.5px] border-ink bg-yellow px-3 py-1.5">
                   <span className="mono-num text-[28px] leading-[1.2] text-ink">20 Cr</span>
@@ -276,17 +276,17 @@ export default function LandingPage() {
 
             <div
               role="group"
-              aria-label={t(TRANSLATIONS.categories.filterLabel)}
+              aria-label={t(TRANSLATIONS.modeFilter.filterLabel)}
               className="flex flex-wrap gap-3"
             >
-              {(["All", "Cinema", "Cricket", "Party"] as const).map((cat) => (
+              {MODE_FILTERS.map((cat) => (
                 <Chip
                   key={cat}
                   active={filter === cat}
                   dotColor={FILTER_DOTS[cat]}
                   onClick={() => setFilter(cat)}
                 >
-                  <Tx v={TRANSLATIONS.categories[cat]} />
+                  <Tx v={TRANSLATIONS.modeFilter[cat]} />
                 </Chip>
               ))}
             </div>
@@ -311,7 +311,7 @@ export default function LandingPage() {
 
                   <div
                     className="mt-3 flex h-[108px] items-center justify-center rounded-[14px] border-[2.5px] border-ink text-ink"
-                    style={{ backgroundColor: CATEGORY_COLORS[game.category] }}
+                    style={{ backgroundColor: MODE_COLORS[panelModeKey(game)] }}
                   >
                     <div className="h-[72px] w-[72px]">
                       <WallIcon kind={game.iconKind} />
@@ -419,13 +419,13 @@ export default function LandingPage() {
                 <div className="mt-3.5">
                   <GameTitle
                     as="p"
-                    title={L.mock.jerseyWord}
+                    title={L.mock.lotWord}
                     teClassName="text-[34px]"
                     enClassName="text-[36px]"
                   />
                 </div>
                 <p className="m-0 mt-1 text-[14px] font-bold text-ink">
-                  <Tx v={L.mock.jerseyFacts} />
+                  <Tx v={L.mock.lotFacts} />
                 </p>
 
                 <div className="mt-3.5 flex gap-2">
