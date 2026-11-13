@@ -3,6 +3,7 @@ import "./globals.css";
 import { FlagsProvider } from "@/components/flags-provider";
 import { LangProvider } from "@/components/lang-provider";
 import { PrefsBootstrap } from "@/components/prefs-bootstrap";
+import { SwManager } from "@/components/sw-manager";
 import { TRANSLATIONS } from "@/lib/i18n";
 import { readShowMvpFlag } from "@/lib/games";
 import { getServerLang } from "@/lib/lang-server";
@@ -12,6 +13,11 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: TRANSLATIONS.brand.pageTitle[lang],
     description: TRANSLATIONS.brand.pageDescription[lang],
+    manifest: "/manifest.webmanifest",
+    icons: {
+      icon: "/icons/icon-192.png",
+      apple: "/icons/apple-touch-icon.png",
+    },
   };
 }
 
@@ -61,7 +67,10 @@ export default async function RootLayout({
       <body>
         <LangProvider initialLang={lang}>
           <PrefsBootstrap />
-          <FlagsProvider showMvp={showMvp}>{children}</FlagsProvider>
+          <FlagsProvider showMvp={showMvp}>
+            {children}
+            <SwManager />
+          </FlagsProvider>
         </LangProvider>
       </body>
     </html>

@@ -1,6 +1,7 @@
 "use client";
 
 import { AppFrame } from "@/components/app-frame";
+import { InstallSticker } from "@/components/install-sticker";
 import { LangSwitch } from "@/components/lang-switch";
 import { Tx, useLang } from "@/components/lang-provider";
 import { Chip, Sticker } from "@/components/sticker-kit";
@@ -14,7 +15,9 @@ export default function MePage() {
 
   return (
     <AppFrame>
-      <Sticker className="mx-auto max-w-[540px] space-y-6 p-6">
+      <div className="mx-auto max-w-[540px] space-y-5">
+      <InstallSticker />
+      <Sticker className="space-y-6 p-6">
         <div>
           <h1 className="anton-title m-0 text-[28px] text-ink">
             <Tx v={TRANSLATIONS.pages.meTitle} />
@@ -65,6 +68,7 @@ export default function MePage() {
           </div>
         </div>
       </Sticker>
+      </div>
     </AppFrame>
   );
 }

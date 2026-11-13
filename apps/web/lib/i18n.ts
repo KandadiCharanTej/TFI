@@ -72,6 +72,7 @@ export const TRANSLATIONS = {
     backToPlay: { en: "Back to Play", te: "ఆట పేజీకి వెళ్ళండి" },
     backToPlayHome: { en: "Back to Play Home", te: "ఆట హోమ్‌కు వెళ్ళండి" },
     goToPlayHome: { en: "Go to Play Home", te: "ఆట హోమ్‌కు వెళ్ళండి" },
+    comingSoon: { en: "Coming soon", te: "త్వరలో వస్తుంది" },
     skip: { en: "Skip", te: "వదిలేయి" },
     correct: { en: "Correct", te: "సరైనది" },
     pass: { en: "Pass", te: "పాస్" },
@@ -466,6 +467,33 @@ export const TRANSLATIONS = {
     step2Body: { en: "Tap the friend who fits the prompt best (you can't pick yourself).", te: "వాక్యానికి సరిపోయే స్నేహితుడి పేరుపై నొక్కండి (మీ పేరు ఎంచుకోలేరు)." },
     step3Title: { en: "3. Reveal & crown", te: "3. విజేతను చూడండి" },
     step3Body: { en: "Everyone sees the winner after all votes are in!", te: "అందరి ఓట్లు పూర్తయ్యాక విజేత ఎవరో తెలుస్తుంది!" },
+  },
+  pwa: {
+    installTitle: { en: "Add to home screen", te: "హోమ్ స్క్రీన్‌కు జోడించండి" },
+    installBody: {
+      en: "Play offline anytime like an app.",
+      te: "యాప్ లాగా ఎప్పుడైనా ఆఫ్‌లైన్‌లో ఆడండి.",
+    },
+    installBtn: { en: "Add to home screen", te: "జోడించండి" },
+    notNow: { en: "Not now", te: "ఇప్పుడు కాదు" },
+    iosTitle: { en: "Add on iPhone", te: "ఐఫోన్‌లో జోడించండి" },
+    iosStep1: {
+      en: "1. Tap the Share button at the bottom of Safari.",
+      te: "1. Safari కింద ఉన్న Share బటన్‌ను నొక్కండి.",
+    },
+    iosStep2: {
+      en: "2. Scroll and tap 'Add to Home Screen'.",
+      te: "2. కిందికి స్క్రోల్ చేసి 'Add to Home Screen' నొక్కండి.",
+    },
+    iosClose: { en: "Got it", te: "అర్థమైంది" },
+    readyOffline: { en: "Ready offline", te: "ఆఫ్‌లైన్‌లో సిద్ధం" },
+    offlineSavedHeading: { en: "Games saved offline", te: "ఆఫ్‌లైన్‌లో సేవ్ చేసిన ఆటలు" },
+    offlineNoneSaved: {
+      en: "Open any game once while online to save it for offline play.",
+      te: "ఆఫ్‌లైన్‌లో ఆడటానికి ఆన్‌లైన్‌లో ఉన్నప్పుడు ఒకసారి ఏదైనా ఆటను తెరవండి.",
+    },
+    swUpdateBanner: { en: "New version ready.", te: "కొత్త వెర్షన్ సిద్ధంగా ఉంది." },
+    swRefreshBtn: { en: "Refresh", te: "రిఫ్రెష్" },
   },
   health: {
     title: { en: "SYSTEM HEALTH", te: "సిస్టమ్ ఆరోగ్యం" },

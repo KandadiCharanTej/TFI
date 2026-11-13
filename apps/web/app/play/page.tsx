@@ -6,8 +6,10 @@ import { MODE_COLORS } from "@tfi/config/tokens";
 import { AppFrame } from "@/components/app-frame";
 import { GameTitle } from "@/components/game-title";
 import { WallIcon } from "@/components/icons";
+import { InstallSticker } from "@/components/install-sticker";
 import { Tx, useLang, useT } from "@/components/lang-provider";
 import { Badge, Chip, Sticker, WallLinkButton } from "@/components/sticker-kit";
+import { useOfflineReadyGames } from "@/components/sw-manager";
 import { useVisibleGames } from "@/components/flags-provider";
 import { MODE_FILTERS, filterByMode, panelModeKey, type ModeFilter } from "@/lib/games";
 import { TRANSLATIONS } from "@/lib/i18n";
@@ -25,6 +27,7 @@ export default function PlayHomePage() {
   const { lang } = useLang();
   const t = useT();
   const visibleGames = useVisibleGames();
+  const offlineSlugs = useOfflineReadyGames();
 
   const todaysPick = visibleGames[0];
   const filteredGames = filterByMode(visibleGames, filter);
@@ -77,6 +80,8 @@ export default function PlayHomePage() {
             </div>
           </Sticker>
         </section>
+
+        <InstallSticker />
 
         {/* Room-code strip */}
         <section aria-label={t(P.joinRoomRegion)}>
@@ -158,6 +163,14 @@ export default function PlayHomePage() {
                   <p className="m-0 mt-1 text-[12px] font-medium leading-[1.4] text-ink sm:text-[13px]">
                     <Tx v={game.description} />
                   </p>
+                  {!game.isOnlineOnly && offlineSlugs.has(game.slug) ? (
+                    <p
+                      data-testid={`offline-ready-${game.slug}`}
+                      className="m-0 mt-1.5 inline-flex items-center gap-1 rounded-full border border-ink bg-green px-2 py-0.5 text-[10px] font-extrabold text-ink"
+                    >
+                      ✓ <Tx v={TRANSLATIONS.pwa.readyOffline} />
+                    </p>
+                  ) : null}
                 </div>
 
                 <div className="mt-3">
