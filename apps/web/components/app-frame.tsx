@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { WallIcon } from "./icons";
 import { LangSwitch } from "./lang-switch";
+import { PublicFooter } from "./public-footer";
 import { Tx } from "./lang-provider";
 import { BRAND_NAME, TRANSLATIONS } from "@/lib/i18n";
 
@@ -73,6 +74,7 @@ export function AppFrame({ children }: AppFrameProps) {
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch={false}
                 aria-current={isActive ? "page" : undefined}
                 className="flex min-h-[54px] items-center gap-3 rounded-[14px] border-[2.5px] border-ink px-4 py-2 font-extrabold text-ink shadow-btn transition-transform"
                 style={{ backgroundColor: isActive ? "#F6BE18" : "#FFFFFF" }}
@@ -94,6 +96,7 @@ export function AppFrame({ children }: AppFrameProps) {
           className="w-full flex-1 px-4 pb-28 pt-4 md:px-0 md:pb-12 md:pt-0"
         >
           {children}
+          <PublicFooter className="mt-10 rounded-[14px] border-[2.5px] border-ink" />
         </main>
       </div>
 
@@ -109,6 +112,7 @@ export function AppFrame({ children }: AppFrameProps) {
               <li key={item.href}>
                 <Link
                   href={item.href}
+                  prefetch={false}
                   aria-current={isActive ? "page" : undefined}
                   className="flex min-h-[52px] items-center justify-center gap-2 rounded-[14px] border-[2.5px] border-ink px-2 py-1.5 font-extrabold text-ink"
                   style={{

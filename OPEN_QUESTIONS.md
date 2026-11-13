@@ -65,3 +65,17 @@ The chips (bhAAi, Bob, Darling, Tarak, OG, Boss, Nani) are in the landing design
 ### Actor / director names
 
 Using names as plain factual identifiers is generally fine, but confirm with legal counsel before v1 public launch, especially for currently-active public figures.
+
+### Privacy Policy & Terms of Play drafts
+`/privacy` and `/terms` are currently marked **(Draft)** and need legal review before public launch.
+
+### About team credit
+`/about` currently reads `"Made by the TFI & Pitch team."` Replace with the real `"Made by <team name>"` when finalized.
+
+## Phase 4 Operations & Copy
+
+### UI translation export (`i18n-review.csv`)
+Run `node --experimental-strip-types apps/web/scripts/export-i18n-review.mjs` to regenerate `i18n-review.csv` (`key,English,Telugu`). Current string count: **357** bilingual pairs.
+
+### Feedback form (`FEEDBACK_URL`)
+Set `FEEDBACK_URL` (e.g. a Google Form or Tally link) in Vercel environment variables so the `"Send feedback"` sticker appears on results pages, `/me`, and the footer. Leave it empty to hide the button cleanly.

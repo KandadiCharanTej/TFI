@@ -82,7 +82,7 @@ test.describe("Phase 0 & Phase 1 Quality Gates", () => {
     // English-mode heading
     await expect(page.getByRole("heading", { level: 1 })).toContainText("Movies.");
     // English tagline
-    await expect(page.getByText("Our movies. Our mayhem. Our gang.")).toBeVisible();
+    await expect(page.getByText("Our movies. Our mayhem. Our gang.", { exact: true })).toBeVisible();
     await expect(
       page.getByText(
         "Unofficial fan-made game. Not affiliated with any film, actor, studio or team.",
@@ -165,6 +165,7 @@ test.describe("Phase 0 & Phase 1 Quality Gates", () => {
     });
 
     // 2. Desktop 1280x800
+    await page.waitForLoadState("networkidle");
     await setLangCookie(page, "en");
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto("/play");

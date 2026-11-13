@@ -15,7 +15,10 @@ export function LangSwitch({ className = "" }: { readonly className?: string }) 
     <button
       type="button"
       data-testid="lang-switch"
-      onClick={() => setLang(next)}
+      onClick={() => {
+        setLang(next);
+        window.dispatchEvent(new CustomEvent("tfi:language_changed", { detail: { lang: next } }));
+      }}
       className={`inline-flex min-h-[44px] min-w-[44px] items-center gap-1.5 rounded-full border-[2.5px] border-ink bg-sticker px-3.5 py-1 text-sm font-extrabold text-ink shadow-logo ${className}`}
     >
       <span className="visually-hidden">
@@ -24,7 +27,7 @@ export function LangSwitch({ className = "" }: { readonly className?: string }) 
       <span
         data-testid="lang-switch-te"
         lang="te"
-        className={`lang-switch-te rounded-full px-2 py-0.5 text-[15px] leading-none ${
+        className={`lang-switch-te inline-flex h-[28px] min-w-[32px] items-center justify-center rounded-full px-2 text-[14px] font-extrabold leading-none ${
           lang === "te" ? "border-2 border-ink bg-yellow" : ""
         }`}
       >
@@ -32,7 +35,7 @@ export function LangSwitch({ className = "" }: { readonly className?: string }) 
       </span>
       <span aria-hidden="true">/</span>
       <span
-        className={`rounded-full px-2 py-0.5 text-[13px] font-extrabold leading-none ${
+        className={`inline-flex h-[28px] min-w-[32px] items-center justify-center rounded-full px-2 text-[14px] font-extrabold leading-none ${
           lang === "en" ? "border-2 border-ink bg-yellow" : ""
         }`}
       >

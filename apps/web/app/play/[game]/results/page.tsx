@@ -3,6 +3,7 @@
 import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import { AppFrame } from "@/components/app-frame";
+import { FeedbackSticker } from "@/components/feedback-sticker";
 import { Tx, useLang } from "@/components/lang-provider";
 import { Sticker, WallButton, WallLinkButton } from "@/components/sticker-kit";
 import { TRANSLATIONS } from "@/lib/i18n";
@@ -320,6 +321,9 @@ export default function JudgeResultsPage({
           <WallLinkButton href="/play" variant="white" className="w-full text-base">
             ← <Tx v={TRANSLATIONS.common.backToPlayHome} />
           </WallLinkButton>
+          <div className="flex justify-center pt-1">
+            <FeedbackSticker />
+          </div>
         </div>
       </div>
     </AppFrame>

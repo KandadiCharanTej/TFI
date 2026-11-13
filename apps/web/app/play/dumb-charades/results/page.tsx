@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getCharadesWinners, type CharadesTeamScore } from "@tfi/game-core";
 import { AppFrame } from "@/components/app-frame";
+import { FeedbackSticker } from "@/components/feedback-sticker";
 import { Tx, useLang, useT } from "@/components/lang-provider";
 import { ConfettiBurst } from "@/components/confetti-burst";
 import { Badge, Sticker, WallButton, WallLinkButton } from "@/components/sticker-kit";
@@ -170,6 +171,9 @@ export default function DumbCharadesResultsPage() {
             <WallLinkButton href="/play" variant="white" className="flex-1">
               <Tx v={TRANSLATIONS.common.backToPlayHome} />
             </WallLinkButton>
+          </div>
+          <div className="flex justify-center">
+            <FeedbackSticker />
           </div>
         </Sticker>
       </div>

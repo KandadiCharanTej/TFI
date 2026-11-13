@@ -38,6 +38,10 @@
   --prose-max: 65ch;
 }
 
+html[data-large-text="true"] {
+  font-size: 18px;
+}
+
 /* Self-hosted fonts: zero external Google requests at runtime */
 @font-face {
   font-family: 'Anton';
@@ -343,12 +347,20 @@ html[data-reduced-motion="true"] .wall-card-interactive {
   transition: none !important;
 }
 
-/* Prose line length limit */
+/* Prose line length limit & balanced headings */
 .wall-prose {
   max-width: var(--prose-max);
 }
 
-/* Telugu switch label uses Anek Telugu only in Telugu mode so EN mode never downloads it */
+.wall-balance {
+  text-wrap: balance;
+}
+
+/* Crisp Telugu switch glyph in EN mode via system font; Anek Telugu in TE mode */
+.lang-switch-te {
+  font-family: 'Kohinoor Telugu', 'Noto Sans Telugu', system-ui, sans-serif;
+}
+
 html[lang="te"] .lang-switch-te {
   font-family: 'Anek Telugu', system-ui, sans-serif;
 }

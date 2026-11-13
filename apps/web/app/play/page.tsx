@@ -6,8 +6,10 @@ import { MODE_COLORS } from "@tfi/config/tokens";
 import { AppFrame } from "@/components/app-frame";
 import { GameTitle } from "@/components/game-title";
 import { WallIcon } from "@/components/icons";
+import { InstallSticker } from "@/components/install-sticker";
 import { Tx, useLang, useT } from "@/components/lang-provider";
 import { Badge, Chip, Sticker, WallLinkButton } from "@/components/sticker-kit";
+import { useOfflineReadyGames } from "@/components/sw-manager";
 import { useVisibleGames } from "@/components/flags-provider";
 import { MODE_FILTERS, filterByMode, panelModeKey, type ModeFilter } from "@/lib/games";
 import { TRANSLATIONS } from "@/lib/i18n";
@@ -25,6 +27,7 @@ export default function PlayHomePage() {
   const { lang } = useLang();
   const t = useT();
   const visibleGames = useVisibleGames();
+  const offlineSlugs = useOfflineReadyGames();
 
   const todaysPick = visibleGames[0];
   const filteredGames = filterByMode(visibleGames, filter);
@@ -78,6 +81,8 @@ export default function PlayHomePage() {
           </Sticker>
         </section>
 
+        <InstallSticker />
+
         {/* Room-code strip */}
         <section aria-label={t(P.joinRoomRegion)}>
           <div className="flex flex-wrap items-center justify-between gap-3 rounded-[16px] border-[3px] border-ink bg-cyan p-4 text-ink shadow-logo">
@@ -121,15 +126,20 @@ export default function PlayHomePage() {
           </div>
 
           <div className="mt-5 grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-3">
-            {filteredGames.map((game) => (
+            {filteredGames.map((game) => {
+              const displayNum = String(
+                visibleGames.findIndex((g) => g.slug === game.slug) + 1,
+              ).padStart(2, "0");
+              return (
               <Link
                 key={game.slug}
                 href={`/play/${game.slug}`}
+                prefetch={false}
                 className="wall-card-interactive wall-sticker-sm flex flex-col justify-between p-3.5 text-ink sm:p-4"
               >
                 <div>
                   <div className="flex items-center justify-between gap-1">
-                    <span className="mono-num text-[12px] text-ink">{game.number}</span>
+                    <span className="mono-num text-[12px] text-ink">{displayNum}</span>
                     <Badge tone={game.isOnlineOnly ? "cyan" : "white"} className="px-2 py-0.5 text-[10px]">
                       <Tx v={TRANSLATIONS.modes[game.modeKey]} />
                     </Badge>
@@ -154,15 +164,30 @@ export default function PlayHomePage() {
                   <p className="m-0 mt-1 text-[12px] font-medium leading-[1.4] text-ink sm:text-[13px]">
                     <Tx v={game.description} />
                   </p>
+                  {!game.isOnlineOnly && offlineSlugs.has(game.slug) ? (
+                    <p
+                      data-testid={`offline-ready-${game.slug}`}
+                      className="m-0 mt-1.5 inline-flex items-center gap-1 rounded-full border border-ink bg-green px-2 py-0.5 text-[10px] font-extrabold text-ink"
+                    >
+                      ✓ <Tx v={TRANSLATIONS.pwa.readyOffline} />
+                    </p>
+                  ) : null}
                 </div>
 
                 <div className="mt-3">
-                  <span className="inline-flex min-h-[44px] w-full items-center justify-center rounded-[10px] border-2 border-ink bg-yellow px-2 text-[12px] font-extrabold uppercase tracking-wider text-ink shadow-logo">
-                    <Tx v={P.playAction} /> →
-                  </span>
+                  {game.isOnlineOnly ? (
+                    <span className="inline-flex min-h-[44px] w-full items-center justify-center rounded-[10px] border-2 border-ink bg-concrete px-2 text-[12px] font-extrabold uppercase tracking-wider text-ink">
+                      <Tx v={TRANSLATIONS.common.comingSoon} />
+                    </span>
+                  ) : (
+                    <span className="inline-flex min-h-[44px] w-full items-center justify-center rounded-[10px] border-2 border-ink bg-yellow px-2 text-[12px] font-extrabold uppercase tracking-wider text-ink shadow-logo">
+                      <Tx v={P.playAction} /> →
+                    </span>
+                  )}
                 </div>
               </Link>
-            ))}
+              );
+            })}
           </div>
         </section>
       </div>

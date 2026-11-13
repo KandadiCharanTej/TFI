@@ -46,7 +46,7 @@ export default function HsgSetupPage() {
           <h1 className="anton-title mt-3 text-[32px] leading-[1.05] text-ink">
             Head Set Go
           </h1>
-          <p className="mt-1 text-[14px] font-bold text-ink opacity-70">
+          <p className="mt-1 text-[14px] font-bold text-ink">
             <Tx v={TRANSLATIONS.hsg.tip} />
           </p>
         </Sticker>
@@ -111,7 +111,7 @@ export default function HsgSetupPage() {
               data-testid="hsg-timer-value"
             >
               {duration}
-              <span className="ml-1 text-[18px] font-bold opacity-60">s</span>
+              <span className="ml-1 text-[18px] font-bold text-ink">s</span>
             </div>
             <button
               type="button"
@@ -123,17 +123,21 @@ export default function HsgSetupPage() {
               +
             </button>
           </div>
-          <div className="mt-3 flex justify-center gap-2">
+          <div className="mt-2 flex justify-center gap-1">
             {TIMER_OPTIONS.map((t) => (
               <button
                 key={t}
                 type="button"
                 onClick={() => setDuration(t)}
-                className={`h-2 w-2 rounded-full border border-ink transition-all ${
-                  t === duration ? "bg-ink" : "bg-card"
-                }`}
+                className="flex min-h-[24px] min-w-[24px] items-center justify-center rounded-full"
                 aria-label={`${t} seconds`}
-              />
+              >
+                <span
+                  className={`block h-2 w-2 rounded-full border border-ink transition-all ${
+                    t === duration ? "bg-ink" : "bg-card"
+                  }`}
+                />
+              </button>
             ))}
           </div>
         </Sticker>
