@@ -4,6 +4,13 @@ import { useEffect, useRef, useCallback, useState, useReducer, use } from "react
 import { useRouter } from "next/navigation";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Tx, useLang } from "@/components/lang-provider";
+import {
+  ConfettiBurst,
+  HowToPlayDialog,
+  OfflineBanner,
+  QuitRoundDialog,
+  RoundSkeleton,
+} from "@/components/round-ui";
 import { TRANSLATIONS } from "@/lib/i18n";
 import type { GameCard } from "@tfi/game-core";
 
@@ -256,7 +263,25 @@ export default function JudgeRoundPage({
   const { lang } = useLang();
   const [s, dispatch] = useReducer(reducer, INITIAL_STATE);
   const [pauseOpen, setPauseOpen] = useState(false);
+  const [quitOpen, setQuitOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
+  const [dontShowHelp, setDontShowHelp] = useState(false);
+  const [streak, setStreak] = useState(0);
+  const [confettiTrigger, setConfettiTrigger] = useState(0);
+  const [offline, setOffline] = useState(false);
   const audio = useAudio(s.muted);
+
+  useEffect(() => {
+    setOffline(!navigator.onLine);
+    const onOnline = () => setOffline(false);
+    const onOffline = () => setOffline(true);
+    window.addEventListener("online", onOnline);
+    window.addEventListener("offline", onOffline);
+    return () => {
+      window.removeEventListener("online", onOnline);
+      window.removeEventListener("offline", onOffline);
+    };
+  }, []);
 
   useEffect(() => {
     document.title = `${slug} Round | TFI & Pitch`;
@@ -436,6 +461,11 @@ export default function JudgeRoundPage({
     if (s.phase !== "playing") return;
     audio.correct();
     navigator.vibrate?.(50);
+    setStreak((prev) => {
+      const next = prev + 1;
+      if (next >= 3) setConfettiTrigger((c) => c + 1);
+      return next;
+    });
     dispatch({ type: "CORRECT" });
   }, [s.phase, audio]);
 
@@ -443,6 +473,7 @@ export default function JudgeRoundPage({
     if (s.phase !== "playing") return;
     audio.pass();
     navigator.vibrate?.(30);
+    setStreak(0);
     dispatch({ type: "SKIP" });
   }, [s.phase, audio]);
 
@@ -458,8 +489,8 @@ export default function JudgeRoundPage({
   // 1. Loading State
   if (s.phase === "loading") {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#EAE6DF]">
-        <p className="anton-title text-3xl text-ink">Loading…</p>
+      <div className="wall-safe-round flex items-center justify-center bg-[#EAE6DF]">
+        <RoundSkeleton />
       </div>
     );
   }
@@ -467,13 +498,14 @@ export default function JudgeRoundPage({
   // 2. Countdown State (Get Ready)
   if (s.phase === "getReady") {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-yellow p-6 text-center select-none">
+      <div className="wall-safe-round flex flex-col items-center justify-center bg-yellow text-center">
         <p className="text-xl font-black uppercase tracking-widest text-ink opacity-80">
           <Tx v={J.getReady} />
         </p>
         <p className="mt-2 text-2xl font-black text-ink">{currentPlayer.name}</p>
         <p
-          className="mono-num text-[130px] font-black leading-none text-ink"
+          key={s.countdown}
+          className="wall-stamp mono-num text-[130px] font-black leading-none text-ink"
           aria-live="assertive"
         >
           {s.countdown}
@@ -485,7 +517,7 @@ export default function JudgeRoundPage({
   // 3. Passing Phone Screen between turns
   if (s.phase === "passingPhone") {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-yellow p-6 text-center select-none">
+      <div className="wall-safe-round flex flex-col items-center justify-center bg-yellow text-center">
         <div className="text-6xl mb-4" aria-hidden>
           📱 🤝
         </div>
@@ -511,8 +543,8 @@ export default function JudgeRoundPage({
   if (s.phase === "turnEnd") {
     const isLastTurn = s.currentTurn >= s.totalTurns;
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-[#EAE6DF] p-6 text-center select-none">
-        <div className="w-full max-w-sm rounded-[24px] border-[3px] border-ink bg-white p-6 shadow-[6px_6px_0_#141313]">
+      <div className="wall-safe-round flex flex-col items-center justify-center bg-[#EAE6DF] text-center">
+        <div className="wall-shake w-full max-w-sm rounded-[24px] border-[3px] border-ink bg-white p-6 shadow-[6px_6px_0_#141313]">
           <span className="rounded-full border-2 border-ink bg-yellow px-3 py-1 text-xs font-black uppercase">
             <Tx v={J.turnSummary} />
           </span>
@@ -560,10 +592,46 @@ export default function JudgeRoundPage({
   return (
     <div
       role="main"
-      className="relative flex min-h-screen select-none flex-col overflow-hidden transition-colors duration-150"
+      className="wall-safe-round relative flex flex-col overflow-hidden p-0 transition-colors duration-150"
       style={{ backgroundColor: bg }}
       data-testid="judge-round-screen"
     >
+      <ConfettiBurst trigger={confettiTrigger} />
+      <QuitRoundDialog
+        open={quitOpen}
+        onOpenChange={setQuitOpen}
+        onConfirm={() => router.push(`/play/${slug}`)}
+      />
+      <HowToPlayDialog
+        open={helpOpen}
+        onClose={() => {
+          setHelpOpen(false);
+          dispatch({ type: "RESUME" });
+        }}
+        title={lang === "te" ? "ఎలా ఆడాలి" : "How to play"}
+        dontShow={dontShowHelp}
+        onToggleDontShow={setDontShowHelp}
+        steps={[
+          {
+            title: lang === "te" ? "1. జడ్జ్ కార్డు చదువుతారు" : "1. Judge reads the clue",
+            body: lang === "te"
+              ? "మిగిలిన వారు ఫోన్ చూడకుండా విని సమాధానం చెప్పాలి."
+              : "Keep the screen to yourself and read or show the clue.",
+          },
+          {
+            title: lang === "te" ? "2. సరి లేదా స్కిప్" : "2. Correct or Skip",
+            body: lang === "te"
+              ? "సరైన జవాబుకు ఆకుపచ్చ, వదిలేయడానికి స్కిప్ నొక్కండి."
+              : "Tap Correct on a hit or Skip to jump to the next card.",
+          },
+          {
+            title: lang === "te" ? "3. సమయం ముగిసేలోపు" : "3. Beat the timer",
+            body: lang === "te"
+              ? "అందరి వంతు అయిపోయాక విజేతను చూడండి!"
+              : "Highest score across all turns wins!",
+          },
+        ]}
+      />
       {/* Top Timer Progress Bar */}
       <div className="relative h-3 w-full border-b-2 border-ink bg-card">
         <div
@@ -571,15 +639,25 @@ export default function JudgeRoundPage({
           style={{ width: `${pct}%`, backgroundColor: timerColor }}
         />
       </div>
+      <div className="pt-2">
+        <OfflineBanner offline={offline} />
+      </div>
 
       {/* Top Header Bar */}
       <header className="flex items-center justify-between px-4 pt-3">
-        {/* Score pill */}
-        <div
-          className="mono-num rounded-full border-2 border-ink bg-white px-3 py-1 text-base font-black text-ink shadow-[2px_2px_0_#141313]"
-          aria-label="Score"
-        >
-          ✓ {s.currentTurnCorrect}
+        {/* Score pill + Streak */}
+        <div className="flex items-center gap-1.5">
+          <div
+            className="mono-num rounded-full border-2 border-ink bg-white px-3 py-1 text-base font-black text-ink shadow-[2px_2px_0_#141313]"
+            aria-label="Score"
+          >
+            ✓ {s.currentTurnCorrect}
+          </div>
+          {streak >= 2 ? (
+            <div className="mono-num rounded-full border-2 border-ink bg-magenta px-2.5 py-1 text-xs font-black text-white shadow-[2px_2px_0_#141313]">
+              🔥 {streak}
+            </div>
+          ) : null}
         </div>
 
         {/* Current Judge Indicator */}
@@ -587,8 +665,19 @@ export default function JudgeRoundPage({
           {currentPlayer.name}
         </div>
 
-        {/* Actions: Pause & Sound */}
+        {/* Actions: Help, Pause & Sound */}
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              dispatch({ type: "PAUSE" });
+              setHelpOpen(true);
+            }}
+            aria-label="How to play"
+            className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink bg-white text-sm font-black text-ink shadow-[2px_2px_0_#141313]"
+          >
+            ?
+          </button>
           <button
             type="button"
             onClick={() => dispatch({ type: "TOGGLE_MUTE" })}
@@ -634,7 +723,10 @@ export default function JudgeRoundPage({
                   </Dialog.Close>
                   <button
                     type="button"
-                    onClick={() => router.push(`/play/${slug}`)}
+                    onClick={() => {
+                      setPauseOpen(false);
+                      setQuitOpen(true);
+                    }}
                     className="wall-btn bg-card text-ink"
                   >
                     <Tx v={J.quit} />

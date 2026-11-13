@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import { getMostCrownedWinners, type CrownSummary } from "@tfi/game-core";
 import { AppFrame } from "@/components/app-frame";
 import { Tx, useLang, useT } from "@/components/lang-provider";
+import { ConfettiBurst } from "@/components/confetti-burst";
 import { Badge, Sticker, WallButton, WallLinkButton } from "@/components/sticker-kit";
 import { TRANSLATIONS } from "@/lib/i18n";
+import { drawWallSharePoster, SHARE_TEMPLATES, type ShareTemplate } from "@/lib/share-card";
 
 const V = TRANSLATIONS.vote;
 const RESULTS_KEY = "tfi.vote.results";
@@ -15,102 +17,14 @@ interface StoredVoteResults {
   totalPrompts: number;
 }
 
-async function generateVoteSharePng(
-  titles: CrownSummary[],
-  showNames: boolean,
-): Promise<Blob | null> {
-  try {
-    const W = 1080;
-    const H = 1350;
-    const canvas = document.createElement("canvas");
-    canvas.width = W;
-    canvas.height = H;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return null;
-
-    ctx.fillStyle = "#EAE6DF";
-    ctx.fillRect(0, 0, W, H);
-
-    ctx.fillStyle = "#141313";
-    for (let x = 20; x < W; x += 28) {
-      for (let y = 20; y < H; y += 28) {
-        ctx.globalAlpha = 0.08;
-        ctx.beginPath();
-        ctx.arc(x, y, 2, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-    ctx.globalAlpha = 1;
-
-    ctx.fillStyle = "#141313";
-    ctx.fillRect(92, 112, W - 160, H - 240);
-
-    ctx.fillStyle = "#FFFFFF";
-    ctx.strokeStyle = "#141313";
-    ctx.lineWidth = 8;
-    ctx.fillRect(80, 100, W - 160, H - 240);
-    ctx.strokeRect(80, 100, W - 160, H - 240);
-
-    ctx.fillStyle = "#F6BE18";
-    ctx.fillRect(140, 160, W - 280, 80);
-    ctx.strokeRect(140, 160, W - 280, 80);
-
-    ctx.fillStyle = "#141313";
-    ctx.font = "bold 42px sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText("MOST LIKELY", W / 2, 215);
-
-    const sorted = [...titles].sort((a, b) => b.crowns - a.crowns || b.totalVotes - a.totalVotes);
-    const crowned = getMostCrownedWinners(sorted);
-    const crownLine =
-      crowned.length > 1
-        ? `TIED CROWN: ${crowned[0]?.crowns ?? 0} CROWNS`
-        : showNames && crowned[0]
-          ? `CROWNED: ${crowned[0].player.name.toUpperCase()}`
-          : `TOP CROWNED: ${crowned[0]?.crowns ?? 0} CROWNS`;
-
-    ctx.font = "bold 50px sans-serif";
-    ctx.fillStyle = "#EC1276";
-    ctx.fillText(crownLine, W / 2, 340);
-
-    sorted.slice(0, 5).forEach((s, idx) => {
-      const y = 440 + idx * 105;
-      ctx.fillStyle = idx === 0 ? "#F6BE18" : "#F4F1EA";
-      ctx.fillRect(140, y - 50, W - 280, 82);
-      ctx.strokeRect(140, y - 50, W - 280, 82);
-
-      ctx.fillStyle = "#141313";
-      ctx.textAlign = "left";
-      ctx.font = "bold 34px sans-serif";
-      const label = showNames ? s.player.name : `Friend ${idx + 1}`;
-      ctx.fillText(`${idx + 1}. ${label}`, 170, y);
-
-      ctx.textAlign = "right";
-      ctx.font = "bold 32px monospace";
-      ctx.fillText(`${s.crowns} crowns`, W - 170, y);
-    });
-
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#141313";
-    ctx.font = "bold 44px sans-serif";
-    ctx.fillText("TFI & Pitch", W / 2, 1140);
-
-    ctx.font = "24px sans-serif";
-    ctx.fillText("Unofficial fan-made game. Not affiliated with any film,", W / 2, 1240);
-    ctx.fillText("actor, studio or team.", W / 2, 1280);
-
-    return new Promise((res) => canvas.toBlob((b) => res(b), "image/png"));
-  } catch {
-    return null;
-  }
-}
-
 export default function MostLikelyResultsPage() {
   const { lang } = useLang();
   const t = useT();
   const [results, setResults] = useState<StoredVoteResults | null>(null);
   const [showNames, setShowNames] = useState(false);
+  const [templateIdx, setTemplateIdx] = useState(0);
   const [shareMsg, setShareMsg] = useState<string | null>(null);
+  const template: ShareTemplate = SHARE_TEMPLATES[templateIdx] ?? "score";
 
   useEffect(() => {
     document.title = `Most Likely Titles | TFI & Pitch`;
@@ -149,7 +63,17 @@ export default function MostLikelyResultsPage() {
   const isTie = crowned.length > 1;
 
   const handleShare = async () => {
-    const blob = await generateVoteSharePng(sorted, showNames);
+    const canvas = document.createElement("canvas");
+    drawWallSharePoster(canvas, {
+      template,
+      gameTitle: "Most Likely",
+      headline: isTie ? crowned.map((c) => c.player.name).join(" & ") : (crowned[0]?.player.name ?? "Player 1"),
+      subline: `${crowned[0]?.crowns ?? 0} crowns · TFI Movie Edition`,
+      rows: sorted.map((item) => ({ label: item.player.name, value: `${item.crowns} 👑` })),
+      showNames,
+      unofficialFooter: TRANSLATIONS.brand.unofficialDisclaimer.en,
+    });
+    const blob = await new Promise<Blob | null>((res) => canvas.toBlob(res, "image/png"));
     if (!blob) {
       setShareMsg(t(TRANSLATIONS.judge.shareFailed));
       return;
@@ -231,10 +155,24 @@ export default function MostLikelyResultsPage() {
               <Tx v={TRANSLATIONS.judge.showNames} />
             </label>
 
-            <WallButton type="button" variant="white" onClick={handleShare} className="w-full">
-              📸 <Tx v={TRANSLATIONS.judge.shareSticker} />
-            </WallButton>
+            <div className="flex gap-2">
+              <WallButton
+                type="button"
+                variant="white"
+                onClick={() => setTemplateIdx((i) => (i + 1) % SHARE_TEMPLATES.length)}
+                className="px-4 text-xs"
+              >
+                🎨 {template.toUpperCase()}
+              </WallButton>
+              <WallButton type="button" variant="white" onClick={handleShare} className="flex-1">
+                📸 <Tx v={TRANSLATIONS.judge.shareSticker} />
+              </WallButton>
+            </div>
             {shareMsg ? <p className="m-0 text-xs font-bold text-ink">{shareMsg}</p> : null}
+            <p className="m-0 text-[11px] font-semibold text-ink/60">
+              <Tx v={TRANSLATIONS.brand.unofficialDisclaimer} />
+            </p>
+            <ConfettiBurst trigger={1} />
           </div>
 
           <div className="flex flex-col gap-3 pt-2 sm:flex-row">

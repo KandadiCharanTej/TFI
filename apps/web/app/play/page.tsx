@@ -6,7 +6,7 @@ import { MODE_COLORS } from "@tfi/config/tokens";
 import { AppFrame } from "@/components/app-frame";
 import { GameTitle } from "@/components/game-title";
 import { WallIcon } from "@/components/icons";
-import { Tx, useT } from "@/components/lang-provider";
+import { Tx, useLang, useT } from "@/components/lang-provider";
 import { Badge, Chip, Sticker, WallLinkButton } from "@/components/sticker-kit";
 import { useVisibleGames } from "@/components/flags-provider";
 import { MODE_FILTERS, filterByMode, panelModeKey, type ModeFilter } from "@/lib/games";
@@ -22,6 +22,7 @@ const P = TRANSLATIONS.playHome;
 
 export default function PlayHomePage() {
   const [filter, setFilter] = useState<ModeFilter>("All");
+  const { lang } = useLang();
   const t = useT();
   const visibleGames = useVisibleGames();
 
@@ -96,7 +97,9 @@ export default function PlayHomePage() {
               id="all-games-heading"
               className="anton-title m-0 text-[28px] leading-none text-ink"
             >
-              <Tx v={P.allGamesHeading} />
+              {lang === "te"
+                ? `మొత్తం ${visibleGames.length} ఆటలు`
+                : `All ${visibleGames.length} games`}
             </h2>
             <div
               role="group"

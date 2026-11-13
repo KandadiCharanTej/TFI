@@ -383,7 +383,7 @@ function CharadesRoundRunner({
 
   return (
     <main
-      className="flex min-h-[100dvh] flex-col justify-between bg-concrete px-4 pb-[max(16px,env(safe-area-inset-bottom))] pt-[max(16px,env(safe-area-inset-top))]"
+      className="wall-tap-safe flex min-h-[100dvh] flex-col justify-between bg-concrete px-4 pb-[max(16px,env(safe-area-inset-bottom))] pt-[max(16px,env(safe-area-inset-top))]"
       style={{ WebkitUserSelect: "none", userSelect: "none" }}
     >
       <header className="mx-auto flex w-full max-w-[520px] items-center justify-between gap-2">

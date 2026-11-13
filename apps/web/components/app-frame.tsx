@@ -28,7 +28,7 @@ export function AppFrame({ children }: AppFrameProps) {
   // The live round hides all frame chrome (no app bar, no bottom bar).
   if (pathname.endsWith("/round")) {
     return (
-      <main id="content" tabIndex={-1} className="min-h-screen w-full">
+      <main id="content" tabIndex={-1} className="min-h-[100dvh] w-full">
         {children}
       </main>
     );
@@ -100,7 +100,7 @@ export function AppFrame({ children }: AppFrameProps) {
       {/* Phone bottom bar: Play, Join, Me. The active item is yellow. */}
       <nav
         aria-label="Bottom navigation"
-        className="fixed bottom-0 left-0 right-0 z-30 border-t-[3px] border-ink bg-concrete px-3 py-2 md:hidden"
+        className="fixed bottom-0 left-0 right-0 z-30 border-t-[3px] border-ink bg-concrete px-3 pt-2 pb-[max(8px,env(safe-area-inset-bottom))] md:hidden"
       >
         <ul role="list" className="mx-auto grid max-w-[440px] grid-cols-3 gap-2.5">
           {NAV_ITEMS.map((item) => {

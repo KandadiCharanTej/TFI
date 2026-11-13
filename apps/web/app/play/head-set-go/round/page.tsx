@@ -9,6 +9,12 @@ import { useEffect, useRef, useCallback, useState, useReducer } from "react";
 import { useRouter } from "next/navigation";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Tx, useLang } from "@/components/lang-provider";
+import {
+  ConfettiBurst,
+  HowToPlayDialog,
+  QuitRoundDialog,
+  RoundSkeleton,
+} from "@/components/round-ui";
 import { TRANSLATIONS } from "@/lib/i18n";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -107,6 +113,11 @@ export default function HsgRoundPage() {
   const [s, dispatch] = useReducer(reducer, INITIAL);
   const [isLandscape, setIsLandscape] = useState(false);
   const [pauseOpen, setPauseOpen] = useState(false);
+  const [quitOpen, setQuitOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
+  const [dontShowHelp, setDontShowHelp] = useState(false);
+  const [streak, setStreak] = useState(0);
+  const [confettiTrigger, setConfettiTrigger] = useState(0);
   const audio = useAudio(s.muted);
 
   // Orientation
@@ -204,12 +215,18 @@ export default function HsgRoundPage() {
 
   const handlePass = useCallback(() => {
     if (s.phase !== "playing") return;
-    audio.pass(); navigator.vibrate?.(30); dispatch({ type: "PASS" });
+    audio.pass(); navigator.vibrate?.(30); setStreak(0); dispatch({ type: "PASS" });
   }, [s.phase, audio]);
 
   const handleCorrect = useCallback(() => {
     if (s.phase !== "playing") return;
-    audio.correct(); navigator.vibrate?.(50); dispatch({ type: "CORRECT" });
+    audio.correct(); navigator.vibrate?.(50);
+    setStreak((prev) => {
+      const next = prev + 1;
+      if (next >= 3) setConfettiTrigger((c) => c + 1);
+      return next;
+    });
+    dispatch({ type: "CORRECT" });
   }, [s.phase, audio]);
 
   const currentCard = s.cards[s.currentIndex];
@@ -220,13 +237,17 @@ export default function HsgRoundPage() {
 
   // Loading
   if (s.phase === "loading") {
-    return <div className="flex h-screen items-center justify-center bg-yellow"><p className="anton-title text-[32px] text-ink">Loading…</p></div>;
+    return (
+      <div className="wall-safe-round flex items-center justify-center bg-yellow">
+        <RoundSkeleton />
+      </div>
+    );
   }
 
   // Portrait splash
   if (!isLandscape) {
     return (
-      <div className="flex h-screen flex-col items-center justify-center gap-4 bg-yellow p-8 text-center">
+      <div className="wall-safe-round flex flex-col items-center justify-center gap-4 bg-yellow p-8 text-center">
         <div className="text-6xl" aria-hidden>📱➡️</div>
         <p className="anton-title text-[28px] text-ink"><Tx v={TRANSLATIONS.hsg.turnSideways} /></p>
         <p className="text-[15px] font-bold text-ink opacity-70"><Tx v={TRANSLATIONS.hsg.turnSidewaysNote} /></p>
@@ -237,15 +258,29 @@ export default function HsgRoundPage() {
   // Get ready
   if (s.phase === "getReady") {
     return (
-      <div className="flex h-screen flex-col items-center justify-center bg-yellow">
+      <div className="wall-safe-round flex flex-col items-center justify-center bg-yellow">
         <p className="text-[20px] font-extrabold uppercase tracking-widest text-ink opacity-60"><Tx v={TRANSLATIONS.hsg.getReady} /></p>
-        <p className="mono-num text-[120px] font-black leading-none text-ink" aria-live="assertive">{s.countdown}</p>
+        <p key={s.countdown} className="wall-stamp mono-num text-[120px] font-black leading-none text-ink" aria-live="assertive">{s.countdown}</p>
       </div>
     );
   }
 
   return (
-    <div role="main" className="relative flex h-screen select-none flex-col overflow-hidden" style={{ background: bg }}>
+    <div role="main" className="wall-safe-round relative flex flex-col overflow-hidden p-0" style={{ background: bg }}>
+      <ConfettiBurst trigger={confettiTrigger} />
+      <QuitRoundDialog open={quitOpen} onOpenChange={setQuitOpen} onConfirm={() => router.push("/play/head-set-go")} />
+      <HowToPlayDialog
+        open={helpOpen}
+        onClose={() => { setHelpOpen(false); dispatch({ type: "RESUME" }); }}
+        title={lang === "te" ? "హెడ్ సెట్ గో ఎలా ఆడాలి" : "How to play Head Set Go"}
+        dontShow={dontShowHelp}
+        onToggleDontShow={setDontShowHelp}
+        steps={[
+          { title: lang === "te" ? "1. నుదిటిపై ఫోన్" : "1. Phone on forehead", body: lang === "te" ? "ఫోన్ అడ్డంగా తిప్పి నుదిటిపై ఉంచండి." : "Hold the phone landscape against your forehead." },
+          { title: lang === "te" ? "2. ఫ్రెండ్స్ క్లూస్ ఇస్తారు" : "2. Friends shout clues", body: lang === "te" ? "పేరు చెప్పకుండా క్లూస్ ఇస్తారు." : "They describe the card without saying the name." },
+          { title: lang === "te" ? "3. సరి లేదా పాస్" : "3. Correct or Pass", body: lang === "te" ? "కుడివైపు సరి, ఎడమవైపు పాస్ నొక్కండి." : "Tap right for Correct, left for Pass." },
+        ]}
+      />
       {/* Timer bar */}
       <div className="relative h-3 w-full border-b-2 border-ink bg-card">
         <div className="h-full transition-[width]" style={{ width: `${pct}%`, backgroundColor: timerColor }} />
@@ -257,26 +292,43 @@ export default function HsgRoundPage() {
           {s.secondsLeft}s
         </div>
 
-        <Dialog.Root open={pauseOpen} onOpenChange={(o) => { setPauseOpen(o); if (o) dispatch({ type: "PAUSE" }); }}>
-          <Dialog.Trigger asChild>
-            <button type="button" aria-label={TRANSLATIONS.hsg.pause.en} className="rounded-full border-2 border-ink bg-sticker px-4 py-1.5 text-sm font-extrabold text-ink shadow-[2px_2px_0px_#141313]">⏸</button>
-          </Dialog.Trigger>
-          <Dialog.Portal>
-            <Dialog.Overlay className="fixed inset-0 bg-ink/60" />
-            <Dialog.Content className="fixed left-1/2 top-1/2 w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-[20px] border-[3px] border-ink bg-sticker p-6 shadow-[6px_6px_0px_#141313]">
-              <Dialog.Title className="anton-title text-[24px] text-ink"><Tx v={TRANSLATIONS.hsg.paused} /></Dialog.Title>
-              <div className="mt-5 flex flex-col gap-3">
-                <Dialog.Close asChild>
-                  <button type="button" onClick={() => dispatch({ type: "RESUME" })} className="wall-btn bg-yellow text-ink"><Tx v={TRANSLATIONS.hsg.resume} /></button>
-                </Dialog.Close>
-                <button type="button" onClick={() => router.push("/play/head-set-go")} className="wall-btn bg-card text-ink"><Tx v={TRANSLATIONS.hsg.quit} /></button>
-              </div>
-            </Dialog.Content>
-          </Dialog.Portal>
-        </Dialog.Root>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => { dispatch({ type: "PAUSE" }); setHelpOpen(true); }}
+            aria-label="How to play"
+            className="rounded-full border-2 border-ink bg-sticker px-3 py-1.5 text-sm font-extrabold text-ink shadow-[2px_2px_0px_#141313]"
+          >
+            ?
+          </button>
+          <Dialog.Root open={pauseOpen} onOpenChange={(o) => { setPauseOpen(o); if (o) dispatch({ type: "PAUSE" }); }}>
+            <Dialog.Trigger asChild>
+              <button type="button" aria-label={TRANSLATIONS.hsg.pause.en} className="rounded-full border-2 border-ink bg-sticker px-4 py-1.5 text-sm font-extrabold text-ink shadow-[2px_2px_0px_#141313]">⏸</button>
+            </Dialog.Trigger>
+            <Dialog.Portal>
+              <Dialog.Overlay className="fixed inset-0 bg-ink/60" />
+              <Dialog.Content className="fixed left-1/2 top-1/2 w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-[20px] border-[3px] border-ink bg-sticker p-6 shadow-[6px_6px_0px_#141313]">
+                <Dialog.Title className="anton-title text-[24px] text-ink"><Tx v={TRANSLATIONS.hsg.paused} /></Dialog.Title>
+                <div className="mt-5 flex flex-col gap-3">
+                  <Dialog.Close asChild>
+                    <button type="button" onClick={() => dispatch({ type: "RESUME" })} className="wall-btn bg-yellow text-ink"><Tx v={TRANSLATIONS.hsg.resume} /></button>
+                  </Dialog.Close>
+                  <button type="button" onClick={() => { setPauseOpen(false); setQuitOpen(true); }} className="wall-btn bg-card text-ink"><Tx v={TRANSLATIONS.hsg.quit} /></button>
+                </div>
+              </Dialog.Content>
+            </Dialog.Portal>
+          </Dialog.Root>
+        </div>
 
-        <div className="mono-num rounded-full border-2 border-ink bg-sticker px-4 py-1.5 text-[18px] font-black text-ink shadow-[2px_2px_0px_#141313]" aria-label={TRANSLATIONS.hsg.correctCount.en}>
-          ✓ {s.correctIds.length}
+        <div className="flex items-center gap-2">
+          {streak >= 2 ? (
+            <div className="mono-num rounded-full border-2 border-ink bg-magenta px-3 py-1 text-sm font-black text-white shadow-[2px_2px_0px_#141313]">
+              🔥 {streak}
+            </div>
+          ) : null}
+          <div className="mono-num rounded-full border-2 border-ink bg-sticker px-4 py-1.5 text-[18px] font-black text-ink shadow-[2px_2px_0px_#141313]" aria-label={TRANSLATIONS.hsg.correctCount.en}>
+            ✓ {s.correctIds.length}
+          </div>
         </div>
       </div>
 
