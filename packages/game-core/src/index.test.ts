@@ -87,7 +87,7 @@ describe("GAME_REGISTRY", () => {
     expect(getGameById("nonexistent")).toBeUndefined();
 
     const readyGames = getGamesByStatus("ready");
-    expect(readyGames.length).toBe(5); // Head Set Go + Transify + Emoji Cinema + Rapid Fire + Cricket IQ
+    expect(readyGames.length).toBe(6); // Head Set Go + Transify + Emoji Cinema + Rapid Fire + Cricket IQ (MVP) + Dumb Charades
 
     const cinemaGames = getGamesByCategory("Cinema");
     expect(cinemaGames.length).toBeGreaterThan(0);
@@ -399,5 +399,141 @@ describe("registry release filtering", () => {
   it("includes MVP games when the flag is on", () => {
     expect(getVisibleGames(true)).toHaveLength(10);
     expect(getGamesByRelease("mvp")).toHaveLength(3);
+  });
+});
+
+
+import {
+  charadesMachine,
+  computeCharadesScores,
+  getCharadesWinners,
+  loadCharadesRecent,
+  saveCharadesRecent,
+  pointsForDifficulty,
+} from "./charades-machine";
+
+const CHARADES_DECK = [
+  { id: "c1", game: "dumb-charades", deck: "dumb-charades-movies", en: "Pokiri", te: "పోకిరి", difficulty: 1 as const, tags: [], verified: false },
+  { id: "c2", game: "dumb-charades", deck: "dumb-charades-movies", en: "Eega", te: "ఈగ", difficulty: 1 as const, tags: [], verified: false },
+  { id: "c3", game: "dumb-charades", deck: "dumb-charades-movies", en: "Khaleja", te: "ఖలేజా", difficulty: 2 as const, tags: [], verified: false },
+  { id: "c4", game: "dumb-charades", deck: "dumb-charades-movies", en: "Dhruva", te: "ధ్రువ", difficulty: 2 as const, tags: [], verified: false },
+  { id: "c5", game: "dumb-charades", deck: "dumb-charades-movies", en: "Mayabazar", te: "మాయాబజార్", difficulty: 3 as const, tags: [], verified: false },
+  { id: "c6", game: "dumb-charades", deck: "dumb-charades-movies", en: "Sankarabharanam", te: "శంకరాభరణం", difficulty: 3 as const, tags: [], verified: false },
+];
+
+describe("charadesMachine", () => {
+  it("runs turn order across 2 teams and scores by difficulty", () => {
+    const actor = createActor(charadesMachine, {
+      input: {
+        teams: [{ id: "t1", name: "Team A" }, { id: "t2", name: "Team B" }],
+        roundsPerTeam: 1,
+        duration: 90,
+        difficultyMix: "hard",
+        deck: CHARADES_DECK,
+        recentlyPlayed: [],
+      },
+    });
+    actor.start();
+    expect(actor.getSnapshot().value).toBe("setup");
+    actor.send({ type: "START" });
+    expect(actor.getSnapshot().value).toBe("passingPhone");
+    expect(actor.getSnapshot().context.currentCard?.difficulty).toBe(3);
+
+    actor.send({ type: "START_ACTING" });
+    expect(actor.getSnapshot().value).toBe("acting");
+    actor.send({ type: "GOT_IT" });
+    expect(actor.getSnapshot().value).toBe("turnEnd");
+    expect(actor.getSnapshot().context.turnSummaries[0]?.points).toBe(3);
+
+    actor.send({ type: "NEXT_TURN" });
+    expect(actor.getSnapshot().value).toBe("passingPhone");
+    expect(actor.getSnapshot().context.currentTeamIndex).toBe(1);
+
+    actor.send({ type: "START_ACTING" });
+    actor.send({ type: "TIME_UP" });
+    expect(actor.getSnapshot().value).toBe("turnEnd");
+    expect(actor.getSnapshot().context.turnSummaries[1]?.points).toBe(0);
+
+    actor.send({ type: "NEXT_TURN" });
+    expect(actor.getSnapshot().value).toBe("results");
+
+    const scores = computeCharadesScores(actor.getSnapshot().context);
+    expect(scores.find((s) => s.team.id === "t1")?.score).toBe(3);
+    expect(scores.find((s) => s.team.id === "t2")?.score).toBe(0);
+    expect(getCharadesWinners(scores).map((w) => w.team.id)).toEqual(["t1"]);
+    actor.stop();
+  });
+
+  it("allows only one skip per turn with same difficulty and no repeats", () => {
+    const actor = createActor(charadesMachine, {
+      input: {
+        teams: [{ id: "t1", name: "Alpha" }, { id: "t2", name: "Beta" }],
+        roundsPerTeam: 1,
+        duration: 60,
+        difficultyMix: "easy",
+        deck: CHARADES_DECK,
+      },
+    });
+    actor.start();
+    actor.send({ type: "START" });
+    const firstCard = actor.getSnapshot().context.currentCard!;
+    expect(firstCard.difficulty).toBe(1);
+
+    actor.send({ type: "SKIP_FILM" });
+    const skippedCard = actor.getSnapshot().context.currentCard!;
+    expect(skippedCard.id).not.toBe(firstCard.id);
+    expect(skippedCard.difficulty).toBe(1);
+    expect(actor.getSnapshot().context.skipUsedInTurn).toBe(true);
+
+    // Second skip must be ignored
+    actor.send({ type: "SKIP_FILM" });
+    expect(actor.getSnapshot().context.currentCard?.id).toBe(skippedCard.id);
+    expect(new Set(actor.getSnapshot().context.usedCardIds).size).toBe(2);
+    actor.stop();
+  });
+
+  it("handles timer ticks, pause/resume, time up, and honest ties", () => {
+    const actor = createActor(charadesMachine, {
+      input: {
+        teams: [{ id: "t1", name: "T1" }, { id: "t2", name: "T2" }],
+        roundsPerTeam: 1,
+        duration: 2,
+        difficultyMix: "medium",
+        deck: CHARADES_DECK,
+      },
+    });
+    actor.start();
+    actor.send({ type: "START" });
+    actor.send({ type: "START_ACTING" });
+    actor.send({ type: "PAUSE" });
+    expect(actor.getSnapshot().value).toBe("paused");
+    actor.send({ type: "RESUME" });
+    expect(actor.getSnapshot().value).toBe("acting");
+    actor.send({ type: "TICK" }); // 1s left
+    expect(actor.getSnapshot().context.secondsLeft).toBe(1);
+    actor.send({ type: "TICK" }); // 0s left
+    actor.send({ type: "TICK" }); // time up
+    expect(actor.getSnapshot().value).toBe("turnEnd");
+    actor.send({ type: "NEXT_TURN" });
+    actor.send({ type: "START_ACTING" });
+    actor.send({ type: "TIME_UP" });
+    actor.send({ type: "NEXT_TURN" });
+    expect(actor.getSnapshot().value).toBe("results");
+
+    const scores = computeCharadesScores(actor.getSnapshot().context);
+    const winners = getCharadesWinners(scores);
+    expect(winners).toHaveLength(2);
+    actor.send({ type: "PLAY_AGAIN" });
+    expect(actor.getSnapshot().value).toBe("setup");
+    actor.stop();
+  });
+
+  it("exposes difficulty points and recent storage helpers", () => {
+    expect(pointsForDifficulty(1)).toBe(1);
+    expect(pointsForDifficulty(2)).toBe(2);
+    expect(pointsForDifficulty(3)).toBe(3);
+    saveCharadesRecent(["c1", "c2"]);
+    expect(loadCharadesRecent()).toContain("c1");
+    expect(getCharadesWinners([])).toEqual([]);
   });
 });
