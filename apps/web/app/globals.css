@@ -12,21 +12,24 @@
   --green: #00C853;
   --cyan: #00E5FF;
 
-  --font-anton: 'Anton';
-  --font-marker: 'Permanent Marker';
-  --font-sans: 'Plus Jakarta Sans';
+  --font-bricolage: 'Bricolage Grotesque';
   --font-mono: 'Space Mono';
   --font-telugu: 'Anek Telugu';
 
-  /* Font roles: swapping a font is a one-line change */
-  --font-display: var(--font-anton);
-  --font-accent: var(--font-marker);
-  --font-body: var(--font-sans);
+  /* V2 Font roles: one voice, two scripts, three families at most */
+  --font-display: var(--font-bricolage);
+  --font-accent: var(--font-bricolage);
+  --font-body: var(--font-bricolage);
   --font-mono-role: var(--font-mono);
   --font-telugu-role: var(--font-telugu);
   --font-telugu-display: var(--font-telugu);
 
-  /* Formal spacing scale (4, 8, 12, 16, 24, 32, 48, 64) */
+  /* Legacy aliases mapped to V2 families */
+  --font-anton: var(--font-bricolage);
+  --font-marker: var(--font-bricolage);
+  --font-sans: var(--font-bricolage);
+
+  /* Formal spacing scale (4, 8, 12, 16, 24, 32, 48, 64, 96, 128) */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -35,24 +38,26 @@
   --space-6: 32px;
   --space-7: 48px;
   --space-8: 64px;
-  --prose-max: 65ch;
+  --space-9: 96px;
+  --space-10: 128px;
+  --prose-max: 62ch;
 }
 
 html[data-large-text="true"] {
   font-size: 18px;
 }
 
-/* Self-hosted fonts: zero external Google requests at runtime */
+/* Self-hosted V2 fonts: Bricolage Grotesque (30 KB), Space Mono (9.3 KB), Anek Telugu (136 KB, TE mode only) */
 @font-face {
-  font-family: 'Anton';
+  font-family: 'Bricolage Grotesque';
   font-style: normal;
-  font-weight: 400;
+  font-weight: 500 800;
+  font-stretch: 100%;
   font-display: swap;
-  src: url('/fonts/anton-latin.woff2') format('woff2');
+  src: url('/fonts/bricolage-grotesque-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-/* Direction A (Poster): Anek Telugu 700-800, loaded only when Telugu text is on the page. */
 @font-face {
   font-family: 'Anek Telugu';
   font-style: normal;
@@ -61,52 +66,6 @@ html[data-large-text="true"] {
   font-display: swap;
   src: url('/fonts/anek-telugu.woff2') format('woff2');
   unicode-range: U+0951-0952, U+0964-0965, U+0B83, U+0C00-0C7F, U+1CD5-1CD6, U+1CD8, U+1CDA, U+1CF2, U+200C-200D, U+25CC;
-}
-
-@font-face {
-  font-family: 'Anek Telugu';
-  font-style: normal;
-  font-weight: 700 800;
-  font-stretch: 100%;
-  font-display: swap;
-  src: url('/fonts/anek-telugu-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: 'Permanent Marker';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('/fonts/permanent-marker-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: 'Plus Jakarta Sans';
-  font-style: normal;
-  font-weight: 500 800;
-  font-display: swap;
-  src: url('/fonts/plus-jakarta-sans-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
-@font-face {
-  font-family: 'Plus Jakarta Sans';
-  font-style: normal;
-  font-weight: 500 800;
-  font-display: swap;
-  src: url('/fonts/plus-jakarta-sans-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: 'Space Mono';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('/fonts/space-mono-bold-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
 @font-face {
@@ -121,22 +80,33 @@ html[data-large-text="true"] {
 body {
   margin: 0;
   background-color: var(--concrete);
-  background-image: radial-gradient(rgba(20, 19, 19, 0.09) 1.3px, transparent 1.4px);
+  background-image: radial-gradient(rgba(20, 19, 19, 0.05) 1.25px, transparent 1.35px);
   background-size: 20px 20px;
-  /* English default: Anek Telugu is NOT in this stack, so it is never downloaded. */
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  /* English default: Anek Telugu is NOT in this stack, so it is never downloaded in EN mode. */
+  font-family: var(--font-body), system-ui, sans-serif;
   font-weight: 500;
+  font-size: 16px;
+  line-height: 1.55;
   color: var(--ink);
   text-align: start;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  text-transform: none;
+  text-wrap: balance;
 }
 
 /*
  * TELUGU MODE (only when the user switches with the తె / EN switch).
  * Anek Telugu joins the font stack here, and only here.
- * Telugu typography: never uppercase, never letter-spaced, line height 1.5+.
+ * Telugu typography: ~10% larger, never uppercase, never letter-spaced, line height 1.55+.
  */
 html[lang="te"] body {
-  font-family: 'Anek Telugu', 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-family: var(--font-telugu), var(--font-body), system-ui, sans-serif;
   font-size: 110%;
 }
 
@@ -146,88 +116,244 @@ html[lang="te"] body * {
   line-height: 1.55 !important;
 }
 
-/* The brand stays English letters, uppercase Anton, in both languages. */
+/* Brand wordmark stays in Bricolage Grotesque 800 in both languages. */
+.keep-case,
 html[lang="te"] .keep-case {
-  font-family: 'Anton', sans-serif !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.01em !important;
+  font-family: var(--font-display), system-ui, sans-serif !important;
+  font-weight: 800 !important;
+  text-transform: none !important;
+  letter-spacing: -0.02em !important;
   line-height: 1.1 !important;
 }
 
-/*
- * TELUGU MODE DISPLAY FIX:
- * Headings use the Telugu display font in weight 800, never uppercase,
- * visually matching Anton's presence without falling back to system serif/sans.
- */
-html[lang="te"] .anton-title {
-  font-family: 'Anek Telugu', sans-serif !important;
+/* V2 Type Scale */
+.display-title {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 40px;
+  line-height: 44px;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  text-wrap: balance;
+}
+
+@media (min-width: 768px) {
+  .display-title {
+    font-size: 64px;
+    line-height: 1.05;
+  }
+}
+
+.h1-title {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 32px;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  text-transform: none;
+  text-wrap: balance;
+}
+
+@media (min-width: 768px) {
+  .h1-title {
+    font-size: 44px;
+  }
+}
+
+.h2-title {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 28px;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  text-transform: none;
+  text-wrap: balance;
+}
+
+@media (min-width: 768px) {
+  .h2-title {
+    font-size: 36px;
+  }
+}
+
+.h3-title {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+
+@media (min-width: 768px) {
+  .h3-title {
+    font-size: 22px;
+  }
+}
+
+.body-lg {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 1.55;
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+
+@media (min-width: 768px) {
+  .body-lg {
+    font-size: 19px;
+  }
+}
+
+/* Tiny 12px uppercase label — the ONLY class allowed to use uppercase */
+.wall-label {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Legacy class mapped cleanly to V2 sentence-case heading voice */
+.anton-title {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 800;
+  text-transform: none;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.marker-accent {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 800;
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+html[lang="te"] .display-title,
+html[lang="te"] .h1-title,
+html[lang="te"] .h2-title,
+html[lang="te"] .h3-title,
+html[lang="te"] .anton-title,
+html[lang="te"] .marker-accent {
+  font-family: var(--font-telugu-display), var(--font-display), sans-serif !important;
   font-weight: 800 !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  line-height: 1.45 !important;
+}
+
+html[lang="te"] .body-lg,
+html[lang="te"] .wall-label,
+html[lang="te"] .wall-btn,
+html[lang="te"] .wall-chip {
+  font-family: var(--font-telugu), var(--font-body), system-ui, sans-serif !important;
   text-transform: none !important;
   letter-spacing: 0 !important;
 }
 
-html[lang="te"] .marker-accent {
-  font-family: 'Anek Telugu', sans-serif !important;
-  font-weight: 800 !important;
-  text-transform: none !important;
-  letter-spacing: 0 !important;
+.mono-num {
+  font-family: var(--font-mono), monospace;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
 html[lang="te"] .mono-num {
-  font-family: 'Space Mono', 'Anek Telugu', monospace;
+  font-family: var(--font-mono), var(--font-telugu), monospace;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Telugu lead (large) with English small beneath, used on game cards and big words. */
 .te-lead {
-  font-family: 'Anek Telugu', 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--font-telugu), var(--font-body), sans-serif;
   font-weight: 800;
 }
 
 .te-sub {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--font-body), sans-serif;
   font-weight: 700;
   font-size: 0.72em;
 }
 
-/* Language names are the one allowed exception: the switch label uses the phone's own Telugu font. */
+/* Crisp Telugu switch glyph in EN mode via system font; Anek Telugu in TE mode */
 .lang-switch-te {
-  /* No Telugu web font here on purpose: English mode must never download it. */
-  font-family: system-ui, sans-serif;
+  font-family: 'Kohinoor Telugu', 'Noto Sans Telugu', system-ui, sans-serif;
   font-weight: 800;
 }
 
-.anton-title {
-  font-family: 'Anton', sans-serif;
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 0.01em;
+html[lang="te"] .lang-switch-te {
+  font-family: var(--font-telugu), system-ui, sans-serif;
 }
 
-.marker-accent {
-  font-family: 'Permanent Marker', cursive;
-  font-weight: 400;
-  text-transform: none;
-  letter-spacing: 0;
-}
-
-.mono-num {
-  font-family: 'Space Mono', monospace;
-  font-weight: 700;
-}
-
-/* Sticker & Button System */
+/* V2 Card, Ticket Stub, Button, and Chip System (Single border, single hard shadow, zero tilt) */
 .wall-sticker {
   background: var(--sticker);
-  border: 3px solid var(--ink);
+  border: 2.5px solid var(--ink);
   border-radius: 20px;
-  box-shadow: 0 0 0 5px #FFFFFF, 0 0 0 7px #141313, 6px 8px 0 5px rgba(20, 19, 19, 0.18);
+  box-shadow: 0 5px 0 var(--ink);
 }
 
 .wall-sticker-sm {
   background: var(--sticker);
-  border: 3px solid var(--ink);
-  border-radius: 16px;
-  box-shadow: 0 0 0 5px #FFFFFF, 0 0 0 7px #141313, 6px 8px 0 5px rgba(20, 19, 19, 0.18);
+  border: 2.5px solid var(--ink);
+  border-radius: 20px;
+  box-shadow: 0 5px 0 var(--ink);
+}
+
+.wall-card-interactive {
+  display: block;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .wall-card-interactive:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 0 var(--ink);
+  }
+}
+
+.wall-card-interactive:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--ink);
+}
+
+/* Signature Shape: Film Ticket Stub with side semi-circle notches and dashed perforation */
+.wall-ticket {
+  position: relative;
+  background: var(--sticker);
+  border: 2.5px solid var(--ink);
+  border-radius: 20px;
+  box-shadow: 0 5px 0 var(--ink);
+}
+
+.wall-ticket::before,
+.wall-ticket::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 22px;
+  height: 22px;
+  margin-top: -11px;
+  background-color: var(--concrete);
+  border: 2.5px solid var(--ink);
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.wall-ticket::before {
+  left: -13px;
+  clip-path: inset(0 0 0 50%);
+}
+
+.wall-ticket::after {
+  right: -13px;
+  clip-path: inset(0 50% 0 0);
+}
+
+.wall-ticket-perf {
+  border-top: 2px dashed var(--ink);
 }
 
 .wall-btn {
@@ -235,28 +361,31 @@ html[lang="te"] .mono-num {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 52px;
+  min-height: 50px;
   min-width: 44px;
-  padding: 0 26px;
+  padding: 0 24px;
   border: 2.5px solid var(--ink);
   border-radius: 14px;
-  box-shadow: 4px 4px 0 var(--ink);
-  font-weight: 800;
-  font-size: 16px;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
+  box-shadow: 0 4px 0 var(--ink);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: 0;
+  text-transform: none;
   transition: transform 0.08s ease, box-shadow 0.08s ease;
   cursor: pointer;
 }
 
-.wall-btn:hover {
-  transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0 var(--ink);
+@media (hover: hover) and (pointer: fine) {
+  .wall-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 0 var(--ink);
+  }
 }
 
 .wall-btn:active {
-  transform: translate(4px, 4px);
-  box-shadow: 0 0 0 var(--ink);
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--ink);
 }
 
 .wall-chip {
@@ -265,30 +394,22 @@ html[lang="te"] .mono-num {
   gap: 8px;
   min-height: 44px;
   min-width: 44px;
-  padding: 0 18px;
+  padding: 0 16px;
   border: 2.5px solid var(--ink);
   border-radius: 999px;
-  font-weight: 800;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 700;
   font-size: 14px;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
+  letter-spacing: 0;
+  text-transform: none;
   background: var(--sticker);
   color: var(--ink);
 }
 
-.wall-card-interactive {
-  display: block;
-  transition: transform 0.12s ease;
-}
-
-.wall-card-interactive:hover {
-  transform: translateY(-4px) rotate(0deg) !important;
-}
-
-/* Accessible focus ring (Rule 7) */
+/* Accessible focus ring */
 :where(a:any-link, button, input, [tabindex="0"]):focus-visible {
-  outline: 4px solid var(--ink);
-  outline-offset: 6px;
+  outline: 3px solid var(--ink);
+  outline-offset: 4px;
 }
 
 /* Visually hidden utility with focus-within opt-out for skip links */
@@ -304,14 +425,10 @@ html[lang="te"] .mono-num {
   white-space: nowrap !important;
 }
 
-/* Marquee tape animation */
+/* Marquee tape animation (used on /health) */
 @keyframes wall-tape-slide {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
 .wall-tape-track {
@@ -347,22 +464,12 @@ html[data-reduced-motion="true"] .wall-card-interactive {
   transition: none !important;
 }
 
-/* Prose line length limit & balanced headings */
 .wall-prose {
   max-width: var(--prose-max);
 }
 
 .wall-balance {
   text-wrap: balance;
-}
-
-/* Crisp Telugu switch glyph in EN mode via system font; Anek Telugu in TE mode */
-.lang-switch-te {
-  font-family: 'Kohinoor Telugu', 'Noto Sans Telugu', system-ui, sans-serif;
-}
-
-html[lang="te"] .lang-switch-te {
-  font-family: 'Anek Telugu', system-ui, sans-serif;
 }
 
 /* Full-screen round ergonomics & safe areas */
@@ -385,34 +492,21 @@ html[lang="te"] .lang-switch-te {
   touch-action: manipulation;
 }
 
-/* Countdown stamp & Time's up shake */
 @keyframes wall-stamp-pop {
-  0% { transform: scale(1.45); opacity: 0.2; }
-  60% { transform: scale(0.94); opacity: 1; }
+  0% { transform: scale(1.25); opacity: 0.3; }
   100% { transform: scale(1); opacity: 1; }
 }
 
 .wall-stamp {
-  animation: wall-stamp-pop 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: wall-stamp-pop 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @keyframes wall-shake-x {
   0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-6px); }
-  40% { transform: translateX(6px); }
-  60% { transform: translateX(-4px); }
-  80% { transform: translateX(4px); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
 }
 
 .wall-shake {
-  animation: wall-shake-x 0.36s ease-in-out;
-}
-
-@keyframes wall-demo-float {
-  0%, 100% { transform: translateY(0) rotate(-1deg); }
-  50% { transform: translateY(-4px) rotate(1deg); }
-}
-
-.wall-demo-card {
-  animation: wall-demo-float 3.2s ease-in-out infinite;
+  animation: wall-shake-x 0.24s ease-in-out;
 }

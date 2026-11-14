@@ -6,7 +6,7 @@ import { AppFrame } from "@/components/app-frame";
 import { FeedbackSticker } from "@/components/feedback-sticker";
 import { Tx, useLang, useT } from "@/components/lang-provider";
 import { ConfettiBurst } from "@/components/confetti-burst";
-import { Badge, Sticker, WallButton, WallLinkButton } from "@/components/sticker-kit";
+import { Badge, Sticker, TicketStub, WallButton, WallLinkButton } from "@/components/sticker-kit";
 import { TRANSLATIONS } from "@/lib/i18n";
 import { drawWallSharePoster, SHARE_TEMPLATES, type ShareTemplate } from "@/lib/share-card";
 
@@ -42,7 +42,7 @@ export default function DumbCharadesResultsPage() {
       <AppFrame>
         <div className="mx-auto max-w-[480px] p-4">
           <Sticker className="space-y-4 p-6 text-center">
-            <h1 className="anton-title m-0 text-[28px] text-ink">
+            <h1 className="h2-title m-0 text-ink">
               <Tx v={TRANSLATIONS.judge.resultsTitle} />
             </h1>
             <p className="m-0 text-sm font-bold text-ink/75">
@@ -105,14 +105,27 @@ export default function DumbCharadesResultsPage() {
             <Tx v={isTie ? TRANSLATIONS.judge.tie : TRANSLATIONS.judge.winner} />
           </Badge>
 
-          <div data-testid="charades-winner-display">
-            <h1 className="anton-title m-0 text-[38px] leading-none text-ink">
+          <TicketStub
+            bg="yellow"
+            data-testid="charades-winner-display"
+            header={
+              <div className="flex items-center justify-between text-ink">
+                <span className="wall-label">
+                  <Tx v={TRANSLATIONS.landing.admitOneGang} />
+                </span>
+                <span className="wall-label">Dumb Charades</span>
+              </div>
+            }
+            footer={
+              <p className="mono-num m-0 text-xl font-bold text-ink">
+                {winners[0]?.score ?? 0} pts
+              </p>
+            }
+          >
+            <h1 className="h1-title m-0 text-ink">
               {isTie ? winners.map((w) => w.team.name).join(" & ") : winners[0]?.team.name}
             </h1>
-            <p className="mono-num m-0 mt-2 text-2xl font-black text-magenta">
-              {winners[0]?.score ?? 0} pts
-            </p>
-          </div>
+          </TicketStub>
 
           <div className="space-y-2.5 text-left">
             {sorted.map((sc, idx) => (

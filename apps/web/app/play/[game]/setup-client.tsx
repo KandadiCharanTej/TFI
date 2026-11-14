@@ -8,6 +8,7 @@ import { GameTitle } from "@/components/game-title";
 import { WallIcon } from "@/components/icons";
 import { Tx, useLang } from "@/components/lang-provider";
 import { Badge, Sticker, WallButton, WallLinkButton } from "@/components/sticker-kit";
+import { recordRecentlyPlayed } from "@/lib/games";
 import { TRANSLATIONS } from "@/lib/i18n";
 import type { GameRegistryEntry } from "@tfi/game-core";
 
@@ -65,6 +66,7 @@ export default function SetupClient({ game, title, description, rule }: SetupCli
   }
 
   function handleStart() {
+    recordRecentlyPlayed(game.id);
     try {
       localStorage.setItem("tfi.judge.players", JSON.stringify(players));
     } catch {
@@ -89,15 +91,18 @@ export default function SetupClient({ game, title, description, rule }: SetupCli
 
   return (
     <AppFrame>
-      <div className="mx-auto max-w-[480px] space-y-5 p-4" data-testid="judge-setup-screen">
+      <div className="mx-auto max-w-[520px] space-y-5 p-4" data-testid="judge-setup-screen">
         {/* Header sticker */}
         <Sticker className="p-5">
           <div className="flex items-center justify-between">
-            <Badge tone="yellow">GAME #{game.number}</Badge>
+            <Badge tone="yellow">Game #{game.number}</Badge>
             <Badge tone="white">
-              <Tx v={TRANSLATIONS.modes[game.mode === "One phone" ? "onePhone" : "phoneOrOnline"]} />
+              <Tx v={TRANSLATIONS.modes.onePhone} />
             </Badge>
           </div>
+          <p className="wall-label m-0 mt-3 text-ink/75">
+            <Tx v={TRANSLATIONS.gameSetup.stepFlow} />
+          </p>
 
           <div className="mt-4 flex items-center gap-4">
             <div

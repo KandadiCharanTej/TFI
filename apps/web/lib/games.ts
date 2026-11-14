@@ -1,4 +1,6 @@
+import { getGameById } from "@tfi/game-core";
 import { GAMES_CATALOG, type GameCatalogItem } from "./i18n";
+import type { Lang } from "./lang";
 
 export type ModeFilter = "All" | "onePhone" | "online";
 export const MODE_FILTERS: readonly ModeFilter[] = ["All", "onePhone", "online"] as const;
@@ -28,3 +30,51 @@ export function filterByMode(
 export function panelModeKey(game: Pick<GameCatalogItem, "isOnlineOnly">): "onePhone" | "online" {
   return game.isOnlineOnly ? "online" : "onePhone";
 }
+
+/**
+ * Formats true player count and estimated session duration from GAME_REGISTRY.
+ * Example: "2 to 8 players · 5 min" (or teams for Dumb Charades).
+ */
+export function formatGameMeta(slug: string, lang: Lang): string {
+  const reg = getGameById(slug);
+  if (!reg) {
+    return lang === "te" ? "2 నుండి 8 మంది · 5 నిమి" : "2 to 8 players · 5 min";
+  }
+  const mins = Math.max(3, Math.round((reg.defaultTimerSec * 5) / 60));
+  if (reg.template === "Charades") {
+    return lang === "te"
+      ? `${reg.playerMin} నుండి ${reg.playerMax} జట్లు · ${mins} నిమి`
+      : `${reg.playerMin} to ${reg.playerMax} teams · ${mins} min`;
+  }
+  return lang === "te"
+    ? `${reg.playerMin} నుండి ${reg.playerMax} మంది · ${mins} నిమి`
+    : `${reg.playerMin} to ${reg.playerMax} players · ${mins} min`;
+}
+
+const RECENTLY_PLAYED_KEY = "tfi.recentlyPlayed";
+
+export function recordRecentlyPlayed(slug: string): void {
+  if (typeof window === "undefined") return;
+  try {
+    const raw = window.localStorage.getItem(RECENTLY_PLAYED_KEY);
+    const prev: string[] = raw ? (JSON.parse(raw) as string[]) : [];
+    const next = [slug, ...prev.filter((s) => s !== slug)].slice(0, 4);
+    window.localStorage.setItem(RECENTLY_PLAYED_KEY, JSON.stringify(next));
+  } catch {
+    /* ignore */
+  }
+}
+
+export function readRecentlyPlayed(): string[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(RECENTLY_PLAYED_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.filter((x): x is string => typeof x === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
+

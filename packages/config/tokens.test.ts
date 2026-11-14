@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { MODE_COLORS, WALL_COLORS, WALL_FONTS } from "./tokens";
 
@@ -21,11 +23,33 @@ describe("The Wall Design System Tokens", () => {
     expect(MODE_COLORS.online).toBe("#00E5FF");
   });
 
-  it("defines the 5 locked font families", () => {
-    expect(WALL_FONTS.anton).toContain("Anton");
-    expect(WALL_FONTS.marker).toContain("Permanent Marker");
-    expect(WALL_FONTS.sans).toContain("Plus Jakarta Sans");
+  it("defines the V2 3-family typography system without Anton or Permanent Marker", () => {
+    expect(WALL_FONTS.display).toContain("Bricolage Grotesque");
+    expect(WALL_FONTS.sans).toContain("Bricolage Grotesque");
     expect(WALL_FONTS.mono).toContain("Space Mono");
     expect(WALL_FONTS.telugu).toContain("Anek Telugu");
+    const allFonts = Object.values(WALL_FONTS).join(" ");
+    expect(allFonts).not.toContain("Anton");
+    expect(allFonts).not.toContain("Permanent Marker");
+  });
+
+  it("forbids text-transform: uppercase on heading, button, and chip classes in globals.css", () => {
+    const cssPath = path.resolve(__dirname, "../../apps/web/app/globals.css");
+    const css = fs.readFileSync(cssPath, "utf8");
+    const checkedSelectors = [
+      ".display-title",
+      ".h1-title",
+      ".h2-title",
+      ".h3-title",
+      ".anton-title",
+      ".wall-btn",
+      ".wall-chip",
+    ];
+    for (const sel of checkedSelectors) {
+      const escaped = sel.replace(".", "\\.");
+      const match = new RegExp(`${escaped}\\s*\\{([^}]*)\\}`, "m").exec(css);
+      expect(match, `Selector ${sel} should exist in globals.css`).not.toBeNull();
+      expect(match?.[1]).not.toMatch(/text-transform:\s*uppercase/i);
+    }
   });
 });

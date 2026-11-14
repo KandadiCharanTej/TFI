@@ -8,7 +8,7 @@ export default function PrivacyPage() {
   return (
     <AppFrame>
       <Sticker className="mx-auto max-w-[680px] space-y-5 p-6">
-        <h1 className="anton-title m-0 text-[32px] text-ink">
+        <h1 className="h1-title m-0 text-ink">
           <Tx v={P.privacyTitle} />
         </h1>
         <p className="m-0 text-base font-bold leading-relaxed text-ink">

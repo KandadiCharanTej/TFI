@@ -25,13 +25,12 @@ async function bodyText(page: Page): Promise<string> {
   return page.evaluate(() => document.body.innerText);
 }
 
-/** Get body text with ALL lang-switch elements stripped out. */
+/** Get body text with ALL lang-switch and bilingual-demo elements stripped out. */
 async function bodyTextNoSwitch(page: Page): Promise<string> {
   return page.evaluate(() => {
     const clone = document.body.cloneNode(true) as HTMLElement;
-    // Remove all lang-switch elements (there may be more than one)
     clone.querySelectorAll("[data-testid='lang-switch']").forEach((el) => el.remove());
-    // Remove script tags (Next.js __NEXT_DATA__ contains all translation strings as JSON)
+    clone.querySelectorAll("[data-testid='bilingual-demo']").forEach((el) => el.remove());
     clone.querySelectorAll("script").forEach((el) => el.remove());
     return clone.innerText;
   });

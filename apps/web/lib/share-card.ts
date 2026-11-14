@@ -13,8 +13,9 @@ export interface ShareCardInput {
 }
 
 /**
- * Draws a 1080x1350 Wall-style share poster onto a Canvas2D context
- * using one of three cycleable templates (Score, Winner, Gang Poster).
+ * Draws a 1080x1350 V2 Film Ticket Stub share poster onto a Canvas2D context.
+ * Includes "Admit one gang", game name, score/winner, date, side ticket notches,
+ * dashed perforation line, and unofficial line at the bottom.
  */
 export function drawWallSharePoster(canvas: HTMLCanvasElement, input: ShareCardInput): void {
   if (typeof window !== "undefined") {
@@ -28,60 +29,93 @@ export function drawWallSharePoster(canvas: HTMLCanvasElement, input: ShareCardI
   if (!ctx) return;
 
   const { template, gameTitle, headline, subline, rows, showNames, unofficialFooter } = input;
+  const bgColor = template === "winner" ? "#F6BE18" : template === "gang" ? "#00E5FF" : "#EAE6DF";
 
   // 1. Concrete / Template Accent Background
-  ctx.fillStyle = template === "winner" ? "#F6BE18" : template === "gang" ? "#00E5FF" : "#EAE6DF";
+  ctx.fillStyle = bgColor;
   ctx.fillRect(0, 0, W, H);
 
-  // Subtle dot grid
-  ctx.fillStyle = "rgba(20,19,19,0.08)";
-  for (let x = 24; x < W; x += 36) {
-    for (let y = 24; y < H; y += 36) {
+  // Subtle 5% concrete dot grid
+  ctx.fillStyle = "rgba(20,19,19,0.05)";
+  for (let x = 24; x < W; x += 32) {
+    for (let y = 24; y < H; y += 32) {
       ctx.fillRect(x, y, 4, 4);
     }
   }
 
-  // 2. Main Sticker Card
-  const cardX = 72;
+  // 2. Main Ticket-Stub Card
+  const cardX = 80;
   const cardY = 88;
-  const cardW = W - 144;
+  const cardW = W - 160;
   const cardH = H - 230;
+  const notchY = cardY + 340;
+  const notchR = 28;
+
+  // Hard shadow
   ctx.fillStyle = "#141313";
-  ctx.fillRect(cardX + 14, cardY + 14, cardW, cardH);
+  ctx.fillRect(cardX + 12, cardY + 12, cardW, cardH);
+
+  // White ticket body
   ctx.fillStyle = "#FFFFFF";
   ctx.fillRect(cardX, cardY, cardW, cardH);
-  ctx.lineWidth = 8;
+  ctx.lineWidth = 6;
   ctx.strokeStyle = "#141313";
   ctx.strokeRect(cardX, cardY, cardW, cardH);
 
-  // 3. Top Header Pill
-  ctx.fillStyle = template === "gang" ? "#F6BE18" : "#EC1276";
-  ctx.fillRect(cardX + 48, cardY + 48, 360, 58);
-  ctx.strokeRect(cardX + 48, cardY + 48, 360, 58);
-  ctx.fillStyle = template === "gang" ? "#141313" : "#FFFFFF";
-  ctx.font = "900 28px sans-serif";
+  // Side semi-circle notches
+  ctx.fillStyle = bgColor;
+  ctx.beginPath();
+  ctx.arc(cardX, notchY, notchR, -Math.PI / 2, Math.PI / 2);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(cardX + cardW, notchY, notchR, Math.PI / 2, -Math.PI / 2);
+  ctx.fill();
+  ctx.stroke();
+
+  // Dashed perforation line across the ticket
+  ctx.save();
+  ctx.setLineDash([14, 12]);
+  ctx.lineWidth = 4;
+  ctx.strokeStyle = "#141313";
+  ctx.beginPath();
+  ctx.moveTo(cardX + notchR + 8, notchY);
+  ctx.lineTo(cardX + cardW - notchR - 8, notchY);
+  ctx.stroke();
+  ctx.restore();
+
+  // 3. Top Header: "Admit one gang" + Date
+  const dateStr = new Date().toISOString().slice(0, 10);
+  ctx.fillStyle = "#F6BE18";
+  ctx.fillRect(cardX + 48, cardY + 42, 320, 52);
+  ctx.lineWidth = 4;
+  ctx.strokeRect(cardX + 48, cardY + 42, 320, 52);
+  ctx.fillStyle = "#141313";
+  ctx.font = "800 24px sans-serif";
   ctx.textAlign = "left";
-  ctx.fillText(
-    template === "score" ? "FINAL SCORE" : template === "winner" ? "CHAMPION" : "THE GANG",
-    cardX + 72,
-    cardY + 87,
-  );
+  ctx.fillText("ADMIT ONE GANG", cardX + 68, cardY + 76);
 
-  // 4. Game Title & Headline
+  ctx.textAlign = "right";
+  ctx.font = "700 24px monospace";
+  ctx.fillText(dateStr, cardX + cardW - 48, cardY + 76);
+
+  // 4. Game Title & Headline (Sentence case)
+  ctx.textAlign = "left";
   ctx.fillStyle = "#141313";
-  ctx.font = "900 44px sans-serif";
-  ctx.fillText(gameTitle.toUpperCase(), cardX + 48, cardY + 175);
-
-  ctx.fillStyle = "#EC1276";
-  ctx.font = "900 76px sans-serif";
-  ctx.fillText(headline.slice(0, 22), cardX + 48, cardY + 275);
+  ctx.font = "800 42px sans-serif";
+  ctx.fillText(gameTitle, cardX + 48, cardY + 162);
 
   ctx.fillStyle = "#141313";
-  ctx.font = "700 34px sans-serif";
-  ctx.fillText(subline.slice(0, 40), cardX + 48, cardY + 335);
+  ctx.font = "900 72px sans-serif";
+  ctx.fillText(headline.slice(0, 22), cardX + 48, cardY + 252);
 
-  // 5. Score / Gang Rows
-  const startY = cardY + 400;
+  ctx.fillStyle = "#141313";
+  ctx.font = "600 30px sans-serif";
+  ctx.fillText(subline.slice(0, 42), cardX + 48, cardY + 305);
+
+  // 5. Score / Gang Rows below perforation
+  const startY = notchY + 46;
   rows.slice(0, 6).forEach((row, idx) => {
     const ry = startY + idx * 102;
     ctx.fillStyle = idx === 0 ? "#F6BE18" : "#F4F1EA";
@@ -104,7 +138,7 @@ export function drawWallSharePoster(canvas: HTMLCanvasElement, input: ShareCardI
   ctx.textAlign = "center";
   ctx.fillStyle = "#141313";
   ctx.font = "800 24px sans-serif";
-  ctx.fillText("TFI & PITCH · tfiandpitch.app", W / 2, H - 84);
+  ctx.fillText("TFI & Pitch · tfiandpitch.app", W / 2, H - 84);
   ctx.font = "600 18px sans-serif";
   ctx.fillText(unofficialFooter.slice(0, 72), W / 2, H - 46);
 }

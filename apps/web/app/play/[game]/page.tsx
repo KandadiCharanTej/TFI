@@ -85,7 +85,7 @@ export default async function GameSetupPage({
       <div className="mx-auto max-w-[480px] space-y-6 p-4">
         <Sticker className="p-6">
           <div className="flex items-center justify-between">
-            <Badge tone="yellow">GAME #{regGame.number}</Badge>
+            <Badge tone="yellow">Game #{regGame.number}</Badge>
             <Badge tone={regGame.mode === "Online" ? "cyan" : "white"}>
               {regGame.mode}
             </Badge>

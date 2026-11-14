@@ -253,7 +253,7 @@ function VoteRoundRunner({
             <Badge tone="cyan">
               {t(V.voterOf, { n: state.currentVoterIndex + 1, total: state.players.length })}
             </Badge>
-            <h1 className="anton-title m-0 text-[34px] leading-tight text-ink">
+            <h1 className="h1-title m-0 text-ink">
               {t(V.passPhoneToVoter, { name: currentVoter.name })}
             </h1>
             <p className="m-0 rounded-[12px] border-2 border-dashed border-ink bg-card p-4 text-[14px] font-bold text-ink/80">
@@ -328,8 +328,8 @@ function VoteRoundRunner({
               {lang === "te" ? latestResult.card.te : latestResult.card.en}
             </p>
 
-            <div className="rounded-[18px] border-[3px] border-ink bg-yellow p-5 shadow-btn">
-              <p className="anton-title m-0 text-[34px] leading-none text-ink" data-testid="vote-prompt-winner">
+            <div className="rounded-[18px] border-2 border-ink bg-yellow p-5">
+              <p className="h1-title m-0 text-ink" data-testid="vote-prompt-winner">
                 {latestResult.winnerIds
                   .map((id) => state.players.find((p) => p.id === id)?.name ?? id)
                   .join(" & ")}
@@ -383,7 +383,7 @@ function VoteRoundRunner({
           className="fixed inset-0 z-50 flex items-center justify-center bg-ink/80 p-4"
         >
           <Sticker className="w-full max-w-[420px] space-y-4 p-6">
-            <h2 className="anton-title m-0 text-[26px] text-ink">
+            <h2 className="h2-title m-0 text-ink">
               <Tx v={V.howToTitle} />
             </h2>
             <div className="space-y-2.5">
@@ -428,7 +428,7 @@ function VoteRoundRunner({
           className="fixed inset-0 z-50 flex items-center justify-center bg-ink/80 p-4"
         >
           <Sticker className="w-full max-w-[360px] space-y-4 p-6 text-center">
-            <h2 className="anton-title m-0 text-[28px] text-ink">
+            <h2 className="h2-title m-0 text-ink">
               <Tx v={TRANSLATIONS.judge.paused} />
             </h2>
             <div className="flex flex-col gap-3">

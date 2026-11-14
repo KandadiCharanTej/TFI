@@ -11,7 +11,7 @@ export default function NewRoomPage() {
         <Badge tone="cyan" mono>
           <Tx v={P.roomNewBadge} />
         </Badge>
-        <h1 className="anton-title m-0 text-[28px] text-ink">
+        <h1 className="h2-title m-0 text-ink">
           <Tx v={P.roomNewTitle} />
         </h1>
         <p className="m-0 text-sm font-bold text-ink">

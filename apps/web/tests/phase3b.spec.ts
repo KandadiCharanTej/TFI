@@ -56,8 +56,10 @@ test.describe("Beta scope: movie games only (flag off)", () => {
   test("new hero copy and pill (English)", async ({ page }) => {
     await page.goto(`${BASE}/`);
     await waitHydrated(page);
-    await expect(page.getByRole("heading", { level: 1 })).toContainText("Mayhem.");
-    await expect(page.getByText("Beta · 7 games · Telugu cinema")).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(
+      "Game night for Telugu movie fans.",
+    );
+    await expect(page.getByText("Free · No sign-up · Works offline")).toBeVisible();
     const text = await bodyTextNoSwitch(page);
     expect(TELUGU_RE.test(text)).toBe(false);
   });
@@ -66,7 +68,12 @@ test.describe("Beta scope: movie games only (flag off)", () => {
     await setLang(page, "te");
     await page.goto(`${BASE}/`);
     await waitHydrated(page);
-    await expect(page.getByText("మన సినిమా, మన సరదా, మన గ్యాంగ్", { exact: true })).toBeVisible();
+    await expect(
+      page.getByRole("heading", {
+        level: 1,
+        name: "తెలుగు సినిమా అభిమానుల కోసం గేమ్ నైట్.",
+      }),
+    ).toBeVisible();
     const axe = await new AxeBuilder({ page }).analyze();
     expect(axe.violations).toEqual([]);
   });

@@ -93,7 +93,7 @@ export function QuitRoundDialog({
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-ink/70" />
         <Dialog.Content className="fixed left-1/2 top-1/2 z-50 w-[min(92vw,380px)] -translate-x-1/2 -translate-y-1/2 rounded-[20px] border-[3px] border-ink bg-sticker p-5 shadow-[6px_6px_0_#141313]">
-          <Dialog.Title className="anton-title m-0 text-[26px] text-ink">
+          <Dialog.Title className="h2-title m-0 text-ink">
             {isTe ? "రౌండ్ ఆపాలా?" : "Leave this round?"}
           </Dialog.Title>
           <Dialog.Description className="mt-2 text-[14px] font-semibold text-ink/75">
@@ -151,7 +151,7 @@ export function HowToPlayDialog({
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-ink/75" />
         <Dialog.Content className="fixed left-1/2 top-1/2 z-50 w-[min(92vw,420px)] -translate-x-1/2 -translate-y-1/2 rounded-[20px] border-[3px] border-ink bg-sticker p-5 shadow-[6px_6px_0_#141313]">
-          <Dialog.Title className="anton-title m-0 text-[28px] text-ink">
+          <Dialog.Title className="h2-title m-0 text-ink">
             {title}
           </Dialog.Title>
           <div className="mt-4 space-y-2.5">

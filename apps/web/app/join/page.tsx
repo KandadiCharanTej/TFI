@@ -16,10 +16,10 @@ export default function JoinRoomPage() {
     <AppFrame>
       <Sticker className="mx-auto max-w-[480px] space-y-5 p-6">
         <Badge tone="cyan" mono>
-          ONLINE ROOMS · 4-LETTER CODE
+          <Tx v={TRANSLATIONS.pages.joinBadge} />
         </Badge>
         <div>
-          <h1 className="anton-title m-0 text-[28px] text-ink">
+          <h1 className="h2-title m-0 text-ink">
             <Tx v={TRANSLATIONS.pages.joinTitle} />
           </h1>
         </div>
