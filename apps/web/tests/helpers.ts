@@ -24,6 +24,7 @@ export async function bodyTextNoSwitch(page: Page): Promise<string> {
   return page.evaluate(() => {
     const clone = document.body.cloneNode(true) as HTMLElement;
     clone.querySelectorAll("[data-testid='lang-switch']").forEach((el) => el.remove());
+    clone.querySelectorAll("[data-testid='bilingual-demo']").forEach((el) => el.remove());
     clone.querySelectorAll("script,style").forEach((el) => el.remove());
     return clone.innerText;
   });

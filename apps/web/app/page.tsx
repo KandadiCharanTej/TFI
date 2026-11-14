@@ -331,6 +331,7 @@ export default function LandingPage() {
         {/* 5. "Telugu when you want it": compact 2-column block showing the SAME card in EN & TE with live switch */}
         <section
           aria-labelledby="telugu-heading"
+          data-testid="bilingual-demo"
           className="mx-auto max-w-[1160px] px-4 py-16 md:px-8 md:py-24"
         >
           <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useCallback, useState, useReducer, use } from "react";
+import { useEffect, useRef, useCallback, useMemo, useState, useReducer, use } from "react";
 import { useRouter } from "next/navigation";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Tx, useLang } from "@/components/lang-provider";
@@ -224,6 +224,7 @@ function useAudio(muted: boolean) {
   const beep = useCallback(
     (freq: number, dur: number, vol = 0.3) => {
       if (muted) return;
+      if (typeof navigator !== "undefined" && "userActivation" in navigator && !navigator.userActivation.hasBeenActive) return;
       try {
         ctxRef.current ??= new AudioContext();
         const ctx = ctxRef.current;
@@ -244,6 +245,7 @@ function useAudio(muted: boolean) {
 
   const clack = useCallback(() => {
     if (muted) return;
+    if (typeof navigator !== "undefined" && "userActivation" in navigator && !navigator.userActivation.hasBeenActive) return;
     try {
       ctxRef.current ??= new AudioContext();
       const ctx = ctxRef.current;
@@ -270,13 +272,16 @@ function useAudio(muted: boolean) {
     }
   }, [muted]);
 
-  return {
-    clack,
-    correct: () => beep(880, 0.1),
-    pass: () => beep(330, 0.1),
-    countdown: () => beep(660, 0.07, 0.2),
-    timeUp: () => beep(220, 0.35),
-  };
+  return useMemo(
+    () => ({
+      clack,
+      correct: () => beep(880, 0.1),
+      pass: () => beep(330, 0.1),
+      countdown: () => beep(660, 0.07, 0.2),
+      timeUp: () => beep(220, 0.35),
+    }),
+    [beep, clack],
+  );
 }
 
 // ─── Round Page Component ────────────────────────────────────────────────────
@@ -598,7 +603,7 @@ export default function JudgeRoundPage({
       data-testid="judge-round-screen"
     >
       {s.phase === "loading" || s.phase === "getReady" ? (
-        <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-yellow/95 p-6 text-center">
+        <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-yellow p-6 text-center">
           <p className="wall-label text-[16px] text-ink">
             <Tx v={J.getReady} />
           </p>

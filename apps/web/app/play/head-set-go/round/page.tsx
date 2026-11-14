@@ -5,7 +5,7 @@
  * No AppFrame — layout.tsx strips chrome for paths ending in /round.
  */
 
-import { useEffect, useRef, useCallback, useState, useReducer } from "react";
+import { useEffect, useRef, useCallback, useMemo, useState, useReducer } from "react";
 import { useRouter } from "next/navigation";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Tx, useLang } from "@/components/lang-provider";
@@ -87,6 +87,7 @@ function useAudio(muted: boolean) {
   const ctxRef = useRef<AudioContext | null>(null);
   const beep = useCallback((freq: number, dur: number, vol = 0.3) => {
     if (muted) return;
+    if (typeof navigator !== "undefined" && "userActivation" in navigator && !navigator.userActivation.hasBeenActive) return;
     try {
       ctxRef.current ??= new AudioContext();
       const ctx = ctxRef.current;
@@ -99,6 +100,7 @@ function useAudio(muted: boolean) {
   }, [muted]);
   const clack = useCallback(() => {
     if (muted) return;
+    if (typeof navigator !== "undefined" && "userActivation" in navigator && !navigator.userActivation.hasBeenActive) return;
     try {
       ctxRef.current ??= new AudioContext();
       const ctx = ctxRef.current;
@@ -123,13 +125,16 @@ function useAudio(muted: boolean) {
       osc2.stop(ctx.currentTime + 0.06);
     } catch { /* silent */ }
   }, [muted]);
-  return {
-    clack,
-    correct: () => beep(880, 0.1),
-    pass: () => beep(330, 0.1),
-    countdown: () => beep(660, 0.07, 0.2),
-    timeUp: () => beep(220, 0.35),
-  };
+  return useMemo(
+    () => ({
+      clack,
+      correct: () => beep(880, 0.1),
+      pass: () => beep(330, 0.1),
+      countdown: () => beep(660, 0.07, 0.2),
+      timeUp: () => beep(220, 0.35),
+    }),
+    [beep, clack],
+  );
 }
 
 // ─── Component ───────────────────────────────────────────────────────────────

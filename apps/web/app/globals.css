@@ -245,6 +245,15 @@ html[lang="te"] .marker-accent {
   line-height: 1.45 !important;
 }
 
+html[lang="te"] .body-lg,
+html[lang="te"] .wall-label,
+html[lang="te"] .wall-btn,
+html[lang="te"] .wall-chip {
+  font-family: var(--font-telugu), var(--font-body), system-ui, sans-serif !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
 .mono-num {
   font-family: var(--font-mono), monospace;
   font-weight: 700;

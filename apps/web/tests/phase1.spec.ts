@@ -80,9 +80,13 @@ test.describe("Phase 0 & Phase 1 Quality Gates", () => {
     await page.waitForTimeout(400);
 
     // English-mode heading
-    await expect(page.getByRole("heading", { level: 1 })).toContainText("Movies.");
-    // English tagline
-    await expect(page.getByText("Our movies. Our mayhem. Our gang.", { exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(
+      "Game night for Telugu movie fans.",
+    );
+    // English subline
+    await expect(
+      page.getByText(/Guess, act and bid on your favourite films/i),
+    ).toBeVisible();
     await expect(
       page.getByText(
         "Unofficial fan-made game. Not affiliated with any film, actor, studio or team.",

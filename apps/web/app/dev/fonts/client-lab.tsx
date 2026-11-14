@@ -101,7 +101,7 @@ export default function ClientFontLab() {
             <button
               type="button"
               onClick={() => setLang("en")}
-              data-testid="lab-lang-en"
+              data-testid="lab-toggle-en"
               className={`wall-btn min-h-[44px] px-4 text-[15px] ${
                 lang === "en" ? "bg-[#F6BE18]" : "bg-white"
               }`}
@@ -111,7 +111,7 @@ export default function ClientFontLab() {
             <button
               type="button"
               onClick={() => setLang("te")}
-              data-testid="lab-lang-te"
+              data-testid="lab-toggle-te"
               className={`wall-btn min-h-[44px] px-4 text-[15px] ${
                 lang === "te" ? "bg-[#F6BE18]" : "bg-white"
               }`}
