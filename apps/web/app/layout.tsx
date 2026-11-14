@@ -58,17 +58,10 @@ export default async function RootLayout({
   return (
     <html lang={lang}>
       <head>
-        {/* Always: the two fonts the first screen needs in any language. */}
+        {/* Preload the single variable Latin font used above the fold (30 KB). */}
         <link
           rel="preload"
-          href="/fonts/anton-latin.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="/fonts/plus-jakarta-sans-latin.woff2"
+          href="/fonts/bricolage-grotesque-latin.woff2"
           as="font"
           type="font/woff2"
           crossOrigin="anonymous"

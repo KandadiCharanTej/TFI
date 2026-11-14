@@ -72,31 +72,25 @@ export default async function HealthPage() {
         </section>
 
         <section aria-labelledby="fonts-heading">
-          <h2 id="fonts-heading" className="anton-title m-0 text-3xl text-ink">
+          <h2 id="fonts-heading" className="h2-title m-0 text-ink">
             <Tx v={H.fonts} />
           </h2>
           <div className="mt-4 grid gap-6 md:grid-cols-2">
             <Sticker className="space-y-4 p-6">
               <div>
-                <p className="mono-num m-0 text-xs uppercase text-ink">Anton</p>
-                <p className="anton-title m-0 mt-1 text-4xl text-ink">
+                <p className="wall-label m-0 text-ink">Bricolage Grotesque (Display)</p>
+                <p className="display-title m-0 mt-1 text-3xl text-ink">
                   <Tx v={TRANSLATIONS.landing.heroLine1} /> <Tx v={TRANSLATIONS.landing.heroLine2} />
                 </p>
               </div>
               <div>
-                <p className="mono-num m-0 text-xs uppercase text-ink">Permanent Marker</p>
-                <p className="marker-accent m-0 mt-1 text-4xl text-magenta">
-                  <Tx v={TRANSLATIONS.landing.heroMarker} />
-                </p>
-              </div>
-              <div>
-                <p className="mono-num m-0 text-xs uppercase text-ink">Plus Jakarta Sans</p>
-                <p className="m-0 mt-1 text-lg font-extrabold text-ink">
+                <p className="wall-label m-0 text-ink">Bricolage Grotesque (Body)</p>
+                <p className="body-lg m-0 mt-1 text-ink">
                   <Tx v={TRANSLATIONS.landing.heroSubline} />
                 </p>
               </div>
               <div>
-                <p className="mono-num m-0 text-xs uppercase text-ink">Space Mono Bold</p>
+                <p className="wall-label m-0 text-ink">Space Mono Bold</p>
                 <p className="mono-num m-0 mt-1 text-2xl text-ink">K7QM · 0:42 · 20 Cr · 4/6</p>
               </div>
             </Sticker>
