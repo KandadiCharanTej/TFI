@@ -75,7 +75,16 @@ Using names as plain factual identifiers is generally fine, but confirm with leg
 ## Phase 4 Operations & Copy
 
 ### UI translation export (`i18n-review.csv`)
-Run `node --experimental-strip-types apps/web/scripts/export-i18n-review.mjs` to regenerate `i18n-review.csv` (`key,English,Telugu`). Current string count: **357** bilingual pairs.
+Run `node --experimental-strip-types apps/web/scripts/export-i18n-review.mjs` to regenerate `i18n-review.csv` (`key,English,Telugu`). All Telugu strings in `apps/web/lib/i18n.ts` and `i18n-review.csv` are flagged for native Telugu speaker review to confirm casual, natural phrasing before public launch.
+
+### Phase 4b Hero Headline Alternatives (for human selection)
+Current V2 default hero headline:
+- **Default:** `"Game night for Telugu movie fans."` (`"తెలుగు సినిమా అభిమానుల కోసం గేమ్ నైట్."`)
+
+Three alternative hero headlines to consider:
+1. **Option 1 (Action-first):** `"Guess, act, and bid on Telugu cinema with your gang."` (`"మీ గ్యాంగ్‌తో కలిసి తెలుగు సినిమాలను ఊహించండి, నటించండి, వేలం వేయండి."`)
+2. **Option 2 (One-phone warmth):** `"One phone. Seven Telugu movie games. Zero sign-up."` (`"ఒకే ఫోన్. ఏడు తెలుగు సినిమా ఆటలు. సైన్-అప్ అవసరం లేదు."`)
+3. **Option 3 (Showtime energy):** `"Turn any hangout into a Telugu movie game night."` (`"ఏ కలయికనైనా తెలుగు సినిమా గేమ్ నైట్‌గా మార్చండి."`)
 
 ### Feedback form (`FEEDBACK_URL`)
 Set `FEEDBACK_URL` (e.g. a Google Form or Tally link) in Vercel environment variables so the `"Send feedback"` sticker appears on results pages, `/me`, and the footer. Leave it empty to hide the button cleanly.

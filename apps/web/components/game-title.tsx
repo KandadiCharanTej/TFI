@@ -4,13 +4,13 @@ import { useLang } from "./lang-provider";
 import type { Bi } from "@/lib/lang";
 
 /**
- * A game title that follows the language rule.
- * English mode: Anton, uppercase, English letters only.
- * Telugu mode: Telugu large and leading, English letters small beneath.
+ * A game title that follows the V2 language & typography rule.
+ * English mode: Bricolage Grotesque 700-800, sentence case, English letters only.
+ * Telugu mode: Anek Telugu large and leading, English letters small beneath.
  */
 export function GameTitle({
   title,
-  teClassName = "text-[24px]",
+  teClassName = "text-[22px]",
   enClassName = "text-[22px]",
   as = "h3",
 }: {
@@ -25,11 +25,11 @@ export function GameTitle({
     return (
       <Tag className={`te-lead m-0 text-ink ${teClassName}`}>
         {title.te}
-        <span className="te-sub block text-[13px] text-ink">{title.en}</span>
+        <span className="te-sub block text-[13px] text-ink/80">{title.en}</span>
       </Tag>
     );
   }
   return (
-    <Tag className={`anton-title m-0 leading-[1.05] text-ink ${enClassName}`}>{title.en}</Tag>
+    <Tag className={`h3-title m-0 text-ink ${enClassName}`}>{title.en}</Tag>
   );
 }
