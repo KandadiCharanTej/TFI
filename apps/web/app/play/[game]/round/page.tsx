@@ -242,7 +242,36 @@ function useAudio(muted: boolean) {
     [muted],
   );
 
+  const clack = useCallback(() => {
+    if (muted) return;
+    try {
+      ctxRef.current ??= new AudioContext();
+      const ctx = ctxRef.current;
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc1.type = "triangle";
+      osc2.type = "square";
+      osc1.frequency.setValueAtTime(1400, ctx.currentTime);
+      osc1.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.055);
+      osc2.frequency.setValueAtTime(720, ctx.currentTime);
+      osc2.frequency.exponentialRampToValueAtTime(140, ctx.currentTime + 0.055);
+      gain.gain.setValueAtTime(0.32, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(ctx.destination);
+      osc1.start();
+      osc2.start();
+      osc1.stop(ctx.currentTime + 0.06);
+      osc2.stop(ctx.currentTime + 0.06);
+    } catch {
+      /* silent */
+    }
+  }, [muted]);
+
   return {
+    clack,
     correct: () => beep(880, 0.1),
     pass: () => beep(330, 0.1),
     countdown: () => beep(660, 0.07, 0.2),
@@ -389,11 +418,12 @@ export default function JudgeRoundPage({
   useEffect(() => {
     if (s.phase !== "getReady") return;
     const id = setInterval(() => {
-      audio.countdown();
+      if (s.countdown <= 1) audio.clack();
+      else audio.countdown();
       dispatch({ type: "COUNTDOWN_TICK" });
     }, 1000);
     return () => clearInterval(id);
-  }, [s.phase, audio]);
+  }, [s.phase, s.countdown, audio]);
 
   // Round turn timer
   useEffect(() => {
@@ -493,16 +523,16 @@ export default function JudgeRoundPage({
         <div className="text-6xl mb-4" aria-hidden>
           📱 🤝
         </div>
-        <p className="text-lg font-black uppercase tracking-wider text-ink">
+        <p className="wall-label text-[15px] text-ink">
           <Tx v={J.passPhoneTo} />
         </p>
-        <h2 className="anton-title mt-2 text-4xl font-black text-ink">
+        <h2 className="h1-title mt-2 text-ink">
           {currentPlayer.name}
         </h2>
         <button
           type="button"
           onClick={() => dispatch({ type: "PHONE_PASSED" })}
-          className="wall-btn mt-8 min-h-[56px] bg-white px-8 text-xl font-black text-ink shadow-[4px_4px_0_#141313]"
+          className="wall-btn mt-8 min-h-[56px] bg-white px-8 text-xl font-bold text-ink"
           data-testid="judge-ready-btn"
         >
           <Tx v={J.readyButton} />
@@ -516,18 +546,18 @@ export default function JudgeRoundPage({
     const isLastTurn = s.currentTurn >= s.totalTurns;
     return (
       <div className="wall-safe-round flex flex-col items-center justify-center bg-[#EAE6DF] text-center">
-        <div className="wall-shake w-full max-w-sm rounded-[24px] border-[3px] border-ink bg-white p-6 shadow-[6px_6px_0_#141313]">
-          <span className="rounded-full border-2 border-ink bg-yellow px-3 py-1 text-xs font-black uppercase">
+        <div className="wall-shake w-full max-w-sm rounded-[20px] border-[2.5px] border-ink bg-white p-6 shadow-[0_5px_0_#141313]">
+          <span className="wall-label rounded-full border-2 border-ink bg-yellow px-3 py-1">
             <Tx v={J.turnSummary} />
           </span>
-          <h2 className="anton-title mt-3 text-3xl font-black text-ink">
+          <h2 className="h2-title mt-3 text-ink">
             {currentPlayer.name}
           </h2>
-          <div className="mt-4 rounded-[16px] border-[2.5px] border-ink bg-[#F4F1EA] p-4">
-            <span className="text-xs font-black uppercase tracking-wider text-ink">
+          <div className="mt-4 rounded-[16px] border-2 border-ink bg-[#F4F1EA] p-4">
+            <span className="wall-label text-ink">
               <Tx v={J.score} />
             </span>
-            <div className="mono-num mt-1 text-5xl font-black text-ink">
+            <div className="mono-num mt-1 text-5xl font-bold text-ink">
               {s.currentTurnCorrect}
             </div>
             <div className="mt-2 text-xs font-bold text-ink">
@@ -538,7 +568,7 @@ export default function JudgeRoundPage({
           <button
             type="button"
             onClick={() => dispatch({ type: "NEXT_TURN" })}
-            className="wall-btn mt-6 w-full bg-yellow py-3 text-lg font-black text-ink"
+            className="wall-btn mt-6 w-full bg-yellow py-3 text-lg font-bold text-ink"
             data-testid="judge-next-turn-btn"
           >
             {isLastTurn ? (
@@ -569,12 +599,12 @@ export default function JudgeRoundPage({
     >
       {s.phase === "loading" || s.phase === "getReady" ? (
         <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-yellow/95 p-6 text-center">
-          <p className="text-xl font-black uppercase tracking-widest text-ink">
+          <p className="wall-label text-[16px] text-ink">
             <Tx v={J.getReady} />
           </p>
-          <p className="mt-2 text-2xl font-black text-ink">{currentPlayer.name}</p>
+          <p className="mt-2 text-2xl font-bold text-ink">{currentPlayer.name}</p>
           <p
-            className="anton-title text-[130px] font-black leading-none text-ink"
+            className="mono-num text-[130px] font-bold leading-none text-ink"
             aria-live="assertive"
           >
             {s.countdown}
@@ -692,8 +722,8 @@ export default function JudgeRoundPage({
             </Dialog.Trigger>
             <Dialog.Portal>
               <Dialog.Overlay className="fixed inset-0 bg-ink/60" />
-              <Dialog.Content className="fixed left-1/2 top-1/2 w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-[20px] border-[3px] border-ink bg-white p-6 shadow-[6px_6px_0_#141313]">
-                <Dialog.Title className="anton-title text-2xl text-ink">
+              <Dialog.Content className="fixed left-1/2 top-1/2 w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-[20px] border-[2.5px] border-ink bg-white p-6 shadow-[0_5px_0_#141313]">
+                <Dialog.Title className="h2-title text-ink">
                   <Tx v={J.paused} />
                 </Dialog.Title>
                 <div className="mt-5 flex flex-col gap-3">
@@ -733,10 +763,10 @@ export default function JudgeRoundPage({
 
       {/* Card View: Clue & Answer */}
       <div className="flex flex-1 flex-col justify-center px-4 py-3">
-        <div className="mx-auto w-full max-w-sm rounded-[24px] border-[3px] border-ink bg-white p-5 shadow-[6px_6px_0_#141313]">
+        <div className="mx-auto w-full max-w-sm rounded-[20px] border-[2.5px] border-ink bg-white p-5 shadow-[0_5px_0_#141313]">
           {/* THE JUDGE READS Header */}
           <div className="text-center">
-            <span className="rounded-full border border-ink/40 bg-card px-3 py-0.5 text-[10px] font-black uppercase tracking-wider text-ink">
+            <span className="wall-label rounded-full border border-ink/40 bg-card px-3 py-0.5 text-ink">
               <Tx v={J.theJudgeReads} />
             </span>
           </div>
@@ -744,12 +774,12 @@ export default function JudgeRoundPage({
           {/* Clue Area */}
           <div className="my-5 flex min-h-[120px] items-center justify-center text-center">
             <div
-              className={`font-black text-ink leading-[1.2] ${
+              className={`font-extrabold text-ink leading-[1.2] ${
                 slug === "emoji-cinema"
                   ? "text-5xl"
                   : lang === "te"
-                    ? "text-[32px]"
-                    : "anton-title text-[36px]"
+                    ? "te-lead text-[32px]"
+                    : "font-display text-[34px] tracking-[-0.02em]"
               }`}
               data-testid="judge-clue"
             >
@@ -758,12 +788,12 @@ export default function JudgeRoundPage({
           </div>
 
           {/* Yellow Answer Strip (Visible only to the Judge holding phone) */}
-          <div className="rounded-[16px] border-[2.5px] border-ink bg-yellow p-3.5 text-center shadow-[3px_3px_0_#141313]">
-            <div className="text-[10px] font-black uppercase tracking-widest text-ink opacity-70">
+          <div className="rounded-[16px] border-2 border-ink bg-yellow p-3.5 text-center">
+            <div className="wall-label text-ink opacity-75">
               <Tx v={isRapidFire ? J.acceptedAnswersLabel : J.answerLabel} />
             </div>
             <div
-              className="mt-1 font-black text-ink leading-tight"
+              className="mt-1 font-extrabold text-ink leading-tight"
               style={{ fontSize: lang === "te" ? "22px" : "20px" }}
               data-testid="judge-answer"
             >

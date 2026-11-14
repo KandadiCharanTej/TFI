@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import { AppFrame } from "@/components/app-frame";
 import { FeedbackSticker } from "@/components/feedback-sticker";
 import { Tx, useLang } from "@/components/lang-provider";
-import { Sticker, WallButton, WallLinkButton } from "@/components/sticker-kit";
+import { Sticker, TicketStub, WallButton, WallLinkButton } from "@/components/sticker-kit";
 import { TRANSLATIONS } from "@/lib/i18n";
+import { drawWallSharePoster } from "@/lib/share-card";
 import { getGameById } from "@tfi/game-core";
 
 const J = TRANSLATIONS.judge;
@@ -47,75 +48,16 @@ async function buildShareSticker(
   showNames: boolean,
 ): Promise<Blob | null> {
   try {
-    const W = 1080;
-    const H = 1350;
     const canvas = document.createElement("canvas");
-    canvas.width = W;
-    canvas.height = H;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return null;
-
-    // Background
-    ctx.fillStyle = "#F6BE18";
-    ctx.fillRect(0, 0, W, H);
-
-    // Ink Border & Outer Rings
-    ctx.strokeStyle = "#141313";
-    ctx.lineWidth = 14;
-    ctx.strokeRect(10, 10, W - 20, H - 20);
-
-    // Game name in Anton / bold
-    ctx.fillStyle = "#141313";
-    ctx.font = "bold 76px sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText(gameName.toUpperCase(), W / 2, 170);
-
-    // Winner Banner / Sticker
-    ctx.fillStyle = "#FFFFFF";
-    ctx.fillRect(100, 240, W - 200, 260);
-    ctx.strokeStyle = "#141313";
-    ctx.lineWidth = 8;
-    ctx.strokeRect(100, 240, W - 200, 260);
-
-    ctx.fillStyle = "#EC1276";
-    ctx.font = "bold 38px sans-serif";
-    ctx.fillText("WINNER", W / 2, 310);
-
-    ctx.fillStyle = "#141313";
-    ctx.font = "bold 64px sans-serif";
-    ctx.fillText(winnerNames, W / 2, 410);
-
-    // Score summary
-    ctx.fillStyle = "#FFFFFF";
-    ctx.fillRect(100, 560, W - 200, 480);
-    ctx.strokeRect(100, 560, W - 200, 480);
-
-    ctx.fillStyle = "#141313";
-    ctx.font = "bold 36px sans-serif";
-    ctx.fillText("SCOREBOARD", W / 2, 630);
-
-    const startY = 700;
-    scores.slice(0, 6).forEach((sc, idx) => {
-      const y = startY + idx * 55;
-      ctx.textAlign = "left";
-      ctx.font = "bold 32px sans-serif";
-      const displayName = showNames ? sc.player.name : `Player ${idx + 1}`;
-      ctx.fillText(`${idx + 1}. ${displayName}`, 160, y);
-
-      ctx.textAlign = "right";
-      ctx.font = "bold 32px monospace";
-      ctx.fillText(`${sc.score} pts`, W - 160, y);
+    drawWallSharePoster(canvas, {
+      template: "winner",
+      gameTitle: gameName,
+      headline: winnerNames,
+      subline: `${scores[0]?.score ?? 0} pts · TFI & Pitch`,
+      rows: scores.map((sc) => ({ label: sc.player.name, value: `${sc.score} pts` })),
+      showNames,
+      unofficialFooter: TRANSLATIONS.brand.unofficialDisclaimer.en,
     });
-
-    // Branding & Disclaimer
-    ctx.textAlign = "center";
-    ctx.font = "bold 44px sans-serif";
-    ctx.fillText("TFI & Pitch", W / 2, 1140);
-
-    ctx.font = "24px sans-serif";
-    ctx.fillText("Unofficial fan-made game. Not affiliated with any film,", W / 2, 1240);
-    ctx.fillText("actor, studio or team.", W / 2, 1280);
-
     return new Promise((res) => canvas.toBlob((b) => res(b), "image/png"));
   } catch {
     return null;
@@ -218,24 +160,36 @@ export default function JudgeResultsPage({
   return (
     <AppFrame>
       <div className="mx-auto max-w-[480px] space-y-5 p-4" data-testid="judge-results-screen">
-        {/* Winner Banner */}
-        <Sticker className="p-6 text-center">
+        {/* Ticket-Stub Winner Banner */}
+        <TicketStub
+          bg="yellow"
+          className="text-center"
+          header={
+            <div className="flex items-center justify-between text-ink">
+              <span className="wall-label">
+                <Tx v={TRANSLATIONS.landing.admitOneGang} />
+              </span>
+              <span className="wall-label">
+                {isTie ? <Tx v={J.tie} /> : <Tx v={J.winner} />}
+              </span>
+            </div>
+          }
+          footer={
+            <p className="mono-num m-0 text-xl font-bold text-ink">
+              {highestScore} {lang === "te" ? "పాయింట్లు" : "pts"}
+            </p>
+          }
+        >
           <div className="text-4xl mb-2" aria-hidden>
             🏆
           </div>
-          <span className="rounded-full border-2 border-ink bg-yellow px-4 py-1 text-xs font-black uppercase text-ink">
-            {isTie ? <Tx v={J.tie} /> : <Tx v={J.winner} />}
-          </span>
           <h1
-            className="anton-title mt-3 text-4xl font-black text-ink"
+            className="h1-title m-0 text-ink"
             data-testid="winner-display"
           >
             {winnerTitle}
           </h1>
-          <p className="mono-num mt-1 text-2xl font-black text-ink">
-            {highestScore} {lang === "te" ? "పాయింట్లు" : "pts"}
-          </p>
-        </Sticker>
+        </TicketStub>
 
         {/* Scoreboard Table */}
         <Sticker className="p-5">

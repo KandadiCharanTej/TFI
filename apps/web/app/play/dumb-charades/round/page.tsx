@@ -178,6 +178,36 @@ function reducer(state: State, action: Action): State {
   }
 }
 
+function playClack(muted: boolean) {
+  if (muted || typeof window === "undefined") return;
+  try {
+    const AC =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    const ctx = new AC();
+    const osc1 = ctx.createOscillator();
+    const osc2 = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc1.type = "triangle";
+    osc2.type = "square";
+    osc1.frequency.setValueAtTime(1400, ctx.currentTime);
+    osc1.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.055);
+    osc2.frequency.setValueAtTime(720, ctx.currentTime);
+    osc2.frequency.exponentialRampToValueAtTime(140, ctx.currentTime + 0.055);
+    gain.gain.setValueAtTime(0.28, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
+    osc1.connect(gain);
+    osc2.connect(gain);
+    gain.connect(ctx.destination);
+    osc1.start();
+    osc2.start();
+    osc1.stop(ctx.currentTime + 0.06);
+    osc2.stop(ctx.currentTime + 0.06);
+  } catch {
+    /* ignore audio errors */
+  }
+}
+
 function playBeep(freq: number, ms: number, muted: boolean) {
   if (muted || typeof window === "undefined") return;
   try {
@@ -426,7 +456,7 @@ function CharadesRoundRunner({
         {state.phase === "passingPhone" && currentCard ? (
           <Sticker className="space-y-5 p-6 text-center" data-testid="charades-passing-screen">
             <Badge tone="yellow">{currentTeam.name}</Badge>
-            <h1 className="anton-title m-0 text-[30px] leading-tight text-ink">
+            <h1 className="h2-title m-0 text-ink">
               {t(C.passToActor, { team: currentTeam.name })}
             </h1>
 
@@ -493,6 +523,7 @@ function CharadesRoundRunner({
                 variant="yellow"
                 onClick={() => {
                   setShutterOpen(false);
+                  playClack(muted);
                   dispatch({ type: "START_ACTING" });
                 }}
                 data-testid="charades-start-acting-btn"
@@ -606,7 +637,7 @@ function CharadesRoundRunner({
           className="fixed inset-0 z-50 flex items-center justify-center bg-ink/80 p-4"
         >
           <Sticker className="w-full max-w-[420px] space-y-4 p-6">
-            <h2 className="anton-title m-0 text-[26px] text-ink">
+            <h2 className="h2-title m-0 text-ink">
               <Tx v={C.howToTitle} />
             </h2>
             <div className="space-y-2.5">
@@ -651,7 +682,7 @@ function CharadesRoundRunner({
           className="fixed inset-0 z-50 flex items-center justify-center bg-ink/80 p-4"
         >
           <Sticker className="w-full max-w-[360px] space-y-4 p-6 text-center">
-            <h2 className="anton-title m-0 text-[28px] text-ink">
+            <h2 className="h2-title m-0 text-ink">
               <Tx v={TRANSLATIONS.judge.paused} />
             </h2>
             <div className="flex flex-col gap-3">

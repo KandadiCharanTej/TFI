@@ -6,7 +6,7 @@ import { AppFrame } from "@/components/app-frame";
 import { FeedbackSticker } from "@/components/feedback-sticker";
 import { Tx, useLang, useT } from "@/components/lang-provider";
 import { ConfettiBurst } from "@/components/confetti-burst";
-import { Badge, Sticker, WallButton, WallLinkButton } from "@/components/sticker-kit";
+import { Badge, Sticker, TicketStub, WallButton, WallLinkButton } from "@/components/sticker-kit";
 import { TRANSLATIONS } from "@/lib/i18n";
 import { drawWallSharePoster, SHARE_TEMPLATES, type ShareTemplate } from "@/lib/share-card";
 
@@ -44,7 +44,7 @@ export default function MostLikelyResultsPage() {
       <AppFrame>
         <div className="mx-auto max-w-[480px] p-4">
           <Sticker className="space-y-4 p-6 text-center">
-            <h1 className="anton-title m-0 text-[28px] text-ink">
+            <h1 className="h2-title m-0 text-ink">
               <Tx v={V.titlesHeading} />
             </h1>
             <p className="m-0 text-sm font-bold text-ink/75">
@@ -106,17 +106,29 @@ export default function MostLikelyResultsPage() {
             <Tx v={isTie ? TRANSLATIONS.judge.tie : V.titlesHeading} />
           </Badge>
 
-          <div data-testid="vote-crowned-display" className="space-y-1">
-            <p className="m-0 text-xs font-black uppercase tracking-wider text-ink/70">
-              <Tx v={V.crownedMostOften} />
-            </p>
-            <h1 className="anton-title m-0 text-[38px] leading-none text-ink">
+          <TicketStub
+            bg="yellow"
+            data-testid="vote-crowned-display"
+            header={
+              <div className="flex items-center justify-between text-ink">
+                <span className="wall-label">
+                  <Tx v={TRANSLATIONS.landing.admitOneGang} />
+                </span>
+                <span className="wall-label">
+                  <Tx v={V.crownedMostOften} />
+                </span>
+              </div>
+            }
+            footer={
+              <p className="mono-num m-0 text-xl font-bold text-ink">
+                👑 {t(V.crownsCount, { n: crowned[0]?.crowns ?? 0 })}
+              </p>
+            }
+          >
+            <h1 className="h1-title m-0 text-ink">
               {crowned.map((c) => c.player.name).join(" & ")}
             </h1>
-            <p className="mono-num m-0 pt-1 text-xl font-black text-magenta">
-              👑 {t(V.crownsCount, { n: crowned[0]?.crowns ?? 0 })}
-            </p>
-          </div>
+          </TicketStub>
 
           <div className="space-y-2.5 text-left">
             {sorted.map((item, idx) => (

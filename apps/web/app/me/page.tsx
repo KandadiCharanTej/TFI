@@ -47,7 +47,7 @@ export default function MePage() {
         <InstallSticker />
         <Sticker className="space-y-6 p-6">
           <div>
-            <h1 className="anton-title m-0 text-[28px] text-ink">
+            <h1 className="h2-title m-0 text-ink">
               <Tx v={P.meTitle} />
             </h1>
             <p className="m-0 mt-1 text-sm font-bold text-ink">

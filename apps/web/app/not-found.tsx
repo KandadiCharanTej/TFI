@@ -11,7 +11,7 @@ export default function NotFoundPage() {
         <Badge tone="yellow" className="mx-auto font-mono text-[14px]">
           404
         </Badge>
-        <h1 className="anton-title m-0 text-[32px] text-ink">
+        <h1 className="h1-title m-0 text-ink">
           <Tx v={P.notFoundTitle} />
         </h1>
         <p className="m-0 text-base font-bold text-ink">

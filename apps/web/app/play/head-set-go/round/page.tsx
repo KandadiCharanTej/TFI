@@ -97,7 +97,34 @@ function useAudio(muted: boolean) {
       osc.start(); osc.stop(ctx.currentTime + dur);
     } catch { /* silent */ }
   }, [muted]);
+  const clack = useCallback(() => {
+    if (muted) return;
+    try {
+      ctxRef.current ??= new AudioContext();
+      const ctx = ctxRef.current;
+      // Short percussive clapperboard "clack": dual high-mid transient
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc1.type = "triangle";
+      osc2.type = "square";
+      osc1.frequency.setValueAtTime(1400, ctx.currentTime);
+      osc1.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.055);
+      osc2.frequency.setValueAtTime(720, ctx.currentTime);
+      osc2.frequency.exponentialRampToValueAtTime(140, ctx.currentTime + 0.055);
+      gain.gain.setValueAtTime(0.32, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(ctx.destination);
+      osc1.start();
+      osc2.start();
+      osc1.stop(ctx.currentTime + 0.06);
+      osc2.stop(ctx.currentTime + 0.06);
+    } catch { /* silent */ }
+  }, [muted]);
   return {
+    clack,
     correct: () => beep(880, 0.1),
     pass: () => beep(330, 0.1),
     countdown: () => beep(660, 0.07, 0.2),
@@ -169,9 +196,13 @@ export default function HsgRoundPage() {
   // Countdown
   useEffect(() => {
     if (s.phase !== "getReady") return;
-    const id = setInterval(() => { audio.countdown(); dispatch({ type: "COUNTDOWN_TICK" }); }, 1000);
+    const id = setInterval(() => {
+      if (s.countdown <= 1) audio.clack();
+      else audio.countdown();
+      dispatch({ type: "COUNTDOWN_TICK" });
+    }, 1000);
     return () => clearInterval(id);
-  }, [s.phase, audio]);
+  }, [s.phase, s.countdown, audio]);
 
   // Round timer
   useEffect(() => {
@@ -187,10 +218,10 @@ export default function HsgRoundPage() {
     return () => document.removeEventListener("visibilitychange", fn);
   }, []);
 
-  // Stamp flash
+  // Stamp flash (< 250ms per V2 spec)
   useEffect(() => {
     if (!s.stamp) return;
-    const id = setTimeout(() => dispatch({ type: "CLEAR_STAMP" }), 300);
+    const id = setTimeout(() => dispatch({ type: "CLEAR_STAMP" }), 220);
     return () => clearTimeout(id);
   }, [s.stamp]);
 
@@ -249,18 +280,18 @@ export default function HsgRoundPage() {
     return (
       <main className="wall-safe-round flex flex-col items-center justify-center gap-4 bg-yellow p-8 text-center">
         <div className="text-6xl" aria-hidden>📱➡️</div>
-        <p className="anton-title text-[28px] text-ink"><Tx v={TRANSLATIONS.hsg.turnSideways} /></p>
+        <p className="h1-title text-ink"><Tx v={TRANSLATIONS.hsg.turnSideways} /></p>
         <p className="text-[15px] font-bold text-ink"><Tx v={TRANSLATIONS.hsg.turnSidewaysNote} /></p>
       </main>
     );
   }
 
   return (
-    <main className="wall-safe-round relative flex flex-col overflow-hidden p-0" style={{ background: bg }}>
+    <main className="wall-safe-round relative flex flex-col overflow-hidden p-0 transition-colors duration-150" style={{ background: bg }}>
       {s.phase === "getReady" ? (
         <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-yellow/95">
-          <p className="text-[20px] font-extrabold uppercase tracking-widest text-ink"><Tx v={TRANSLATIONS.hsg.getReady} /></p>
-          <p className="anton-title text-[120px] font-black leading-none text-ink" aria-live="assertive">{s.countdown}</p>
+          <p className="wall-label text-[16px] text-ink"><Tx v={TRANSLATIONS.hsg.getReady} /></p>
+          <p className="mono-num text-[120px] font-bold leading-none text-ink" aria-live="assertive">{s.countdown}</p>
         </div>
       ) : null}
       <ConfettiBurst trigger={confettiTrigger} />
@@ -303,8 +334,8 @@ export default function HsgRoundPage() {
             </Dialog.Trigger>
             <Dialog.Portal>
               <Dialog.Overlay className="fixed inset-0 bg-ink/60" />
-              <Dialog.Content className="fixed left-1/2 top-1/2 w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-[20px] border-[3px] border-ink bg-sticker p-6 shadow-[6px_6px_0px_#141313]">
-                <Dialog.Title className="anton-title text-[24px] text-ink"><Tx v={TRANSLATIONS.hsg.paused} /></Dialog.Title>
+              <Dialog.Content className="fixed left-1/2 top-1/2 w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-[20px] border-[2.5px] border-ink bg-sticker p-6 shadow-[0_5px_0_#141313]">
+                <Dialog.Title className="h2-title text-ink"><Tx v={TRANSLATIONS.hsg.paused} /></Dialog.Title>
                 <div className="mt-5 flex flex-col gap-3">
                   <Dialog.Close asChild>
                     <button type="button" onClick={() => dispatch({ type: "RESUME" })} className="wall-btn bg-yellow text-ink"><Tx v={TRANSLATIONS.hsg.resume} /></button>
@@ -318,33 +349,44 @@ export default function HsgRoundPage() {
 
         <div className="flex items-center gap-2">
           {streak >= 2 ? (
-            <div className="mono-num rounded-full border-2 border-ink bg-magenta px-3 py-1 text-sm font-black text-white shadow-[2px_2px_0px_#141313]">
+            <div className="mono-num rounded-full border-2 border-ink bg-magenta px-3 py-1 text-sm font-bold text-white">
               🔥 {streak}
             </div>
           ) : null}
-          <div className="mono-num rounded-full border-2 border-ink bg-sticker px-4 py-1.5 text-[18px] font-black text-ink shadow-[2px_2px_0px_#141313]" aria-label={TRANSLATIONS.hsg.correctCount.en}>
+          <div className="mono-num rounded-full border-2 border-ink bg-sticker px-4 py-1.5 text-[18px] font-bold text-ink" aria-label={TRANSLATIONS.hsg.correctCount.en}>
             ✓ {s.correctIds.length}
           </div>
         </div>
       </div>
 
-      {/* Card word */}
-      <div className="flex flex-1 items-center justify-center px-8" aria-live="polite" aria-label={TRANSLATIONS.hsg.currentCard.en}>
-        <p className={`text-center leading-[1.1] text-ink ${lang === "te" ? "te-script text-[52px]" : "anton-title text-[60px]"}`}>
-          {cardText}
-        </p>
+      {/* Card word — hero of the screen: 96px+ TE with EN below, 72px+ EN in English mode */}
+      <div className="flex flex-1 flex-col items-center justify-center px-8 text-center" aria-live="polite" aria-label={TRANSLATIONS.hsg.currentCard.en}>
+        {lang === "te" && currentCard ? (
+          <div>
+            <p className="te-lead m-0 text-[clamp(56px,9vw,96px)] text-ink">
+              {currentCard.te}
+            </p>
+            <p className="te-sub m-0 mt-1 text-[22px] text-ink/85">
+              {currentCard.en}
+            </p>
+          </div>
+        ) : (
+          <p className="m-0 font-display text-[clamp(52px,8vw,80px)] font-extrabold leading-[1.06] tracking-[-0.02em] text-ink">
+            {cardText}
+          </p>
+        )}
       </div>
 
-      {/* Tap zones */}
-      <div className="flex border-t-2 border-dashed border-ink" style={{ height: "38%" }}>
+      {/* Tap zones — sentence case Pass (magenta) and Correct! (green) */}
+      <div className="flex border-t-2 border-dashed border-ink" style={{ height: "36%" }}>
         <button type="button" onClick={handlePass} aria-label={TRANSLATIONS.hsg.passStamp.en}
-          className="flex flex-1 items-center justify-center border-r-2 border-dashed border-ink text-[22px] font-black uppercase tracking-widest text-ink"
-          style={{ backgroundColor: "rgba(236,18,118,0.12)" }}>
+          className="flex flex-1 items-center justify-center border-r-2 border-dashed border-ink text-[22px] font-bold text-ink"
+          style={{ backgroundColor: "rgba(236,18,118,0.14)" }}>
           <Tx v={TRANSLATIONS.hsg.passStamp} />
         </button>
         <button type="button" onClick={handleCorrect} aria-label={TRANSLATIONS.hsg.correctStamp.en}
-          className="flex flex-1 items-center justify-center text-[22px] font-black uppercase tracking-widest text-ink"
-          style={{ backgroundColor: "rgba(74,222,128,0.2)" }}>
+          className="flex flex-1 items-center justify-center text-[22px] font-bold text-ink"
+          style={{ backgroundColor: "rgba(0,200,83,0.18)" }}>
           <Tx v={TRANSLATIONS.hsg.correctStamp} />
         </button>
       </div>

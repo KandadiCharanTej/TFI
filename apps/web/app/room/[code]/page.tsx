@@ -21,7 +21,7 @@ export default async function RoomPage({ params }: { params: Promise<{ code: str
             {upper}
           </Badge>
         </div>
-        <h1 className="anton-title m-0 text-[28px] text-ink">
+        <h1 className="h2-title m-0 text-ink">
           <Tx v={P.roomTitle} values={{ code: upper }} />
         </h1>
         <BidDisplay currentBidCr={20} label={P.bidLabel[lang]} />

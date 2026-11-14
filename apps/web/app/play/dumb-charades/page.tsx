@@ -9,6 +9,7 @@ import { GameTitle } from "@/components/game-title";
 import { WallIcon } from "@/components/icons";
 import { Tx, useLang, useT } from "@/components/lang-provider";
 import { Badge, Chip, Sticker, WallButton, WallLinkButton } from "@/components/sticker-kit";
+import { recordRecentlyPlayed } from "@/lib/games";
 import { GAMES_CATALOG, TRANSLATIONS } from "@/lib/i18n";
 
 const C = TRANSLATIONS.charades;
@@ -75,6 +76,7 @@ export default function DumbCharadesSetupPage() {
   };
 
   const handleStart = () => {
+    recordRecentlyPlayed("dumb-charades");
     const cleanTeams = teams.map((n, i) => ({
       id: `t${i + 1}`,
       name: n.trim() || `Team ${i + 1}`,
@@ -124,9 +126,12 @@ export default function DumbCharadesSetupPage() {
 
         <Sticker className="p-5 sm:p-6">
           <div className="flex items-center justify-between gap-2">
-            <Badge tone="yellow">GAME #{catalogGame.number}</Badge>
+            <Badge tone="yellow">Game #{catalogGame.number}</Badge>
             <Badge tone="white"><Tx v={TRANSLATIONS.modes.onePhone} /></Badge>
           </div>
+          <p className="wall-label m-0 mt-3 text-ink/75">
+            <Tx v={TRANSLATIONS.gameSetup.stepFlow} />
+          </p>
 
           <div className="mt-4 flex items-center gap-4">
             <div
@@ -291,7 +296,7 @@ export default function DumbCharadesSetupPage() {
             className="fixed inset-0 z-50 flex items-center justify-center bg-ink/75 p-4"
           >
             <Sticker className="w-full max-w-[420px] space-y-4 p-6">
-              <h2 className="anton-title m-0 text-[26px] text-ink">
+              <h2 className="h2-title m-0 text-ink">
                 <Tx v={C.howToTitle} />
               </h2>
               <div className="space-y-3 text-left">

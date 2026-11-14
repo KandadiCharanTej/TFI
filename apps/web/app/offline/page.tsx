@@ -18,7 +18,7 @@ export default function OfflinePage() {
     <AppFrame>
       <div className="mx-auto max-w-[540px] space-y-5">
         <Sticker className="space-y-4 p-6 text-center">
-          <h1 className="anton-title m-0 text-[32px] text-ink">
+          <h1 className="h1-title m-0 text-ink">
             <Tx v={P.offlineTitle} />
           </h1>
           <p className="m-0 text-base font-bold text-ink">
@@ -30,7 +30,7 @@ export default function OfflinePage() {
         </Sticker>
 
         <Sticker className="space-y-3 p-5">
-          <h2 className="anton-title m-0 text-[22px] text-ink">
+          <h2 className="h3-title m-0 text-ink">
             <Tx v={TRANSLATIONS.pwa.offlineSavedHeading} />
           </h2>
           {savedGames.length === 0 ? (

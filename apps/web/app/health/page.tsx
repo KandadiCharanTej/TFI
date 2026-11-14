@@ -28,7 +28,7 @@ export default async function HealthPage() {
               <WallIcon kind="mark" />
             </span>
             <div>
-              <h1 className="anton-title m-0 text-4xl leading-none text-ink">
+              <h1 className="h1-title m-0 text-ink">
                 <span className="keep-case">{BRAND_NAME}</span> · <Tx v={H.title} />
               </h1>
               <p className="m-0 mt-1 text-xl font-extrabold text-ink">
@@ -50,7 +50,7 @@ export default async function HealthPage() {
 
       <main id="content" tabIndex={-1} className="mx-auto mt-8 max-w-[1100px] space-y-10">
         <section aria-labelledby="tokens-heading">
-          <h2 id="tokens-heading" className="anton-title m-0 text-3xl text-ink">
+          <h2 id="tokens-heading" className="h2-title m-0 text-ink">
             <Tx v={H.tokens} />
           </h2>
           <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -123,7 +123,7 @@ export default async function HealthPage() {
         </section>
 
         <section aria-labelledby="kit-heading">
-          <h2 id="kit-heading" className="anton-title m-0 text-3xl text-ink">
+          <h2 id="kit-heading" className="h2-title m-0 text-ink">
             <Tx v={H.kit} />
           </h2>
           <Sticker className="mt-4 space-y-6 p-6">

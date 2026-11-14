@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import { AppFrame } from "@/components/app-frame";
 import { FeedbackSticker } from "@/components/feedback-sticker";
 import { Tx, useLang } from "@/components/lang-provider";
-import { Sticker, WallButton, WallLinkButton } from "@/components/sticker-kit";
+import { Sticker, TicketStub, WallButton, WallLinkButton } from "@/components/sticker-kit";
 import { TRANSLATIONS } from "@/lib/i18n";
+import { drawWallSharePoster } from "@/lib/share-card";
 
 interface RoundCard {
   id: string;
@@ -25,49 +26,16 @@ function downloadBlob(blob: Blob, filename: string) {
 
 async function buildShareSticker(correct: number, deck: string): Promise<Blob | null> {
   try {
-    const W = 1080, H = 1350;
     const canvas = document.createElement("canvas");
-    canvas.width = W;
-    canvas.height = H;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return null;
-
-    // Background
-    ctx.fillStyle = "#F5E642";
-    ctx.fillRect(0, 0, W, H);
-
-    // Border
-    ctx.strokeStyle = "#141313";
-    ctx.lineWidth = 12;
-    ctx.strokeRect(6, 6, W - 12, H - 12);
-
-    // Game name
-    ctx.fillStyle = "#141313";
-    ctx.font = "bold 72px serif";
-    ctx.textAlign = "center";
-    ctx.fillText("HEAD SET GO", W / 2, 160);
-
-    // Score
-    ctx.font = "bold 220px monospace";
-    ctx.fillText(String(correct), W / 2, 480);
-
-    ctx.font = "bold 42px sans-serif";
-    ctx.fillText(`${correct} correct`, W / 2, 560);
-
-    // Deck
-    ctx.font = "bold 36px sans-serif";
-    ctx.fillText(`Deck: ${deck}`, W / 2, 650);
-
-    // TFI & Pitch
-    ctx.font = "bold 52px serif";
-    ctx.fillText("TFI & Pitch", W / 2, 820);
-
-    // Disclaimer
-    ctx.fillStyle = "#141313";
-    ctx.font = "24px sans-serif";
-    ctx.fillText("Unofficial fan-made game. Not affiliated with any film,", W / 2, 1250);
-    ctx.fillText("actor, studio or team.", W / 2, 1290);
-
+    drawWallSharePoster(canvas, {
+      template: "score",
+      gameTitle: "Head Set Go",
+      headline: `${correct} correct`,
+      subline: `Deck: ${deck}`,
+      rows: [{ label: "Score", value: `${correct} pts` }],
+      showNames: true,
+      unofficialFooter: TRANSLATIONS.brand.unofficialDisclaimer.en,
+    });
     return new Promise((res) => canvas.toBlob((b) => res(b), "image/png"));
   } catch {
     return null;
@@ -122,21 +90,31 @@ export default function HsgResultsPage() {
   return (
     <AppFrame>
       <div className="mx-auto max-w-[480px] space-y-5 p-4">
-        {/* Score header */}
-        <Sticker className="p-5 text-center">
-          <p className="m-0 text-[20px] font-extrabold uppercase tracking-wider text-ink">
-            <Tx v={TRANSLATIONS.hsg.timesUp} />
-          </p>
+        {/* Ticket-stub Score header */}
+        <TicketStub
+          bg="yellow"
+          className="text-center"
+          header={
+            <div className="flex items-center justify-between text-ink">
+              <span className="wall-label">
+                <Tx v={TRANSLATIONS.landing.admitOneGang} />
+              </span>
+              <span className="wall-label">Head Set Go</span>
+            </div>
+          }
+          footer={
+            <p className="m-0 text-[15px] font-bold text-ink">
+              <Tx v={TRANSLATIONS.hsg.timesUp} /> · <Tx v={TRANSLATIONS.hsg.scoreLabel} />
+            </p>
+          }
+        >
           <p
-            className="mono-num mt-2 text-[88px] font-black leading-none text-ink"
+            className="mono-num m-0 text-[84px] font-bold leading-none text-ink"
             aria-label={`${correctIds.length} ${TRANSLATIONS.hsg.scoreLabel[lang]}`}
           >
             {correctIds.length}
           </p>
-          <p className="text-[16px] font-bold text-ink opacity-70">
-            <Tx v={TRANSLATIONS.hsg.scoreLabel} />
-          </p>
-        </Sticker>
+        </TicketStub>
 
         {/* Got it */}
         <Sticker className="p-5">

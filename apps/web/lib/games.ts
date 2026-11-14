@@ -51,3 +51,30 @@ export function formatGameMeta(slug: string, lang: Lang): string {
     : `${reg.playerMin} to ${reg.playerMax} players · ${mins} min`;
 }
 
+const RECENTLY_PLAYED_KEY = "tfi.recentlyPlayed";
+
+export function recordRecentlyPlayed(slug: string): void {
+  if (typeof window === "undefined") return;
+  try {
+    const raw = window.localStorage.getItem(RECENTLY_PLAYED_KEY);
+    const prev: string[] = raw ? (JSON.parse(raw) as string[]) : [];
+    const next = [slug, ...prev.filter((s) => s !== slug)].slice(0, 4);
+    window.localStorage.setItem(RECENTLY_PLAYED_KEY, JSON.stringify(next));
+  } catch {
+    /* ignore */
+  }
+}
+
+export function readRecentlyPlayed(): string[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(RECENTLY_PLAYED_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.filter((x): x is string => typeof x === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
+
