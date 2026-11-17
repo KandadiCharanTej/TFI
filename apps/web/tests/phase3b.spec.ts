@@ -71,7 +71,7 @@ test.describe("Beta scope: movie games only (flag off)", () => {
     await expect(
       page.getByRole("heading", {
         level: 1,
-        name: "తెలుగు సినిమా అభిమానుల కోసం గేమ్ నైట్.",
+        name: "తెలుగు సినిమా ఫ్యాన్స్‌కు గేమ్ నైట్.",
       }),
     ).toBeVisible();
     const axe = await new AxeBuilder({ page }).analyze();

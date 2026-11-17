@@ -19,14 +19,16 @@ const DESIGN_V2_DIR = path.resolve(process.cwd(), "../../reference/design-v2");
 
 function saveV2Shot(name: string, buf: Buffer) {
   fs.mkdirSync(DESIGN_V2_DIR, { recursive: true });
-  fs.writeFileSync(path.join(DESIGN_V2_DIR, name), buf);
+  const target = path.join(DESIGN_V2_DIR, name);
+  if (!fs.existsSync(target)) {
+    fs.writeFileSync(target, buf);
+  }
 }
 
 test.describe("Phase 4b — Design V2 Overhaul", () => {
-  test("No heading (h1-h6), button, or chip uses text-transform: uppercase across core routes", async ({
+  test("No non-display heading, button, chip, or Telugu heading uses text-transform: uppercase", async ({
     page,
   }) => {
-    await setLang(page, "en");
     const routes = [
       "/",
       "/play",
@@ -39,19 +41,27 @@ test.describe("Phase 4b — Design V2 Overhaul", () => {
       "/about",
     ];
 
-    for (const route of routes) {
-      await page.goto(`${BASE}${route}`);
-      await waitHydrated(page);
-      const uppercaseHeadings = await page.evaluate(() => {
-        const els = Array.from(document.querySelectorAll("h1, h2, h3, h4, h5, h6, .wall-btn, .wall-chip"));
-        return els
-          .filter((el) => window.getComputedStyle(el).textTransform === "uppercase")
-          .map((el) => ({ tag: el.tagName, text: (el.textContent || "").trim().slice(0, 30) }));
-      });
-      expect(
-        uppercaseHeadings,
-        `Found uppercase heading/button/chip on ${route}: ${JSON.stringify(uppercaseHeadings)}`,
-      ).toEqual([]);
+    for (const lang of ["en", "te"] as const) {
+      await setLang(page, lang);
+      for (const route of routes) {
+        await page.goto(`${BASE}${route}`);
+        await waitHydrated(page);
+        const uppercaseHeadings = await page.evaluate((currentLang) => {
+          const els = Array.from(document.querySelectorAll("h1, h2, h3, h4, h5, h6, .wall-btn, .wall-chip"));
+          return els
+            .filter((el) => {
+              if (window.getComputedStyle(el).textTransform !== "uppercase") return false;
+              // Design V4: Latin display headings (.display-title) may be uppercase; Telugu never may.
+              if (currentLang === "en" && el.classList.contains("display-title")) return false;
+              return true;
+            })
+            .map((el) => ({ tag: el.tagName, text: (el.textContent || "").trim().slice(0, 30) }));
+        }, lang);
+        expect(
+          uppercaseHeadings,
+          `Found disallowed uppercase element on ${route} (${lang}): ${JSON.stringify(uppercaseHeadings)}`,
+        ).toEqual([]);
+      }
     }
   });
 

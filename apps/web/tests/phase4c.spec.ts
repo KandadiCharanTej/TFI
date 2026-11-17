@@ -16,7 +16,10 @@ const DESIGN_V3_DIR = path.resolve(process.cwd(), "../../reference/design-v3");
 
 function saveV3Shot(name: string, buf: Buffer) {
   fs.mkdirSync(DESIGN_V3_DIR, { recursive: true });
-  fs.writeFileSync(path.join(DESIGN_V3_DIR, name), buf);
+  const target = path.join(DESIGN_V3_DIR, name);
+  if (!fs.existsSync(target)) {
+    fs.writeFileSync(target, buf);
+  }
 }
 
 const ALLOWED_RGB = new Set([
