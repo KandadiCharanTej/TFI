@@ -12,7 +12,13 @@
 - **Sentence case everywhere:** Headings (`h1`–`h6`), buttons, badges, and chips use sentence case. Only the brand wordmark and small `12px` labels (`font-weight: 600; letter-spacing: 0.06em`) may use uppercase.
 - **No marker or compressed poster fonts:** `Anton` and `Permanent Marker` are removed from the application.
 - **Single-border, zero-tilt cards:** Every card uses one `2.5px solid #141313` border, `20px` radius, and one hard shadow (`0 5px 0 #141313`). No card tilt in grids, lists, or rounds. At most **one** tilted decorative element (`rotate(-3deg)` ticket stub on the landing hero) appears on any screen.
-- **Calm color discipline:** At most two accent colors visible on any screen (excluding live round Pass/Correct flashes). Yellow is reserved for the primary CTA and one hero block per page; cyan marks online mode; magenta is for live moments and Pass; green is for Correct/success.
+- **Color Jobs (One clear job per color, full palette):**
+  - **Yellow (`#F6BE18`)**: the single main CTA per screen, and ONE large block per page (the hero poster shape or closing card).
+  - **Magenta (`#EC1276`)**: Pass and Skip actions, live moments, the `"Admit one gang"` stub, timer warning (`<= 10s`), and game identity color. Text on magenta fills uses **white** at large bold size (`>= 19px`, weight `700+`) to meet AA contrast.
+  - **Green (`#00C853`)**: Correct/Got it actions, success, `"Ready offline"` ticks, and game identity color (ink `#141313` text).
+  - **Cyan (`#00E5FF`)**: online features only — room codes, `"Online"` badges, online game tiles, `"Coming next"` strip (ink `#141313` text).
+  - **Game identity color:** used ONLY on a game's illustration panel (illustration only, never text inside colored panels) and a small matching dot beside the game title. One-phone games rotate yellow, magenta, green: `head-set-go` (yellow), `transify` (magenta), `dumb-charades` (green), `emoji-cinema` (yellow), `rapid-fire` (magenta), `most-likely` (green), `box-office-auction` (cyan).
+  - **Neutrals (`#EAE6DF`, `#FFFFFF`, `#F4F1EA`, `#141313`):** everything else stays neutral. At most one big colored area per screen section.
 - **Concrete dot texture at 5% opacity:** Subtle radial ink dots (`rgba(20, 19, 19, 0.05)`), keeping large areas calm and legible.
 - **True claims only:** Every player count, duration, and game count comes directly from `GAME_REGISTRY`.
 

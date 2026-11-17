@@ -268,8 +268,8 @@ export default function HsgRoundPage() {
   const currentCard = s.cards[s.currentIndex];
   const cardText = currentCard ? (lang === "te" ? currentCard.te : currentCard.en) : "—";
   const pct = s.duration > 0 ? (s.secondsLeft / s.duration) * 100 : 0;
-  const timerColor = pct > 40 ? "#22c55e" : pct > 15 ? "#f59e0b" : "#ef4444";
-  const bg = s.stamp === "correct" ? "#4ade80" : s.stamp === "pass" ? "#EC1276" : "#F5E642";
+  const timerColor = s.secondsLeft <= 10 ? "#EC1276" : "#141313";
+  const bg = s.stamp === "correct" ? "#00C853" : s.stamp === "pass" ? "#EC1276" : "#F6BE18";
 
   // Loading
   if (s.phase === "loading") {
@@ -313,8 +313,8 @@ export default function HsgRoundPage() {
           { title: lang === "te" ? "3. సరి లేదా పాస్" : "3. Correct or Pass", body: lang === "te" ? "కుడివైపు సరి, ఎడమవైపు పాస్ నొక్కండి." : "Tap right for Correct, left for Pass." },
         ]}
       />
-      {/* Timer bar */}
-      <div className="relative h-3 w-full border-b-2 border-ink bg-card">
+      {/* Timer bar: ink on white, turns magenta at 10s */}
+      <div className="relative h-3 w-full border-b-2 border-ink bg-white">
         <div className="h-full transition-[width]" style={{ width: `${pct}%`, backgroundColor: timerColor }} />
       </div>
 
@@ -354,7 +354,7 @@ export default function HsgRoundPage() {
 
         <div className="flex items-center gap-2">
           {streak >= 2 ? (
-            <div className="mono-num rounded-full border-2 border-ink bg-magenta px-3 py-1 text-sm font-bold text-white">
+            <div className="mono-num rounded-full border-2 border-ink bg-magenta px-3 py-1 text-[19px] font-bold text-white">
               🔥 {streak}
             </div>
           ) : null}
@@ -382,16 +382,22 @@ export default function HsgRoundPage() {
         )}
       </div>
 
-      {/* Tap zones — sentence case Pass (magenta) and Correct! (green) */}
-      <div className="flex border-t-2 border-dashed border-ink" style={{ height: "36%" }}>
-        <button type="button" onClick={handlePass} aria-label={TRANSLATIONS.hsg.passStamp.en}
-          className="flex flex-1 items-center justify-center border-r-2 border-dashed border-ink text-[22px] font-bold text-ink"
-          style={{ backgroundColor: "rgba(236,18,118,0.14)" }}>
+      {/* Tap zones — Pass (magenta / white large bold) and Correct! (green / ink) */}
+      <div className="flex border-t-2 border-ink" style={{ height: "36%" }}>
+        <button
+          type="button"
+          onClick={handlePass}
+          aria-label={TRANSLATIONS.hsg.passStamp.en}
+          className="flex flex-1 items-center justify-center border-r-2 border-ink bg-magenta text-[24px] font-bold text-white"
+        >
           <Tx v={TRANSLATIONS.hsg.passStamp} />
         </button>
-        <button type="button" onClick={handleCorrect} aria-label={TRANSLATIONS.hsg.correctStamp.en}
-          className="flex flex-1 items-center justify-center text-[22px] font-bold text-ink"
-          style={{ backgroundColor: "rgba(0,200,83,0.18)" }}>
+        <button
+          type="button"
+          onClick={handleCorrect}
+          aria-label={TRANSLATIONS.hsg.correctStamp.en}
+          className="flex flex-1 items-center justify-center bg-green text-[24px] font-bold text-ink"
+        >
           <Tx v={TRANSLATIONS.hsg.correctStamp} />
         </button>
       </div>

@@ -92,7 +92,10 @@ test.describe("STEP 0 item 4c: Telugu Mode Computed Font Check", () => {
         return {
           text: (el.textContent || "").trim().slice(0, 15),
           font: computed,
-          hasTeluguFont: computed.includes("Anek Telugu"),
+          hasTeluguFont:
+            computed.includes("Anek Telugu") ||
+            (el.getAttribute("data-testid") === "lang-switch-te" &&
+              computed.includes("Anek Telugu Switch")),
         };
       });
     });

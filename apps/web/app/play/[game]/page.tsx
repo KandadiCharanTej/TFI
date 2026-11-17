@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import { MODE_COLORS } from "@tfi/config/tokens";
+import { getGameColor } from "@tfi/config/tokens";
 import { GAME_REGISTRY, getGameById } from "@tfi/game-core";
 import { AppFrame } from "@/components/app-frame";
 import { GameTitle } from "@/components/game-title";
@@ -77,8 +77,8 @@ export default async function GameSetupPage({
     );
   }
 
-  // Otherwise, it's a Coming Soon game (Phase 3b or Wave 2)
-  const panelColor = MODE_COLORS[regGame.mode === "Online" ? "online" : "onePhone"];
+  // Otherwise, it's a Coming Soon game (Box Office Auction or Wave 2)
+  const panelColor = getGameColor(regGame.id);
 
   return (
     <AppFrame>
@@ -101,12 +101,19 @@ export default async function GameSetupPage({
               </div>
             </div>
             <div>
-              <GameTitle
-                title={catalogGame.title}
-                as="h1"
-                teClassName="text-[28px]"
-                enClassName="text-[26px]"
-              />
+              <div className="flex items-center gap-2">
+                <span
+                  aria-hidden="true"
+                  className="inline-block h-3 w-3 shrink-0 rounded-full border-2 border-ink"
+                  style={{ backgroundColor: panelColor }}
+                />
+                <GameTitle
+                  title={catalogGame.title}
+                  as="h1"
+                  teClassName="text-[28px]"
+                  enClassName="text-[26px]"
+                />
+              </div>
               <p className="m-0 mt-1 text-[14px] font-bold text-ink">
                 <Tx v={catalogGame.description} />
               </p>

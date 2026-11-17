@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export interface StickerProps extends HTMLAttributes<HTMLDivElement> {
   readonly size?: "lg" | "sm";
-  readonly bg?: "white" | "yellow" | "card";
+  readonly bg?: "white" | "yellow" | "card" | "cyan" | "green" | "magenta";
   readonly tilt?: number;
   readonly children: ReactNode;
 }
@@ -26,6 +26,9 @@ export function Sticker({
     white: "#FFFFFF",
     yellow: "#F6BE18",
     card: "#F4F1EA",
+    cyan: "#00E5FF",
+    green: "#00C853",
+    magenta: "#EC1276",
   } as const;
 
   const clampedTilt = Math.max(-3, Math.min(3, tilt));
@@ -35,6 +38,7 @@ export function Sticker({
       className={`${size === "lg" ? "wall-sticker" : "wall-sticker-sm"} ${className}`}
       style={{
         backgroundColor: bgMap[bg],
+        color: bg === "magenta" ? "#FFFFFF" : "#141313",
         transform: clampedTilt !== 0 ? `rotate(${clampedTilt}deg)` : undefined,
         ...style,
       }}
@@ -46,7 +50,7 @@ export function Sticker({
 }
 
 export interface TicketStubProps extends HTMLAttributes<HTMLDivElement> {
-  readonly bg?: "white" | "yellow" | "card";
+  readonly bg?: "white" | "yellow" | "card" | "magenta" | "green" | "cyan";
   readonly tilt?: number;
   readonly header?: ReactNode;
   readonly children: ReactNode;
@@ -74,6 +78,9 @@ export function TicketStub({
     white: "#FFFFFF",
     yellow: "#F6BE18",
     card: "#F4F1EA",
+    magenta: "#EC1276",
+    green: "#00C853",
+    cyan: "#00E5FF",
   } as const;
 
   return (
@@ -81,6 +88,7 @@ export function TicketStub({
       className={`wall-ticket ${className}`}
       style={{
         backgroundColor: bgMap[bg],
+        color: bg === "magenta" ? "#FFFFFF" : "#141313",
         transform: tilt !== 0 ? `rotate(${tilt}deg)` : undefined,
         ...style,
       }}
@@ -133,10 +141,11 @@ export function WallButton({
       className={`wall-btn ${className}`}
       style={{
         backgroundColor: bgMap[variant],
-        color: "#141313",
+        color: variant === "magenta" ? "#FFFFFF" : "#141313",
         minHeight: size === "sm" ? "44px" : "52px",
         padding: size === "sm" ? "0 18px" : "0 24px",
         fontSize: variant === "magenta" ? "19px" : size === "sm" ? "15px" : "17px",
+        fontWeight: variant === "magenta" ? 700 : undefined,
         borderColor: lightBorder ? "#EAE6DF" : "#141313",
         boxShadow: lightBorder ? "0 4px 0 #EAE6DF" : undefined,
         ...style,
@@ -179,10 +188,11 @@ export function WallLinkButton({
       className={`wall-btn ${className}`}
       style={{
         backgroundColor: bgMap[variant],
-        color: "#141313",
+        color: variant === "magenta" ? "#FFFFFF" : "#141313",
         minHeight: size === "sm" ? "44px" : "52px",
         padding: size === "sm" ? "0 18px" : "0 24px",
-        fontSize: size === "sm" ? "15px" : "17px",
+        fontSize: variant === "magenta" ? "19px" : size === "sm" ? "15px" : "17px",
+        fontWeight: variant === "magenta" ? 700 : undefined,
         borderColor: lightBorder ? "#EAE6DF" : "#141313",
         boxShadow: lightBorder ? "0 4px 0 #EAE6DF" : undefined,
       }}
@@ -265,12 +275,12 @@ export function Badge({
 
   return (
     <span
-      className={`${mono ? "mono-num" : "font-bold"} inline-flex items-center justify-center rounded-full border-2 border-ink px-3 py-1 text-ink ${
-        tone === "magenta" ? "text-[18.7px] leading-tight" : "text-[13px] leading-tight"
+      className={`${mono ? "mono-num" : "font-bold"} inline-flex items-center justify-center rounded-full border-2 border-ink px-3 py-1 ${
+        tone === "magenta" ? "text-[19px] leading-tight text-white" : "text-[13px] leading-tight text-ink"
       } ${className}`}
       style={{
         backgroundColor: bgMap[tone],
-        color: "#141313",
+        color: tone === "magenta" ? "#FFFFFF" : "#141313",
         ...style,
       }}
       {...props}

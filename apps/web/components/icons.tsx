@@ -189,7 +189,7 @@ function renderIconPath(kind: WallIconKind) {
     case "rapid":
       return (
         <g stroke="#141313" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M38 6L15 36h15l-4 22 23-32H34z" fill="#EC1276" />
+          <path d="M38 6L15 36h15l-4 22 23-32H34z" fill="#F6BE18" />
         </g>
       );
     case "most":

@@ -510,7 +510,7 @@ function CharadesRoundRunner({
             <div className="flex flex-col gap-3 pt-2 sm:flex-row">
               <WallButton
                 type="button"
-                variant="white"
+                variant="magenta"
                 disabled={state.skipUsedInTurn}
                 onClick={() => dispatch({ type: "SKIP_FILM" })}
                 data-testid="charades-skip-btn"
@@ -537,11 +537,20 @@ function CharadesRoundRunner({
 
         {state.phase === "acting" ? (
           <Sticker
-            className={`space-y-6 p-6 text-center ${
-              state.secondsLeft <= 10 ? "border-magenta bg-yellow" : ""
-            }`}
+            className="space-y-6 overflow-hidden p-6 text-center"
             data-testid="charades-acting-screen"
           >
+            {/* Timer bar: ink on white, warning turns magenta at 10s */}
+            <div className="h-3 w-full overflow-hidden rounded-full border-2 border-ink bg-white">
+              <div
+                className="h-full transition-all duration-200"
+                style={{
+                  width: `${Math.max(0, Math.min(100, Math.round((state.secondsLeft / state.duration) * 100)))}%`,
+                  backgroundColor: state.secondsLeft <= 10 ? "#EC1276" : "#141313",
+                }}
+              />
+            </div>
+
             <div className="flex items-center justify-between">
               <Badge tone="white">{currentTeam.name}</Badge>
               <Badge tone={state.secondsLeft <= 10 ? "magenta" : "yellow"}>
@@ -549,14 +558,14 @@ function CharadesRoundRunner({
               </Badge>
             </div>
 
-            <p className="m-0 text-sm font-black uppercase tracking-widest text-ink/80">
+            <p className="wall-label m-0 text-ink/80">
               <Tx v={C.actingNow} />
             </p>
 
             <div
               data-testid="charades-timer"
               className={`mono-num mx-auto inline-block rounded-[20px] border-[3px] border-ink px-8 py-4 text-[clamp(56px,16vw,88px)] font-bold leading-none ${
-                state.secondsLeft <= 10 ? "bg-magenta text-ink animate-pulse" : "bg-card text-ink"
+                state.secondsLeft <= 10 ? "bg-magenta text-white" : "bg-card text-ink"
               }`}
             >
               {String(Math.floor(state.secondsLeft / 60))}:

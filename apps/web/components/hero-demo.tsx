@@ -9,19 +9,17 @@ interface DemoCard {
   readonly en: string;
   readonly te: string;
   readonly year: number;
-  readonly clueEn: string;
-  readonly clueTe: string;
 }
 
 const DEMO_CARDS: readonly DemoCard[] = [
-  { en: "Pokiri", te: "పోకిరి", year: 2006, clueEn: "\"okka saari commit aithe...\"", clueTe: "\"ఒక్కసారి కమిట్ అయితే...\"" },
-  { en: "Magadheera", te: "మగధీర", year: 2009, clueEn: "\"100 warriors on the bridge\"", clueTe: "\"వంతెనపై వంద మంది యోధులు\"" },
-  { en: "Baahubali", te: "బాహుబలి", year: 2015, clueEn: "\"Why did Kattappa...\"", clueTe: "\"కట్టప్ప ఎందుకు...\"" },
-  { en: "Athadu", te: "అతడు", year: 2005, clueEn: "\"Nanda Gopal / Pardhu\"", clueTe: "\"నంద గోపాల్ / పార్థు\"" },
-  { en: "Pushpa", te: "పుష్ప", year: 2021, clueEn: "\"Thaggede le\"", clueTe: "\"తగ్గేదే లే\"" },
-  { en: "Eega", te: "ఈగ", year: 2012, clueEn: "\"Reborn as a housefly\"", clueTe: "\"ఈగగా పునర్జన్మ\"" },
-  { en: "Mahanati", te: "మహానటి", year: 2018, clueEn: "\"Savitri's biopic\"", clueTe: "\"సావిత్రి జీవిత కథ\"" },
-  { en: "Kalki 2898 AD", te: "కల్కి 2898 AD", year: 2024, clueEn: "\"Bhairava & Bujji\"", clueTe: "\"భైరవ మరియు బుజ్జి\"" },
+  { en: "Pokiri", te: "పోకిరి", year: 2006 },
+  { en: "Magadheera", te: "మగధీర", year: 2009 },
+  { en: "Baahubali", te: "బాహుబలి", year: 2015 },
+  { en: "Athadu", te: "అతడు", year: 2005 },
+  { en: "Pushpa", te: "పుష్ప", year: 2021 },
+  { en: "Eega", te: "ఈగ", year: 2012 },
+  { en: "Mahanati", te: "మహానటి", year: 2018 },
+  { en: "Kalki 2898 AD", te: "కల్కి 2898 AD", year: 2024 },
 ] as const;
 
 export function HeroDemo() {
@@ -57,19 +55,19 @@ export function HeroDemo() {
   };
 
   const card = DEMO_CARDS[idx] ?? DEMO_CARDS[0]!;
-  const progressPct = Math.round((((idx + 1) / DEMO_CARDS.length) * 100));
+  const progressPct = Math.round(((idx + 1) / DEMO_CARDS.length) * 100);
 
   return (
     <div className="relative flex w-full max-w-[400px] flex-col items-center">
-      {/* The ONLY tilted decorative element on the screen: -3deg TicketStub */}
+      {/* The ONLY tilted decorative element on the screen: -3deg Magenta TicketStub */}
       <div className="z-10 -mb-3 self-end pr-2">
         <TicketStub
-          bg="yellow"
+          bg="magenta"
           tilt={-3}
-          className="shadow-[0_4px_0_#141313]"
+          className="px-1 py-0.5 shadow-[0_4px_0_#141313]"
           data-testid="hero-ticket-stub"
         >
-          <span className="wall-label block text-ink">
+          <span className="block font-bold leading-none text-white text-[19px]">
             <Tx v={TRANSLATIONS.landing.admitOneGang} />
           </span>
         </TicketStub>
@@ -83,7 +81,7 @@ export function HeroDemo() {
         className="w-full rounded-[28px] border-[3px] border-ink bg-ink p-2.5 shadow-[0_7px_0_#141313]"
       >
         <div
-          className="relative overflow-hidden rounded-[20px] border-2 border-ink bg-sticker p-5 transition-colors duration-150"
+          className="wall-demo-panel relative overflow-hidden rounded-[20px] border-2 border-ink bg-sticker p-5 transition-colors duration-150"
           style={{
             backgroundColor:
               flash === "correct"
@@ -116,8 +114,8 @@ export function HeroDemo() {
             />
           </div>
 
-          {/* Card text hero */}
-          <div className="my-5 rounded-[16px] border-2 border-ink bg-card px-4 py-6 text-center">
+          {/* Card text hero: Film title and year only (no dialogues) */}
+          <div className="my-5 rounded-[16px] border-2 border-ink bg-card px-4 py-7 text-center">
             <span className="wall-label block text-ink/75">{card.year}</span>
             {lang === "te" ? (
               <div className="mt-1">
@@ -131,24 +129,21 @@ export function HeroDemo() {
               </div>
             ) : (
               <p
-                className="m-0 mt-1 font-display text-[36px] font-extrabold leading-[1.08] tracking-[-0.02em] text-ink sm:text-[42px]"
+                className="m-0 mt-1 font-display text-[38px] font-extrabold leading-[1.08] tracking-[-0.02em] text-ink sm:text-[44px]"
                 data-testid="hero-demo-card-title"
               >
                 {card.en}
               </p>
             )}
-            <p className="m-0 mt-2 text-[14px] font-medium text-ink/80">
-              {lang === "te" ? card.clueTe : card.clueEn}
-            </p>
           </div>
 
-          {/* Interactive Pass & Correct! tap zones */}
+          {/* Interactive Pass (Magenta/White) & Correct! (Green/Ink) tap zones */}
           <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
               data-testid="hero-demo-pass"
               onClick={() => handleAction("pass")}
-              className="wall-btn min-h-[48px] w-full bg-sticker px-3 text-[16px] text-ink"
+              className="wall-btn min-h-[48px] w-full bg-magenta px-3 text-[19px] font-bold text-white"
             >
               <Tx v={TRANSLATIONS.common.pass} />
             </button>
@@ -156,7 +151,7 @@ export function HeroDemo() {
               type="button"
               data-testid="hero-demo-correct"
               onClick={() => handleAction("correct")}
-              className="wall-btn min-h-[48px] w-full bg-yellow px-3 text-[16px] text-ink"
+              className="wall-btn min-h-[48px] w-full bg-green px-3 text-[17px] font-bold text-ink"
             >
               <Tx v={TRANSLATIONS.common.correct} />
             </button>
