@@ -4,12 +4,17 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "partykit dev --port 1999",
+    "deploy": "partykit deploy",
+    "simulate": "node src/run-simulate.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit",
     "test": "vitest run"
   },
   "dependencies": {
     "@tfi/game-core": "workspace:*",
+    "partykit": "^0.0.115",
+    "partysocket": "^1.3.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {

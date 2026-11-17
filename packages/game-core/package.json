@@ -6,7 +6,8 @@
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./room-schemas": "./src/room-schemas.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -21,6 +22,7 @@
   },
   "dependencies": {
     "@tfi/content": "workspace:*",
-    "xstate": "^5.33.4"
+    "xstate": "^5.33.4",
+    "zod": "^3.25.76"
   }
 }

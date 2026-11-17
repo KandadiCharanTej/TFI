@@ -10,20 +10,11 @@ export const ROUND_PHASES: readonly RoundPhase[] = [
   "results",
 ] as const;
 
-export const ROOM_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-
-export function isValidRoomCode(code: string): boolean {
-  if (code.length !== 4) return false;
-  for (const ch of code) {
-    if (!ROOM_CODE_ALPHABET.includes(ch)) {
-      return false;
-    }
-  }
-  return true;
-}
-
 export * from "./registry";
 export * from "./judge-machine";
 export * from "./hsg-machine";
 export * from "./charades-machine";
 export * from "./vote-machine";
+export * from "./room-protocol";
+export * from "./room-plugin";
+export * from "./room-engine";

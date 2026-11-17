@@ -31,6 +31,7 @@ yarn-error.log*
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+.partykit
 
 # Keep reference HTML out of git noise if desired, or track reference
 TFI\ &\ Pitch\ Landing\ and\ App\ Preview\ –\ Landing\ page.html

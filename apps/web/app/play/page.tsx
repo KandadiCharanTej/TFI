@@ -170,7 +170,7 @@ export default function PlayHomePage() {
               <Tx v={P.roomBannerTitle} />
             </p>
             <Link href="/join" className="wall-btn min-h-[44px] bg-sticker px-4 text-[14px] text-ink">
-              <span className="mono-num mr-1">K7QM</span> · <Tx v={P.joinBtn} /> →
+              <span className="mono-num mr-1">KXQM</span> · <Tx v={P.joinBtn} /> →
             </Link>
           </Sticker>
         </section>

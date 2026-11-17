@@ -1,0 +1,9 @@
+{
+  "$schema": "https://www.partykit.io/schema.json",
+  "name": "tfi-and-pitch-rooms",
+  "main": "src/server.ts",
+  "parties": {
+    "registry": "src/registry.ts"
+  },
+  "compatibilityDate": "2024-07-01"
+}

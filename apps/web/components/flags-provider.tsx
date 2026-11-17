@@ -7,6 +7,9 @@ import type { GameCatalogItem } from "@/lib/i18n";
 
 export interface RuntimeFlags {
   readonly showMvp: boolean;
+  readonly enableRooms: boolean;
+  readonly enableReadyCheck: boolean;
+  readonly partykitHost: string;
   readonly feedbackUrl: string;
   readonly posthogKey: string;
   readonly sentryDsn: string;
@@ -14,6 +17,9 @@ export interface RuntimeFlags {
 
 const FlagsContext = createContext<RuntimeFlags>({
   showMvp: false,
+  enableRooms: false,
+  enableReadyCheck: false,
+  partykitHost: "",
   feedbackUrl: "",
   posthogKey: "",
   sentryDsn: "",
@@ -22,20 +28,34 @@ const FlagsContext = createContext<RuntimeFlags>({
 /** The server reads env flags once and passes them down. */
 export function FlagsProvider({
   showMvp,
+  enableRooms = false,
+  enableReadyCheck = false,
+  partykitHost = "",
   feedbackUrl = "",
   posthogKey = "",
   sentryDsn = "",
   children,
 }: {
   readonly showMvp: boolean;
+  readonly enableRooms?: boolean;
+  readonly enableReadyCheck?: boolean;
+  readonly partykitHost?: string;
   readonly feedbackUrl?: string;
   readonly posthogKey?: string;
   readonly sentryDsn?: string;
   readonly children: ReactNode;
 }) {
   const value = useMemo(
-    () => ({ showMvp, feedbackUrl, posthogKey, sentryDsn }),
-    [showMvp, feedbackUrl, posthogKey, sentryDsn],
+    () => ({
+      showMvp,
+      enableRooms,
+      enableReadyCheck,
+      partykitHost,
+      feedbackUrl,
+      posthogKey,
+      sentryDsn,
+    }),
+    [showMvp, enableRooms, enableReadyCheck, partykitHost, feedbackUrl, posthogKey, sentryDsn],
   );
   return <FlagsContext.Provider value={value}>{children}</FlagsContext.Provider>;
 }

@@ -10,6 +10,16 @@ export function readShowMvpFlag(value: string | undefined): boolean {
   return value === "true";
 }
 
+/** Server-only: online rooms flag (default false in production, true in development). */
+export function readEnableRoomsFlag(
+  value: string | undefined,
+  nodeEnv: string | undefined = process.env.NODE_ENV,
+): boolean {
+  if (value === "true") return true;
+  if (value === "false") return false;
+  return nodeEnv === "development";
+}
+
 /** The games a visitor may see. Beta shows only release:"beta". */
 export function getVisibleCatalog(showMvp: boolean): readonly GameCatalogItem[] {
   return GAMES_CATALOG.filter((g) => showMvp || g.release === "beta");

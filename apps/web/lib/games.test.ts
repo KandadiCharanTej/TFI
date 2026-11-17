@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { filterByMode, getVisibleCatalog, readShowMvpFlag } from "./games";
+import { filterByMode, getVisibleCatalog, readEnableRoomsFlag, readShowMvpFlag } from "./games";
 
 describe("beta catalog filtering", () => {
   it("shows exactly the 7 beta games by default", () => {
@@ -14,6 +14,12 @@ describe("beta catalog filtering", () => {
     expect(readShowMvpFlag("true")).toBe(true);
     expect(readShowMvpFlag("1")).toBe(false);
     expect(readShowMvpFlag(undefined)).toBe(false);
+  });
+  it("defaults ENABLE_ROOMS to true in development and false in production", () => {
+    expect(readEnableRoomsFlag(undefined, "development")).toBe(true);
+    expect(readEnableRoomsFlag(undefined, "production")).toBe(false);
+    expect(readEnableRoomsFlag("true", "production")).toBe(true);
+    expect(readEnableRoomsFlag("false", "development")).toBe(false);
   });
   it("filters by mode", () => {
     const beta = getVisibleCatalog(false);

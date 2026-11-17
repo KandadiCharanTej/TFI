@@ -6,7 +6,10 @@ export type TelemetryEventName =
   | "round_finished"
   | "share_clicked"
   | "install_clicked"
-  | "language_changed";
+  | "language_changed"
+  | "room_created"
+  | "room_joined"
+  | "room_started";
 
 const CONSENT_KEY = "tfi.analytics.consent";
 

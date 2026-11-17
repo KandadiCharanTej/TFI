@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useFlags } from "./flags-provider";
 import { WallIcon } from "./icons";
 import { LangSwitch } from "./lang-switch";
 import { PublicFooter } from "./public-footer";
@@ -46,6 +47,10 @@ export function BrandWordmark({ href = "/" }: { readonly href?: string }) {
 
 export function AppFrame({ children }: AppFrameProps) {
   const pathname = usePathname() ?? "/play";
+  const { enableRooms } = useFlags();
+  const visibleNav = enableRooms
+    ? NAV_ITEMS
+    : NAV_ITEMS.filter((item) => item.href !== "/join");
 
   // The live round hides all frame chrome (no app bar, no bottom bar).
   if (pathname.endsWith("/round")) {
@@ -79,7 +84,7 @@ export function AppFrame({ children }: AppFrameProps) {
           aria-label="App navigation"
           className="hidden md:flex md:w-[200px] md:shrink-0 md:flex-col md:gap-2.5"
         >
-          {NAV_ITEMS.map((item) => {
+          {visibleNav.map((item) => {
             const isActive = isActivePath(pathname, item.href);
             return (
               <Link
@@ -119,8 +124,13 @@ export function AppFrame({ children }: AppFrameProps) {
         aria-label="Bottom navigation"
         className="fixed bottom-0 left-0 right-0 z-30 border-t border-ink bg-concrete/95 px-3 pt-2 pb-[max(8px,env(safe-area-inset-bottom))] backdrop-blur-sm md:hidden"
       >
-        <ul role="list" className="mx-auto grid max-w-[420px] grid-cols-3 gap-2">
-          {NAV_ITEMS.map((item) => {
+        <ul
+          role="list"
+          className={`mx-auto grid gap-2 ${
+            visibleNav.length === 2 ? "max-w-[300px] grid-cols-2" : "max-w-[420px] grid-cols-3"
+          }`}
+        >
+          {visibleNav.map((item) => {
             const isActive = isActivePath(pathname, item.href);
             return (
               <li key={item.href}>

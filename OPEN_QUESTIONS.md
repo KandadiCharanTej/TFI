@@ -88,3 +88,14 @@ Three alternative hero headlines to consider:
 
 ### Feedback form (`FEEDBACK_URL`)
 Set `FEEDBACK_URL` (e.g. a Google Form or Tally link) in Vercel environment variables so the `"Send feedback"` sticker appears on results pages, `/me`, and the footer. Leave it empty to hide the button cleanly.
+
+## Phase 5 Online Rooms & Safety
+
+### Profanity filter for player names
+Currently player names apply character/length hygiene (1–16 characters, strip control characters, collapse spaces, fallback to `"Guest Tiger"`). Adding a real-world Telugu + English profanity & slur filter requires a curated native-speaker word list before public room launch (`ENABLE_ROOMS=true` in production).
+
+### Stronger rate limiting for 4-letter room code guessing
+4-letter codes (`24^4 = 331,776` combinations) can be probed rapidly. Registry lookups currently enforce a short-term limit (5 wrong guesses per 30 seconds per IP). Before public v1 launch, add Cloudflare Turnstile / edge WAF rate limiting or extend codes to 5–6 letters if abuse appears.
+
+### PartyKit / Cloudflare hosting cost note
+PartyKit runs on Cloudflare Durable Objects. Hobby/beta traffic fits inside Cloudflare Workers/DO free allowances, while sustained concurrent rooms at launch require the Workers Paid plan (minimum \$5/month + usage).
