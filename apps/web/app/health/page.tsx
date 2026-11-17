@@ -91,7 +91,7 @@ export default async function HealthPage() {
               </div>
               <div>
                 <p className="wall-label m-0 text-ink">Space Mono Bold</p>
-                <p className="mono-num m-0 mt-1 text-2xl text-ink">K7QM · 0:42 · 20 Cr · 4/6</p>
+                <p className="mono-num m-0 mt-1 text-2xl text-ink">KXQM · 0:42 · 20 Cr · 4/6</p>
               </div>
             </Sticker>
 
@@ -147,7 +147,7 @@ export default async function HealthPage() {
                 <Tx v={TRANSLATIONS.modeFilter.online} />
               </Chip>
               <Badge tone="cyan" mono>
-                K7QM
+                KXQM
               </Badge>
             </div>
             <div className="grid gap-6 md:grid-cols-2">

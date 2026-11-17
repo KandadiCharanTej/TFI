@@ -48,16 +48,19 @@ function startActor(deck = DECK_5, duration = 60) {
 // ─── Room Code Tests ──────────────────────────────────────────────────────────
 
 describe("isValidRoomCode", () => {
-  it("validates 4-character allowed codes", () => {
+  it("validates 4-letter codes from the unambiguous 24-letter alphabet", () => {
     expect(isValidRoomCode("ABCD")).toBe(true);
     expect(isValidRoomCode("WXYZ")).toBe(true);
-    expect(isValidRoomCode("2345")).toBe(true);
+    expect(isValidRoomCode("KXQM")).toBe(true);
   });
 
-  it("rejects invalid lengths or forbidden characters", () => {
+  it("rejects invalid lengths, digits, I, O, or lowercase", () => {
     expect(isValidRoomCode("ABC")).toBe(false);
     expect(isValidRoomCode("ABCDE")).toBe(false);
-    expect(isValidRoomCode("AB10")).toBe(false); // 0 and 1 are excluded from alphabet
+    expect(isValidRoomCode("2345")).toBe(false);
+    expect(isValidRoomCode("AB10")).toBe(false);
+    expect(isValidRoomCode("ABCDI".slice(1))).toBe(false);
+    expect(isValidRoomCode("ABCO")).toBe(false);
     expect(isValidRoomCode("ab cd")).toBe(false);
   });
 });

@@ -19,13 +19,47 @@ The switch label "తె / EN" uses Telugu script in both modes — this is the 
 pnpm install          # install all packages
 pnpm content:build    # build card JSONs from CSVs (run this once after cloning)
 pnpm content:review   # export review.csv and print verified vs unverified counts
-pnpm dev              # start dev server
+pnpm dev              # start web (3000) + PartyKit room server (1999) + print LAN URL
 pnpm typecheck        # TypeScript check (all packages)
 pnpm test             # unit tests (all packages)
 pnpm lint             # ESLint
 pnpm build            # production build
 pnpm test:e2e         # Playwright E2E (needs system Chrome)
+pnpm --filter @tfi/realtime simulate   # 10-player WebSocket room stress test
 ```
+
+## Testing online rooms on two phones (same Wi-Fi)
+
+1. Connect your laptop and both phones to the **same Wi-Fi network**.
+2. Start everything in one command:
+   ```bash
+   pnpm dev
+   ```
+3. Look at the printed banner in the terminal for `Phone Wi-Fi: http://<your-lan-ip>:3000` (for example `http://192.168.1.42:3000`).
+4. Open `http://<your-lan-ip>:3000/room/new` on Phone A, create a **Ready check** room, and share the 4-letter code or `/r/XXXX` link with Phone B (`http://<your-lan-ip>:3000/join`).
+5. Leave `NEXT_PUBLIC_PARTYKIT_HOST` blank in `.env.local` so phones automatically connect to `<your-lan-ip>:1999`. (`ENABLE_ROOMS` defaults to `true` in `pnpm dev`.)
+
+## How to deploy the room server (PartyKit on Cloudflare)
+
+1. Log in to PartyKit (opens GitHub / browser sign-in once):
+   ```bash
+   cd apps/realtime
+   npx partykit login
+   ```
+2. Set allowed website origins so only your site can create/query rooms:
+   ```bash
+   npx partykit env add ALLOWED_ORIGINS
+   # Enter your production URL, e.g. https://your-site.vercel.app
+   ```
+3. Deploy the room server from `apps/realtime`:
+   ```bash
+   npx partykit deploy
+   ```
+   Copy the deployed host printed at the end (for example `tfi-and-pitch-rooms.<your-handle>.partykit.dev`).
+4. In Vercel -> Project Settings -> Environment Variables, add:
+   - `NEXT_PUBLIC_PARTYKIT_HOST=tfi-and-pitch-rooms.<your-handle>.partykit.dev`
+   - `ENABLE_ROOMS=true` (when ready to open rooms publicly; leave `false` while closed)
+5. Redeploy Vercel so the updated environment variables take effect.
 
 ## Package structure
 

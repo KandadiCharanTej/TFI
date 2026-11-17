@@ -30,13 +30,31 @@ export function ConsentBanner() {
       trackEvent(posthogKey, "language_changed", detail?.lang ? { lang: detail.lang } : undefined);
     };
     const onShare = () => trackEvent(posthogKey, "share_clicked");
+    const onRoomCreated = (e: Event) => {
+      const detail = (e as CustomEvent<{ game?: string }>).detail;
+      trackEvent(posthogKey, "room_created", detail?.game ? { game: detail.game } : undefined);
+    };
+    const onRoomJoined = (e: Event) => {
+      const detail = (e as CustomEvent<{ game?: string }>).detail;
+      trackEvent(posthogKey, "room_joined", detail?.game ? { game: detail.game } : undefined);
+    };
+    const onRoomStarted = (e: Event) => {
+      const detail = (e as CustomEvent<{ game?: string }>).detail;
+      trackEvent(posthogKey, "room_started", detail?.game ? { game: detail.game } : undefined);
+    };
     window.addEventListener("tfi:install_clicked", onInstall);
     window.addEventListener("tfi:language_changed", onLang);
     window.addEventListener("tfi:share_clicked", onShare);
+    window.addEventListener("tfi:room_created", onRoomCreated);
+    window.addEventListener("tfi:room_joined", onRoomJoined);
+    window.addEventListener("tfi:room_started", onRoomStarted);
     return () => {
       window.removeEventListener("tfi:install_clicked", onInstall);
       window.removeEventListener("tfi:language_changed", onLang);
       window.removeEventListener("tfi:share_clicked", onShare);
+      window.removeEventListener("tfi:room_created", onRoomCreated);
+      window.removeEventListener("tfi:room_joined", onRoomJoined);
+      window.removeEventListener("tfi:room_started", onRoomStarted);
     };
   }, [posthogKey]);
 

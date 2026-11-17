@@ -6,7 +6,7 @@ import { LangProvider } from "@/components/lang-provider";
 import { PrefsBootstrap } from "@/components/prefs-bootstrap";
 import { SwManager } from "@/components/sw-manager";
 import { TRANSLATIONS } from "@/lib/i18n";
-import { readShowMvpFlag } from "@/lib/games";
+import { readEnableRoomsFlag, readShowMvpFlag } from "@/lib/games";
 import { getServerLang } from "@/lib/lang-server";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -51,6 +51,11 @@ export default async function RootLayout({
 }>) {
   const lang = await getServerLang();
   const showMvp = readShowMvpFlag(process.env.SHOW_MVP_GAMES);
+  const enableRooms = readEnableRoomsFlag(process.env.ENABLE_ROOMS, process.env.NODE_ENV);
+  const enableReadyCheck =
+    enableRooms &&
+    (process.env.NODE_ENV === "development" || process.env.ENABLE_READY_CHECK === "true");
+  const partykitHost = process.env.NEXT_PUBLIC_PARTYKIT_HOST ?? "";
   const feedbackUrl = process.env.FEEDBACK_URL ?? "";
   const posthogKey = process.env.POSTHOG_KEY ?? "";
   const sentryDsn = process.env.SENTRY_DSN ?? "";
@@ -89,6 +94,9 @@ export default async function RootLayout({
           <PrefsBootstrap />
           <FlagsProvider
             showMvp={showMvp}
+            enableRooms={enableRooms}
+            enableReadyCheck={enableReadyCheck}
+            partykitHost={partykitHost}
             feedbackUrl={feedbackUrl}
             posthogKey={posthogKey}
             sentryDsn={sentryDsn}
