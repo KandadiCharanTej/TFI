@@ -1,7 +1,7 @@
 import os from "node:os";
 import { spawn } from "node:child_process";
 
-function getLanIps(): string[] {
+function getLanIps() {
   const nets = os.networkInterfaces();
   const ips: string[] = [];
   for (const list of Object.values(nets)) {
