@@ -129,7 +129,13 @@ export default function HsgResultsPage() {
             <ul className="space-y-1">
               {correctIds.map((id) => (
                 <li key={id} className="flex items-center gap-2 text-[15px] font-bold text-ink">
-                  <span className="text-green-600" aria-hidden>✓</span> {label(id)}
+                  <span
+                    aria-hidden
+                    className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-ink bg-green text-[12px] font-bold text-ink"
+                  >
+                    ✓
+                  </span>{" "}
+                  {label(id)}
                 </li>
               ))}
             </ul>

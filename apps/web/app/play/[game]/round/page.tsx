@@ -517,7 +517,7 @@ export default function JudgeRoundPage({
   };
   const currentCard = s.cards[s.currentIndex];
   const pct = s.duration > 0 ? (s.secondsLeft / s.duration) * 100 : 0;
-  const timerColor = pct > 40 ? "#00C853" : pct > 15 ? "#F6BE18" : "#EC1276";
+  const timerColor = s.secondsLeft <= 10 ? "#EC1276" : "#141313";
   const bg = s.stamp === "correct" ? "#00C853" : s.stamp === "skip" ? "#EC1276" : "#EAE6DF";
 
   // 1. Loading State
@@ -652,8 +652,8 @@ export default function JudgeRoundPage({
           },
         ]}
       />
-      {/* Top Timer Progress Bar */}
-      <div className="relative h-3 w-full border-b-2 border-ink bg-card">
+      {/* Top Timer Progress Bar: ink on white, turns magenta at 10s */}
+      <div className="relative h-3 w-full border-b-2 border-ink bg-white">
         <div
           className="h-full transition-all duration-200"
           style={{ width: `${pct}%`, backgroundColor: timerColor }}
@@ -674,7 +674,7 @@ export default function JudgeRoundPage({
             ✓ {s.currentTurnCorrect}
           </div>
           {streak >= 2 ? (
-            <div className="mono-num rounded-full border-2 border-ink bg-magenta px-2.5 py-1 text-xs font-black text-white shadow-[2px_2px_0_#141313]">
+            <div className="mono-num rounded-full border-2 border-ink bg-magenta px-2.5 py-1 text-[19px] font-bold text-white shadow-[2px_2px_0_#141313]">
               🔥 {streak}
             </div>
           ) : null}
@@ -813,12 +813,12 @@ export default function JudgeRoundPage({
         </div>
       </div>
 
-      {/* Bottom Thumb Action Buttons */}
+      {/* Bottom Thumb Action Buttons: Skip = magenta/white, Correct = green/ink */}
       <footer className="grid grid-cols-2 gap-3 p-4">
         <button
           type="button"
           onClick={handleSkip}
-          className="wall-btn min-h-[58px] bg-white text-lg font-black text-ink shadow-[4px_4px_0_#141313]"
+          className="wall-btn min-h-[58px] bg-magenta text-[19px] font-bold text-white shadow-[4px_4px_0_#141313]"
           data-testid="judge-skip-btn"
         >
           <Tx v={J.skip} />
@@ -826,7 +826,7 @@ export default function JudgeRoundPage({
         <button
           type="button"
           onClick={handleCorrect}
-          className="wall-btn min-h-[58px] bg-[#00C853] text-lg font-black text-ink shadow-[4px_4px_0_#141313]"
+          className="wall-btn min-h-[58px] bg-green text-[19px] font-bold text-ink shadow-[4px_4px_0_#141313]"
           data-testid="judge-correct-btn"
         >
           <Tx v={J.correct} />

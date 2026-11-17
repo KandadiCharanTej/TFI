@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { MODE_COLORS } from "@tfi/config/tokens";
+import { getGameColor } from "@tfi/config/tokens";
 import { AppFrame } from "@/components/app-frame";
 import { GameTitle } from "@/components/game-title";
 import { WallIcon } from "@/components/icons";
@@ -131,19 +131,26 @@ export default function MostLikelySetupPage() {
           <div className="mt-4 flex items-center gap-4">
             <div
               className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[14px] border-[2.5px] border-ink text-ink"
-              style={{ backgroundColor: MODE_COLORS.onePhone }}
+              style={{ backgroundColor: getGameColor("most-likely") }}
             >
               <div className="h-10 w-10">
                 <WallIcon kind="most" />
               </div>
             </div>
             <div>
-              <GameTitle
-                title={catalogGame.title}
-                as="h1"
-                teClassName="text-[28px]"
-                enClassName="text-[26px]"
-              />
+              <div className="flex items-center gap-2">
+                <span
+                  aria-hidden="true"
+                  className="inline-block h-3 w-3 shrink-0 rounded-full border-2 border-ink"
+                  style={{ backgroundColor: getGameColor("most-likely") }}
+                />
+                <GameTitle
+                  title={catalogGame.title}
+                  as="h1"
+                  teClassName="text-[28px]"
+                  enClassName="text-[26px]"
+                />
+              </div>
               <p className="m-0 mt-1 text-[13px] font-bold text-ink/80">
                 <Tx v={TRANSLATIONS.gamesMeta.mostLikelyRule} />
               </p>

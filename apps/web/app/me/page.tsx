@@ -159,7 +159,7 @@ export default function MePage() {
                 <button
                   type="button"
                   onClick={handleConfirmClear}
-                  className="wall-btn min-h-[44px] bg-magenta px-4 text-[13px] text-white"
+                  className="wall-btn min-h-[44px] bg-magenta px-4 text-[19px] font-bold text-white"
                 >
                   <Tx v={P.meClearConfirmBtn} />
                 </button>

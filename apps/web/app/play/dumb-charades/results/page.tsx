@@ -106,7 +106,7 @@ export default function DumbCharadesResultsPage() {
           </Badge>
 
           <TicketStub
-            bg="yellow"
+            bg="green"
             data-testid="charades-winner-display"
             header={
               <div className="flex items-center justify-between text-ink">

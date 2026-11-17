@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { MODE_COLORS } from "@tfi/config/tokens";
+import { getGameColor } from "@tfi/config/tokens";
 import { AppFrame } from "@/components/app-frame";
 import { GameTitle } from "@/components/game-title";
 import { WallIcon } from "@/components/icons";
@@ -87,7 +87,7 @@ export default function SetupClient({ game, title, description, rule }: SetupCli
     router.push(`/play/${game.id}/round`);
   }
 
-  const panelColor = MODE_COLORS[game.mode === "Online" ? "online" : "onePhone"];
+  const panelColor = getGameColor(game.id);
 
   return (
     <AppFrame>
@@ -114,7 +114,14 @@ export default function SetupClient({ game, title, description, rule }: SetupCli
               </div>
             </div>
             <div>
-              <GameTitle title={title} as="h1" teClassName="text-[26px]" enClassName="text-[24px]" />
+              <div className="flex items-center gap-2">
+                <span
+                  aria-hidden="true"
+                  className="inline-block h-3 w-3 shrink-0 rounded-full border-2 border-ink"
+                  style={{ backgroundColor: panelColor }}
+                />
+                <GameTitle title={title} as="h1" teClassName="text-[26px]" enClassName="text-[24px]" />
+              </div>
               <p className="m-0 mt-0.5 text-[13px] font-bold text-ink opacity-70">
                 <Tx v={description} />
               </p>
@@ -167,7 +174,7 @@ export default function SetupClient({ game, title, description, rule }: SetupCli
                     type="button"
                     onClick={() => handleRemovePlayer(i)}
                     aria-label={`Remove player ${i + 1}`}
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[8px] border-2 border-ink bg-card text-base font-black text-ink shadow-[2px_2px_0_#141313] hover:bg-magenta hover:text-white"
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[8px] border-2 border-ink bg-card text-base font-black text-ink shadow-[2px_2px_0_#141313] hover:bg-yellow hover:text-ink"
                   >
                     ×
                   </button>

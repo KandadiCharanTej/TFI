@@ -10,7 +10,7 @@ export default function GlobalErrorPage({ reset }: { readonly reset: () => void 
   return (
     <AppFrame>
       <Sticker className="mx-auto max-w-[540px] space-y-4 p-6 text-center">
-        <Badge tone="magenta" className="mx-auto font-mono text-[14px]">
+        <Badge tone="magenta" className="mx-auto font-mono">
           Error
         </Badge>
         <h1 className="h1-title m-0 text-ink">

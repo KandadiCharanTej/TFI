@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { MODE_COLORS, WALL_COLORS, WALL_FONTS } from "./tokens";
+import { COLOR_JOBS, GAME_COLORS, MODE_COLORS, WALL_COLORS, WALL_FONTS, getGameColor } from "./tokens";
 
 describe("The Wall Design System Tokens", () => {
   it("locks exact hex values for all 8 Wall colors and forbids purple", () => {
@@ -18,7 +18,25 @@ describe("The Wall Design System Tokens", () => {
     expect(Object.keys(WALL_COLORS)).toHaveLength(8);
   });
 
-  it("maps game modes strictly to One phone=yellow, Online=cyan", () => {
+  it("maps game colors and color jobs strictly to the locked 4 accent palette", () => {
+    expect(COLOR_JOBS).toEqual({
+      primaryActionAndHero: "#F6BE18",
+      passLiveAndWarning: "#EC1276",
+      correctAndOfflineReady: "#00C853",
+      onlineAndRooms: "#00E5FF",
+    });
+    expect(getGameColor("head-set-go")).toBe("#F6BE18");
+    expect(getGameColor("transify")).toBe("#EC1276");
+    expect(getGameColor("dumb-charades")).toBe("#00C853");
+    expect(getGameColor("emoji-cinema")).toBe("#F6BE18");
+    expect(getGameColor("rapid-fire")).toBe("#EC1276");
+    expect(getGameColor("most-likely")).toBe("#00C853");
+    expect(getGameColor("box-office-auction")).toBe("#00E5FF");
+
+    const allowed = new Set<string>(Object.values(WALL_COLORS));
+    for (const color of Object.values(GAME_COLORS)) {
+      expect(allowed.has(color)).toBe(true);
+    }
     expect(MODE_COLORS.onePhone).toBe("#F6BE18");
     expect(MODE_COLORS.online).toBe("#00E5FF");
   });

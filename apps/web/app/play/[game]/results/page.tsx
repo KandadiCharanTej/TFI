@@ -2,10 +2,11 @@
 
 import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
+import { getGameColorKey } from "@tfi/config/tokens";
 import { AppFrame } from "@/components/app-frame";
 import { FeedbackSticker } from "@/components/feedback-sticker";
 import { Tx, useLang } from "@/components/lang-provider";
-import { Sticker, TicketStub, WallButton, WallLinkButton } from "@/components/sticker-kit";
+import { Badge, Sticker, TicketStub, WallButton, WallLinkButton } from "@/components/sticker-kit";
 import { TRANSLATIONS } from "@/lib/i18n";
 import { drawWallSharePoster } from "@/lib/share-card";
 import { getGameById } from "@tfi/game-core";
@@ -157,25 +158,32 @@ export default function JudgeResultsPage({
     }
   }
 
+  const gameStubBg = getGameColorKey(slug);
+  const isMagentaStub = gameStubBg === "magenta";
+
   return (
     <AppFrame>
       <div className="mx-auto max-w-[480px] space-y-5 p-4" data-testid="judge-results-screen">
-        {/* Ticket-Stub Winner Banner */}
+        {/* Ticket-Stub Winner Banner in the game's color */}
         <TicketStub
-          bg="yellow"
+          bg={gameStubBg}
           className="text-center"
           header={
-            <div className="flex items-center justify-between text-ink">
-              <span className="wall-label">
+            <div className="flex items-center justify-between gap-2">
+              <Badge tone="white">
                 <Tx v={TRANSLATIONS.landing.admitOneGang} />
-              </span>
-              <span className="wall-label">
+              </Badge>
+              <Badge tone="white">
                 {isTie ? <Tx v={J.tie} /> : <Tx v={J.winner} />}
-              </span>
+              </Badge>
             </div>
           }
           footer={
-            <p className="mono-num m-0 text-xl font-bold text-ink">
+            <p
+              className={`mono-num m-0 text-xl font-bold ${
+                isMagentaStub ? "text-white" : "text-ink"
+              }`}
+            >
               {highestScore} {lang === "te" ? "పాయింట్లు" : "pts"}
             </p>
           }
@@ -184,7 +192,7 @@ export default function JudgeResultsPage({
             🏆
           </div>
           <h1
-            className="h1-title m-0 text-ink"
+            className={`h1-title m-0 ${isMagentaStub ? "text-white" : "text-ink"}`}
             data-testid="winner-display"
           >
             {winnerTitle}

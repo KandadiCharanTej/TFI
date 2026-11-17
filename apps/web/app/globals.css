@@ -68,6 +68,16 @@ html[data-large-text="true"] {
   unicode-range: U+0951-0952, U+0964-0965, U+0B83, U+0C00-0C7F, U+1CD5-1CD6, U+1CD8, U+1CDA, U+1CF2, U+200C-200D, U+25CC;
 }
 
+/* Tiny 2.0 KB subset containing ONLY "తె" for crisp rendering on the switch in EN mode */
+@font-face {
+  font-family: 'Anek Telugu Switch';
+  font-style: normal;
+  font-weight: 500 800;
+  font-display: swap;
+  src: url('/fonts/anek-telugu-switch.woff2') format('woff2');
+  unicode-range: U+0C24, U+0C46;
+}
+
 @font-face {
   font-family: 'Space Mono';
   font-style: normal;
@@ -277,14 +287,15 @@ html[lang="te"] .mono-num {
   font-size: 0.72em;
 }
 
-/* Crisp Telugu switch glyph in EN mode via system font; Anek Telugu in TE mode */
+/* Tiny Anek Telugu Switch subset (2.0 KB) for crisp "తె" in EN mode without fetching Anek Telugu */
 .lang-switch-te {
-  font-family: 'Kohinoor Telugu', 'Noto Sans Telugu', system-ui, sans-serif;
-  font-weight: 800;
+  font-family: 'Anek Telugu Switch', system-ui, sans-serif;
+  font-weight: 700;
 }
 
 html[lang="te"] .lang-switch-te {
-  font-family: var(--font-telugu), system-ui, sans-serif;
+  font-family: var(--font-telugu), 'Anek Telugu Switch', system-ui, sans-serif;
+  font-weight: 700;
 }
 
 /* V2 Card, Ticket Stub, Button, and Chip System (Single border, single hard shadow, zero tilt) */
@@ -376,6 +387,12 @@ html[lang="te"] .lang-switch-te {
   cursor: pointer;
 }
 
+.wall-btn.bg-magenta {
+  font-size: 19px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
 @media (hover: hover) and (pointer: fine) {
   .wall-btn:hover {
     transform: translateY(-1px);
@@ -447,7 +464,8 @@ html[lang="te"] .lang-switch-te {
     animation: none !important;
   }
   .wall-btn,
-  .wall-card-interactive {
+  .wall-card-interactive,
+  .wall-demo-panel {
     transition: none !important;
   }
 }
@@ -460,7 +478,8 @@ html[data-reduced-motion="true"] .wall-demo-card {
 }
 
 html[data-reduced-motion="true"] .wall-btn,
-html[data-reduced-motion="true"] .wall-card-interactive {
+html[data-reduced-motion="true"] .wall-card-interactive,
+html[data-reduced-motion="true"] .wall-demo-panel {
   transition: none !important;
 }
 

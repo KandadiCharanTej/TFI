@@ -9,6 +9,7 @@ const config: Config = {
       current: "currentColor",
       concrete: WALL_COLORS.concrete,
       sticker: WALL_COLORS.sticker,
+      white: WALL_COLORS.sticker,
       card: WALL_COLORS.card,
       ink: WALL_COLORS.ink,
       yellow: WALL_COLORS.yellow,

@@ -107,7 +107,7 @@ export default function MostLikelyResultsPage() {
           </Badge>
 
           <TicketStub
-            bg="yellow"
+            bg="green"
             data-testid="vote-crowned-display"
             header={
               <div className="flex items-center justify-between text-ink">

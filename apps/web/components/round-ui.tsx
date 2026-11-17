@@ -112,7 +112,7 @@ export function QuitRoundDialog({
             <button
               type="button"
               onClick={onConfirm}
-              className="wall-btn min-h-[48px] bg-magenta px-4 text-[14px] text-white"
+              className="wall-btn min-h-[48px] bg-magenta px-4 text-[19px] font-bold text-white"
             >
               {isTe ? "బయటకు వెళ్ళు" : "Quit round"}
             </button>

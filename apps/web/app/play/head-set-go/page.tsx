@@ -48,7 +48,11 @@ export default function HsgSetupPage() {
               <Tx v={TRANSLATIONS.modes.onePhone} />
             </Badge>
           </div>
-          <div className="mt-3">
+          <div className="mt-3 flex items-center gap-2.5">
+            <span
+              aria-hidden="true"
+              className="inline-block h-3.5 w-3.5 shrink-0 rounded-full border-2 border-ink bg-yellow"
+            />
             <GameTitle
               as="h1"
               title={TRANSLATIONS.hsg.name}

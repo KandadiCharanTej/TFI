@@ -80,7 +80,9 @@ test.describe("Beta scope: movie games only (flag off)", () => {
 });
 
 test.describe("Font direction A loading rules", () => {
-  test("English mode never requests the Telugu font", async ({ page }) => {
+  test("English mode never requests the full Telugu font (only the <3KB switch subset)", async ({
+    page,
+  }) => {
     const fontUrls: string[] = [];
     page.on("request", (r) => {
       if (r.url().includes("/fonts/")) fontUrls.push(r.url());
@@ -88,7 +90,10 @@ test.describe("Font direction A loading rules", () => {
     await setLang(page, "en");
     await page.goto(`${BASE}/play`);
     await waitHydrated(page);
-    expect(fontUrls.filter((u) => /anek|noto/i.test(u))).toEqual([]);
+    const fullTeluguRequests = fontUrls.filter(
+      (u) => /anek|noto/i.test(u) && !u.includes("anek-telugu-switch"),
+    );
+    expect(fullTeluguRequests).toEqual([]);
   });
 
   test("Telugu mode loads only Anek Telugu, under 250 KB", async ({ page }) => {
