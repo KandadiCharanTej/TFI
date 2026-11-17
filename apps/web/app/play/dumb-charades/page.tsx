@@ -2,17 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getGameColor } from "@tfi/config/tokens";
 import type { DifficultyMix } from "@tfi/game-core";
 import { AppFrame } from "@/components/app-frame";
-import { GameTitle } from "@/components/game-title";
-import { WallIcon } from "@/components/icons";
+import { GameSetupHero } from "@/components/game-setup-hero";
 import { Tx, useLang, useT } from "@/components/lang-provider";
-import { Badge, Chip, Sticker, WallButton, WallLinkButton } from "@/components/sticker-kit";
+import { Chip, Sticker, WallButton, WallLinkButton } from "@/components/sticker-kit";
 import { recordRecentlyPlayed } from "@/lib/games";
 import { GAMES_CATALOG, TRANSLATIONS } from "@/lib/i18n";
+import { GAME_TRANSLATIONS } from "@/lib/i18n-games";
 
-const C = TRANSLATIONS.charades;
+const C = GAME_TRANSLATIONS.charades;
 const TEAMS_KEY = "tfi.charades.teams";
 const CONFIG_KEY = "tfi.charades.config";
 const HIDE_HOWTO_KEY = "tfi.charades.hideHowTo";
@@ -108,62 +107,30 @@ export default function DumbCharadesSetupPage() {
 
   return (
     <AppFrame>
-      <div className="mx-auto max-w-[520px] space-y-6 p-4">
+      <div className="mx-auto max-w-[540px] space-y-5">
         <div className="flex items-center justify-between gap-2">
           <WallLinkButton href="/play" variant="white" size="sm">
             ← <Tx v={TRANSLATIONS.common.backToPlay} />
           </WallLinkButton>
-          <button
-            type="button"
-            onClick={resetHowTo}
-            aria-label={t(C.howToTitle)}
-            data-testid="charades-help-btn"
-            className="flex h-11 w-11 items-center justify-center rounded-full border-[2.5px] border-ink bg-white text-lg font-black text-ink shadow-btn active:translate-y-0.5"
-          >
-            ?
-          </button>
         </div>
 
+        <GameSetupHero
+          slug="dumb-charades"
+          gameNumber={catalogGame.number}
+          iconKind="charades"
+          title={catalogGame.title}
+          description={GAME_TRANSLATIONS.gamesMeta.dumbCharadesRule}
+          onOpenHowTo={resetHowTo}
+          howToTestId="charades-help-btn"
+        />
+
         <Sticker className="p-5 sm:p-6">
-          <div className="flex items-center justify-between gap-2">
-            <Badge tone="yellow">Game #{catalogGame.number}</Badge>
-            <Badge tone="white"><Tx v={TRANSLATIONS.modes.onePhone} /></Badge>
-          </div>
-          <p className="wall-label m-0 mt-3 text-ink/75">
+          <p className="wall-label m-0 text-ink/75">
             <Tx v={TRANSLATIONS.gameSetup.stepFlow} />
           </p>
 
-          <div className="mt-4 flex items-center gap-4">
-            <div
-              className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[14px] border-[2.5px] border-ink text-ink"
-              style={{ backgroundColor: getGameColor("dumb-charades") }}
-            >
-              <div className="h-10 w-10">
-                <WallIcon kind="charades" />
-              </div>
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span
-                  aria-hidden="true"
-                  className="inline-block h-3 w-3 shrink-0 rounded-full border-2 border-ink"
-                  style={{ backgroundColor: getGameColor("dumb-charades") }}
-                />
-                <GameTitle
-                  title={catalogGame.title}
-                  as="h1"
-                  teClassName="text-[28px]"
-                  enClassName="text-[26px]"
-                />
-              </div>
-              <p className="m-0 mt-1 text-[13px] font-bold text-ink/80">
-                <Tx v={TRANSLATIONS.gamesMeta.dumbCharadesRule} />
-              </p>
-            </div>
-          </div>
-
           {/* Teams (2 to 4) */}
-          <div className="mt-6 space-y-2.5">
+          <div className="mt-4 space-y-2.5">
             <label className="block text-[13px] font-black uppercase tracking-wider text-ink">
               <Tx v={C.teams} />
             </label>
@@ -184,7 +151,7 @@ export default function DumbCharadesSetupPage() {
                     <button
                       type="button"
                       onClick={() => handleRemoveTeam(idx)}
-                      aria-label={`${t(TRANSLATIONS.judge.removePlayer)} ${name}`}
+                      aria-label={`${t(GAME_TRANSLATIONS.judge.removePlayer)} ${name}`}
                       className="min-h-[44px] rounded-[10px] border-2 border-ink bg-white px-3 text-xs font-black text-ink"
                     >
                       ✕
@@ -290,7 +257,7 @@ export default function DumbCharadesSetupPage() {
               onClick={handleStart}
               data-testid="charades-start-btn"
             >
-              <Tx v={TRANSLATIONS.judge.startGame} /> →
+              <Tx v={GAME_TRANSLATIONS.judge.startGame} /> →
             </WallButton>
           </div>
         </Sticker>

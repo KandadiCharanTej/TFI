@@ -7,10 +7,9 @@ import { useFlags } from "@/components/flags-provider";
 import { Tx, useLang } from "@/components/lang-provider";
 import { Badge, Sticker, WallButton, WallLinkButton } from "@/components/sticker-kit";
 import { GAMES_CATALOG, TRANSLATIONS } from "@/lib/i18n";
+import { ROOMS_TRANSLATIONS as R } from "@/lib/i18n-rooms";
 import { createRoomOnServer, savePendingRoomName } from "@/lib/room-client";
 import { usePreferencesStore } from "@/lib/store";
-
-const R = TRANSLATIONS.rooms;
 
 export default function NewRoomPage() {
   const router = useRouter();

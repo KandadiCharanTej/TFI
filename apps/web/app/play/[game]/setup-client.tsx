@@ -2,17 +2,18 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getGameColor } from "@tfi/config/tokens";
 import { AppFrame } from "@/components/app-frame";
-import { GameTitle } from "@/components/game-title";
-import { WallIcon } from "@/components/icons";
+import { GameSetupHero } from "@/components/game-setup-hero";
 import { Tx, useLang } from "@/components/lang-provider";
-import { Badge, Sticker, WallButton, WallLinkButton } from "@/components/sticker-kit";
+import { HowToPlayDialog } from "@/components/round-ui";
+import { Sticker, WallButton, WallLinkButton } from "@/components/sticker-kit";
 import { recordRecentlyPlayed } from "@/lib/games";
 import { TRANSLATIONS } from "@/lib/i18n";
+import { GAME_TRANSLATIONS } from "@/lib/i18n-games";
+import { markUserAudioInteraction, playPartySound } from "@/lib/sound";
 import type { GameRegistryEntry } from "@tfi/game-core";
 
-const J = TRANSLATIONS.judge;
+const J = GAME_TRANSLATIONS.judge;
 
 interface SetupClientProps {
   game: GameRegistryEntry;
@@ -25,6 +26,8 @@ export default function SetupClient({ game, title, description, rule }: SetupCli
   const router = useRouter();
   const { lang } = useLang();
   const [duration, setDuration] = useState(game.defaultTimerSec);
+  const [howToOpen, setHowToOpen] = useState(false);
+  const [dontShowHelp, setDontShowHelp] = useState(false);
   const [players, setPlayers] = useState<string[]>([
     lang === "te" ? "ఆటగాడు 1" : "Player 1",
     lang === "te" ? "ఆటగాడు 2" : "Player 2",
@@ -66,6 +69,8 @@ export default function SetupClient({ game, title, description, rule }: SetupCli
   }
 
   function handleStart() {
+    markUserAudioInteraction();
+    playPartySound("tap");
     recordRecentlyPlayed(game.id);
     try {
       localStorage.setItem("tfi.judge.players", JSON.stringify(players));
@@ -87,53 +92,52 @@ export default function SetupClient({ game, title, description, rule }: SetupCli
     router.push(`/play/${game.id}/round`);
   }
 
-  const panelColor = getGameColor(game.id);
-
   return (
     <AppFrame>
-      <div className="mx-auto max-w-[520px] space-y-5 p-4" data-testid="judge-setup-screen">
-        {/* Header sticker */}
-        <Sticker className="p-5">
-          <div className="flex items-center justify-between">
-            <Badge tone="yellow">Game #{game.number}</Badge>
-            <Badge tone="white">
-              <Tx v={TRANSLATIONS.modes.onePhone} />
-            </Badge>
-          </div>
-          <p className="wall-label m-0 mt-3 text-ink/75">
-            <Tx v={TRANSLATIONS.gameSetup.stepFlow} />
-          </p>
+      <div className="mx-auto max-w-[540px] space-y-5" data-testid="judge-setup-screen">
+        <div className="flex items-center justify-between gap-2">
+          <WallLinkButton href="/play" variant="white" size="sm">
+            ← <Tx v={TRANSLATIONS.common.backToPlay} />
+          </WallLinkButton>
+        </div>
 
-          <div className="mt-4 flex items-center gap-4">
-            <div
-              className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[14px] border-[2.5px] border-ink text-ink"
-              style={{ backgroundColor: panelColor }}
-            >
-              <div className="h-10 w-10">
-                <WallIcon kind={game.iconId} />
-              </div>
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span
-                  aria-hidden="true"
-                  className="inline-block h-3 w-3 shrink-0 rounded-full border-2 border-ink"
-                  style={{ backgroundColor: panelColor }}
-                />
-                <GameTitle title={title} as="h1" teClassName="text-[26px]" enClassName="text-[24px]" />
-              </div>
-              <p className="m-0 mt-0.5 text-[13px] font-bold text-ink opacity-70">
-                <Tx v={description} />
-              </p>
-            </div>
-          </div>
+        <GameSetupHero
+          slug={game.id}
+          gameNumber={game.number}
+          iconKind={game.iconId}
+          title={title}
+          description={description}
+          onOpenHowTo={() => setHowToOpen(true)}
+          howToTestId="judge-help-btn"
+        />
 
-          <div className="mt-4 rounded-[12px] border-2 border-ink bg-card p-3">
-            <p className="m-0 text-[13px] font-bold leading-relaxed text-ink">
-              <Tx v={rule} />
-            </p>
-          </div>
-        </Sticker>
+        <HowToPlayDialog
+          open={howToOpen}
+          onClose={() => setHowToOpen(false)}
+          title={title[lang]}
+          dontShow={dontShowHelp}
+          onToggleDontShow={setDontShowHelp}
+          steps={[
+            {
+              title: lang === "te" ? "1. జడ్జ్ ఫోన్ పట్టుకుంటారు" : "1. Judge holds the phone",
+              body: rule[lang],
+            },
+            {
+              title: lang === "te" ? "2. పాస్ లేదా సరైనది" : "2. Tap Correct or Pass",
+              body:
+                lang === "te"
+                  ? "సరైన జవాబుకు ఆకుపచ్చ బటన్, పాస్ చేయడానికి పింక్ బటన్ నొక్కండి."
+                  : "Green scores a point, magenta skips to the next card.",
+            },
+            {
+              title: lang === "te" ? "3. ఫోన్ పాస్ చేయండి" : "3. Pass the phone",
+              body:
+                lang === "te"
+                  ? "ప్రతి ఆటగాడికి ఒక రౌండ్ ఉంటుంది. చివరలో విజేత తెలుస్తారు."
+                  : "Each player takes a turn as Judge until everyone scores.",
+            },
+          ]}
+        />
 
         {/* Players List (2 to 8) */}
         <Sticker className="p-5">
@@ -204,7 +208,7 @@ export default function SetupClient({ game, title, description, rule }: SetupCli
               data-testid="judge-timer-value"
             >
               {duration}
-              <span className="ml-1 text-[16px] font-bold opacity-60">s</span>
+              <span className="ml-1 text-[16px] font-bold opacity-80">s</span>
             </div>
             <button
               type="button"

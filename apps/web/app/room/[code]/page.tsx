@@ -8,10 +8,9 @@ import { useFlags } from "@/components/flags-provider";
 import { Tx, useLang, useT } from "@/components/lang-provider";
 import { Badge, Sticker, TicketStub, WallButton, WallLinkButton } from "@/components/sticker-kit";
 import { TRANSLATIONS } from "@/lib/i18n";
+import { ROOMS_TRANSLATIONS as R } from "@/lib/i18n-rooms";
 import { readPendingRoomName, useRoomConnection } from "@/lib/room-client";
 import { usePreferencesStore } from "@/lib/store";
-
-const R = TRANSLATIONS.rooms;
 
 export default function RoomLobbyPage({ params }: { params: Promise<{ code: string }> }) {
   const { code: rawCode } = use(params);
@@ -221,6 +220,7 @@ export default function RoomLobbyPage({ params }: { params: Promise<{ code: stri
         {/* Cyan TicketStub centerpiece with 4-letter Room Code */}
         <TicketStub
           bg="cyan"
+          className="bg-stripes"
           header={
             <div className="flex items-center justify-between gap-2">
               <Badge tone="white">
@@ -353,7 +353,7 @@ export default function RoomLobbyPage({ params }: { params: Promise<{ code: stri
                 <li
                   key={p.id}
                   data-testid={`player-row-${p.id}`}
-                  className="flex items-center justify-between gap-3 rounded-[14px] border-2 border-ink bg-card px-3.5 py-2.5"
+                  className="v4-avatar-pop flex items-center justify-between gap-3 rounded-[16px] border-[2.5px] border-ink bg-card px-3.5 py-2.5"
                 >
                   <div className="flex items-center gap-3">
                     <span
@@ -424,7 +424,11 @@ export default function RoomLobbyPage({ params }: { params: Promise<{ code: stri
                   disabled={connectedCount < 2 || room.gameId === "box-office-auction"}
                   onClick={() => sendStartGame(room.gameId)}
                   data-testid="room-start-btn"
-                  className="w-full"
+                  className={`w-full ${
+                    connectedCount >= 2 && room.gameId !== "box-office-auction"
+                      ? "v4-host-pulse"
+                      : ""
+                  }`}
                 >
                   <Tx v={R.startGame} /> →
                 </WallButton>

@@ -2,16 +2,19 @@
 
 import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
-import { getGameColorKey } from "@tfi/config/tokens";
+import { getGameColor, getGameColorKey } from "@tfi/config/tokens";
 import { AppFrame } from "@/components/app-frame";
+import { ConfettiBurst } from "@/components/confetti-burst";
 import { FeedbackSticker } from "@/components/feedback-sticker";
 import { Tx, useLang } from "@/components/lang-provider";
 import { Badge, Sticker, TicketStub, WallButton, WallLinkButton } from "@/components/sticker-kit";
 import { TRANSLATIONS } from "@/lib/i18n";
+import { GAME_TRANSLATIONS } from "@/lib/i18n-games";
 import { drawWallSharePoster } from "@/lib/share-card";
+import { playPartySound } from "@/lib/sound";
 import { getGameById } from "@tfi/game-core";
 
-const J = TRANSLATIONS.judge;
+const J = GAME_TRANSLATIONS.judge;
 
 interface TurnSummary {
   playerId: string;
@@ -47,6 +50,7 @@ async function buildShareSticker(
   winnerNames: string,
   scores: PlayerScore[],
   showNames: boolean,
+  gameColor: string,
 ): Promise<Blob | null> {
   try {
     const canvas = document.createElement("canvas");
@@ -58,6 +62,7 @@ async function buildShareSticker(
       rows: scores.map((sc) => ({ label: sc.player.name, value: `${sc.score} pts` })),
       showNames,
       unofficialFooter: TRANSLATIONS.brand.unofficialDisclaimer.en,
+      gameColor,
     });
     return new Promise((res) => canvas.toBlob((b) => res(b), "image/png"));
   } catch {
@@ -92,6 +97,7 @@ export default function JudgeResultsPage({
       const rawPlayers = sessionStorage.getItem("judge.players");
       if (rawResults) setTurnSummaries(JSON.parse(rawResults) as TurnSummary[]);
       if (rawPlayers) setPlayers(JSON.parse(rawPlayers) as Player[]);
+      playPartySound("win");
     } catch {
       /* ignore */
     }
@@ -129,7 +135,7 @@ export default function JudgeResultsPage({
           ? (showNames ? winners[0].player.name : "Winner")
           : "Winner";
 
-      const blob = await buildShareSticker(gameName, winnerStr, playerScores, showNames);
+      const blob = await buildShareSticker(gameName, winnerStr, playerScores, showNames, getGameColor(slug));
       if (!blob) throw new Error("Could not generate image");
 
       const file = new File([blob], `${slug}-result.png`, { type: "image/png" });
@@ -163,6 +169,7 @@ export default function JudgeResultsPage({
 
   return (
     <AppFrame>
+      <ConfettiBurst trigger={1} />
       <div className="mx-auto max-w-[480px] space-y-5 p-4" data-testid="judge-results-screen">
         {/* Ticket-Stub Winner Banner in the game's color */}
         <TicketStub
@@ -171,7 +178,7 @@ export default function JudgeResultsPage({
           header={
             <div className="flex items-center justify-between gap-2">
               <Badge tone="white">
-                <Tx v={TRANSLATIONS.landing.admitOneGang} />
+                <Tx v={TRANSLATIONS.common.admitOneGang} />
               </Badge>
               <Badge tone="white">
                 {isTie ? <Tx v={J.tie} /> : <Tx v={J.winner} />}
@@ -219,7 +226,7 @@ export default function JudgeResultsPage({
                     <span className="font-extrabold text-ink text-base">
                       {ps.player.name}
                     </span>
-                    <span className="block text-xs font-bold text-ink opacity-60">
+                    <span className="block text-xs font-bold text-ink opacity-80">
                       {ps.correct} {lang === "te" ? "సరైనవి" : "correct"} · {ps.skipped}{" "}
                       {lang === "te" ? "వదిలేసినవి" : "skipped"}
                     </span>

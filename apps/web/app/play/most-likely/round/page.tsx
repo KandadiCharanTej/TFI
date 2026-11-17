@@ -15,8 +15,9 @@ import {
 import { Tx, useLang, useT } from "@/components/lang-provider";
 import { Badge, Sticker, WallButton } from "@/components/sticker-kit";
 import { TRANSLATIONS } from "@/lib/i18n";
+import { GAME_TRANSLATIONS } from "@/lib/i18n-games";
 
-const V = TRANSLATIONS.vote;
+const V = GAME_TRANSLATIONS.vote;
 const CONFIG_KEY = "tfi.vote.config";
 const RESULTS_KEY = "tfi.vote.results";
 const HIDE_HOWTO_KEY = "tfi.vote.hideHowTo";
@@ -227,7 +228,7 @@ function VoteRoundRunner({
 
   return (
     <main
-      className="wall-tap-safe flex min-h-[100dvh] flex-col justify-between bg-concrete px-4 pb-[max(16px,env(safe-area-inset-bottom))] pt-[max(16px,env(safe-area-inset-top))]"
+      className="wall-tap-safe bg-halftone flex min-h-[100dvh] flex-col justify-between bg-green px-4 pb-[max(16px,env(safe-area-inset-bottom))] pt-[max(16px,env(safe-area-inset-top))]"
       style={{ WebkitUserSelect: "none", userSelect: "none" }}
     >
       <header className="mx-auto flex w-full max-w-[520px] items-center justify-between gap-2">
@@ -240,7 +241,7 @@ function VoteRoundRunner({
         <button
           type="button"
           onClick={() => setConfirmQuit(true)}
-          aria-label={t(TRANSLATIONS.judge.quit)}
+          aria-label={t(GAME_TRANSLATIONS.judge.quit)}
           className="flex h-11 min-w-[44px] items-center justify-center rounded-full border-2 border-ink bg-white px-3 text-sm font-black text-ink"
         >
           ✕
@@ -321,7 +322,7 @@ function VoteRoundRunner({
         {state.phase === "reveal" && latestResult ? (
           <Sticker className="space-y-5 p-6 text-center" data-testid="vote-reveal-screen">
             <Badge tone={latestResult.isTie ? "cyan" : "yellow"}>
-              <Tx v={latestResult.isTie ? TRANSLATIONS.judge.tie : V.revealTitle} />
+              <Tx v={latestResult.isTie ? GAME_TRANSLATIONS.judge.tie : V.revealTitle} />
             </Badge>
 
             <p className="m-0 text-[16px] font-bold text-ink/80">
@@ -405,7 +406,7 @@ function VoteRoundRunner({
                 onChange={(e) => setDontShowAgain(e.target.checked)}
                 className="h-5 w-5 accent-ink"
               />
-              <Tx v={TRANSLATIONS.charades.dontShowAgain} />
+              <Tx v={GAME_TRANSLATIONS.charades.dontShowAgain} />
             </label>
             <WallButton
               type="button"
@@ -414,7 +415,7 @@ function VoteRoundRunner({
               onClick={dismissHowTo}
               data-testid="vote-howto-ok"
             >
-              <Tx v={TRANSLATIONS.charades.gotItStart} />
+              <Tx v={GAME_TRANSLATIONS.charades.gotItStart} />
             </WallButton>
           </Sticker>
         </div>
@@ -424,23 +425,23 @@ function VoteRoundRunner({
         <div
           role="dialog"
           aria-modal="true"
-          aria-label={t(TRANSLATIONS.judge.paused)}
+          aria-label={t(GAME_TRANSLATIONS.judge.paused)}
           className="fixed inset-0 z-50 flex items-center justify-center bg-ink/80 p-4"
         >
           <Sticker className="w-full max-w-[360px] space-y-4 p-6 text-center">
             <h2 className="h2-title m-0 text-ink">
-              <Tx v={TRANSLATIONS.judge.paused} />
+              <Tx v={GAME_TRANSLATIONS.judge.paused} />
             </h2>
             <div className="flex flex-col gap-3">
               <WallButton type="button" variant="yellow" onClick={() => setConfirmQuit(false)}>
-                <Tx v={TRANSLATIONS.judge.resume} />
+                <Tx v={GAME_TRANSLATIONS.judge.resume} />
               </WallButton>
               <WallButton
                 type="button"
                 variant="white"
                 onClick={() => router.push("/play/most-likely")}
               >
-                <Tx v={TRANSLATIONS.judge.quit} />
+                <Tx v={GAME_TRANSLATIONS.judge.quit} />
               </WallButton>
             </div>
           </Sticker>

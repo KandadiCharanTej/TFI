@@ -3,17 +3,19 @@
 import { useEffect, useRef, useCallback, useMemo, useState, useReducer, use } from "react";
 import { useRouter } from "next/navigation";
 import * as Dialog from "@radix-ui/react-dialog";
+import { getGameColor } from "@tfi/config/tokens";
+import { ConfettiBurst } from "@/components/confetti-burst";
 import { Tx, useLang } from "@/components/lang-provider";
 import {
-  ConfettiBurst,
   HowToPlayDialog,
   OfflineBanner,
   QuitRoundDialog,
 } from "@/components/round-ui";
-import { TRANSLATIONS } from "@/lib/i18n";
+import { GAME_TRANSLATIONS } from "@/lib/i18n-games";
+import { isCalmActive } from "@/lib/store";
 import type { GameCard } from "@tfi/game-core";
 
-const J = TRANSLATIONS.judge;
+const J = GAME_TRANSLATIONS.judge;
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -223,7 +225,7 @@ function useAudio(muted: boolean) {
 
   const beep = useCallback(
     (freq: number, dur: number, vol = 0.3) => {
-      if (muted) return;
+      if (muted || isCalmActive()) return;
       if (typeof navigator !== "undefined" && "userActivation" in navigator && !navigator.userActivation.hasBeenActive) return;
       try {
         ctxRef.current ??= new AudioContext();
@@ -518,7 +520,8 @@ export default function JudgeRoundPage({
   const currentCard = s.cards[s.currentIndex];
   const pct = s.duration > 0 ? (s.secondsLeft / s.duration) * 100 : 0;
   const timerColor = s.secondsLeft <= 10 ? "#EC1276" : "#141313";
-  const bg = s.stamp === "correct" ? "#00C853" : s.stamp === "skip" ? "#EC1276" : "#EAE6DF";
+  const baseColor = getGameColor(slug);
+  const bg = s.stamp === "correct" ? "#00C853" : s.stamp === "skip" ? "#EC1276" : baseColor;
 
   // 1. Loading State
   // 1. Passing Phone Screen between turns
@@ -598,7 +601,9 @@ export default function JudgeRoundPage({
 
   return (
     <div
-      className="wall-safe-round relative flex flex-col overflow-hidden p-0 transition-colors duration-150"
+      className={`wall-safe-round bg-halftone relative flex flex-col overflow-hidden p-0 transition-colors duration-150 ${
+        s.secondsLeft === 0 ? "wall-shake" : ""
+      }`}
       style={{ backgroundColor: bg }}
       data-testid="judge-round-screen"
     >
@@ -758,7 +763,11 @@ export default function JudgeRoundPage({
 
           {/* Seconds Left Pill */}
           <div
-            className="mono-num rounded-full border-2 border-ink bg-white px-3 py-1 text-base font-black text-ink shadow-[2px_2px_0_#141313]"
+            className={`mono-num rounded-full border-2 border-ink px-3 py-1 text-base font-black shadow-[2px_2px_0_#141313] ${
+              s.secondsLeft <= 10 && s.secondsLeft > 0
+                ? "v4-pulse-urgent bg-magenta text-[19px] text-white"
+                : "bg-white text-ink"
+            }`}
             data-testid="judge-seconds-left"
           >
             {s.secondsLeft}s

@@ -1,6 +1,7 @@
 "use client";
 
 import { AppFrame } from "@/components/app-frame";
+import { Starburst } from "@/components/art-kit";
 import { GameTitle } from "@/components/game-title";
 import { Tx } from "@/components/lang-provider";
 import { useVisibleGames } from "@/components/flags-provider";
@@ -17,7 +18,10 @@ export default function OfflinePage() {
   return (
     <AppFrame>
       <div className="mx-auto max-w-[540px] space-y-5">
-        <Sticker className="space-y-4 p-6 text-center">
+        <Sticker className="relative space-y-4 p-6 text-center">
+          <div className="pointer-events-none absolute right-4 top-4" aria-hidden="true">
+            <Starburst color="yellow" size={40} />
+          </div>
           <h1 className="h1-title m-0 text-ink">
             <Tx v={P.offlineTitle} />
           </h1>

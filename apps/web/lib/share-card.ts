@@ -10,12 +10,13 @@ export interface ShareCardInput {
   rows: readonly { label: string; value: string }[];
   showNames: boolean;
   unofficialFooter: string;
+  gameColor?: string;
 }
 
 /**
- * Draws a 1080x1350 V2 Film Ticket Stub share poster onto a Canvas2D context.
- * Includes "Admit one gang", game name, score/winner, date, side ticket notches,
- * dashed perforation line, and unofficial line at the bottom.
+ * Draws a 1080x1350 V4 Party Mode Film Ticket Stub share poster onto a Canvas2D context.
+ * Uses the game color as background (with concrete dots), white TicketStub centerpiece,
+ * Admit one gang badge, and unofficial line at the bottom.
  */
 export function drawWallSharePoster(canvas: HTMLCanvasElement, input: ShareCardInput): void {
   if (typeof window !== "undefined") {
@@ -28,8 +29,9 @@ export function drawWallSharePoster(canvas: HTMLCanvasElement, input: ShareCardI
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
-  const { template, gameTitle, headline, subline, rows, showNames, unofficialFooter } = input;
-  const bgColor = template === "winner" ? "#F6BE18" : template === "gang" ? "#00E5FF" : "#EAE6DF";
+  const { template, gameTitle, headline, subline, rows, showNames, unofficialFooter, gameColor } = input;
+  const bgColor =
+    gameColor ?? (template === "winner" ? "#F6BE18" : template === "gang" ? "#00E5FF" : "#EAE6DF");
 
   // 1. Concrete / Template Accent Background
   ctx.fillStyle = bgColor;
@@ -134,11 +136,16 @@ export function drawWallSharePoster(canvas: HTMLCanvasElement, input: ShareCardI
     ctx.fillText(row.value, cardX + cardW - 76, ry + 53);
   });
 
-  // 6. Unofficial Footer
+  // 6. Unofficial Footer on clean white strip for guaranteed contrast
+  ctx.fillStyle = "#FFFFFF";
+  ctx.fillRect(cardX, H - 116, cardW, 78);
+  ctx.lineWidth = 4;
+  ctx.strokeStyle = "#141313";
+  ctx.strokeRect(cardX, H - 116, cardW, 78);
   ctx.textAlign = "center";
   ctx.fillStyle = "#141313";
-  ctx.font = "800 24px sans-serif";
-  ctx.fillText("TFI & Pitch · tfiandpitch.app", W / 2, H - 84);
-  ctx.font = "600 18px sans-serif";
-  ctx.fillText(unofficialFooter.slice(0, 72), W / 2, H - 46);
+  ctx.font = "800 22px sans-serif";
+  ctx.fillText("TFI & Pitch · Free party games", W / 2, H - 82);
+  ctx.font = "600 17px sans-serif";
+  ctx.fillText(unofficialFooter.slice(0, 72), W / 2, H - 52);
 }

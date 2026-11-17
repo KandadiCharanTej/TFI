@@ -2,6 +2,9 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { GAMES_CATALOG, TELUGU_CONJUNCT_SAMPLES, TRANSLATIONS } from "../lib/i18n.ts";
+import { GAME_TRANSLATIONS } from "../lib/i18n-games.ts";
+import { LANDING_TRANSLATIONS } from "../lib/i18n-landing.ts";
+import { ROOMS_TRANSLATIONS } from "../lib/i18n-rooms.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, "../../..");
@@ -30,6 +33,9 @@ function walk(prefix, obj) {
 }
 
 walk("TRANSLATIONS", TRANSLATIONS);
+walk("TRANSLATIONS", GAME_TRANSLATIONS);
+walk("TRANSLATIONS.landing", LANDING_TRANSLATIONS);
+walk("TRANSLATIONS.rooms", ROOMS_TRANSLATIONS);
 GAMES_CATALOG.forEach((game) => {
   walk(`GAMES_CATALOG.${game.slug}`, {
     title: game.title,

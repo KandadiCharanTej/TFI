@@ -2,12 +2,17 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { getGameColor } from "@tfi/config/tokens";
 import { AppFrame } from "@/components/app-frame";
+import { ConfettiBurst } from "@/components/confetti-burst";
 import { FeedbackSticker } from "@/components/feedback-sticker";
 import { Tx, useLang } from "@/components/lang-provider";
+import { CountUp } from "@/components/motion-kit";
 import { Sticker, TicketStub, WallButton, WallLinkButton } from "@/components/sticker-kit";
 import { TRANSLATIONS } from "@/lib/i18n";
+import { GAME_TRANSLATIONS } from "@/lib/i18n-games";
 import { drawWallSharePoster } from "@/lib/share-card";
+import { playPartySound } from "@/lib/sound";
 
 interface RoundCard {
   id: string;
@@ -35,6 +40,7 @@ async function buildShareSticker(correct: number, deck: string): Promise<Blob | 
       rows: [{ label: "Score", value: `${correct} pts` }],
       showNames: true,
       unofficialFooter: TRANSLATIONS.brand.unofficialDisclaimer.en,
+      gameColor: getGameColor("head-set-go"),
     });
     return new Promise((res) => canvas.toBlob((b) => res(b), "image/png"));
   } catch {
@@ -57,6 +63,7 @@ export default function HsgResultsPage() {
     setPassedIds(JSON.parse(sessionStorage.getItem("hsg.passedIds") ?? "[]"));
     setAllCards(JSON.parse(sessionStorage.getItem("hsg.allCards") ?? "[]"));
     deckRef.current = sessionStorage.getItem("hsg.deck") ?? "movies";
+    playPartySound("win");
   }, []);
 
   const cardMap = Object.fromEntries(allCards.map((c) => [c.id, c]));
@@ -66,17 +73,17 @@ export default function HsgResultsPage() {
     setShareMsg("");
     const blob = await buildShareSticker(correctIds.length, deckRef.current);
     if (!blob) {
-      setShareMsg(TRANSLATIONS.hsg.shareFailed[lang]);
+      setShareMsg(GAME_TRANSLATIONS.hsg.shareFailed[lang]);
       setSharing(false);
       return;
     }
     const file = new File([blob], "head-set-go-score.png", { type: "image/png" });
     if (navigator.canShare?.({ files: [file] })) {
       await navigator.share({ files: [file], title: `Head Set Go — ${correctIds.length} correct` });
-      setShareMsg(TRANSLATIONS.hsg.shareDone[lang]);
+      setShareMsg(GAME_TRANSLATIONS.hsg.shareDone[lang]);
     } else {
       downloadBlob(blob, "head-set-go-score.png");
-      setShareMsg(TRANSLATIONS.hsg.shareSaved[lang]);
+      setShareMsg(GAME_TRANSLATIONS.hsg.shareSaved[lang]);
     }
     setSharing(false);
   }
@@ -89,6 +96,7 @@ export default function HsgResultsPage() {
 
   return (
     <AppFrame>
+      <ConfettiBurst trigger={1} />
       <div className="mx-auto max-w-[480px] space-y-5 p-4">
         {/* Ticket-stub Score header */}
         <TicketStub
@@ -97,33 +105,33 @@ export default function HsgResultsPage() {
           header={
             <div className="flex items-center justify-between text-ink">
               <span className="wall-label">
-                <Tx v={TRANSLATIONS.landing.admitOneGang} />
+                <Tx v={TRANSLATIONS.common.admitOneGang} />
               </span>
               <span className="wall-label">Head Set Go</span>
             </div>
           }
           footer={
             <p className="m-0 text-[15px] font-bold text-ink">
-              <Tx v={TRANSLATIONS.hsg.timesUp} /> · <Tx v={TRANSLATIONS.hsg.scoreLabel} />
+              <Tx v={GAME_TRANSLATIONS.hsg.timesUp} /> · <Tx v={GAME_TRANSLATIONS.hsg.scoreLabel} />
             </p>
           }
         >
           <p
             className="mono-num m-0 text-[84px] font-bold leading-none text-ink"
-            aria-label={`${correctIds.length} ${TRANSLATIONS.hsg.scoreLabel[lang]}`}
+            aria-label={`${correctIds.length} ${GAME_TRANSLATIONS.hsg.scoreLabel[lang]}`}
           >
-            {correctIds.length}
+            <CountUp value={correctIds.length} durationMs={480} />
           </p>
         </TicketStub>
 
         {/* Got it */}
         <Sticker className="p-5">
           <p className="mb-3 text-xs font-extrabold uppercase tracking-wider text-ink">
-            <Tx v={TRANSLATIONS.hsg.gotIt} /> ({correctIds.length})
+            <Tx v={GAME_TRANSLATIONS.hsg.gotIt} /> ({correctIds.length})
           </p>
           {correctIds.length === 0 ? (
-            <p className="text-sm text-ink opacity-50">
-              <Tx v={TRANSLATIONS.hsg.emptyList} />
+            <p className="text-sm text-ink opacity-80">
+              <Tx v={GAME_TRANSLATIONS.hsg.emptyList} />
             </p>
           ) : (
             <ul className="space-y-1">
@@ -145,11 +153,11 @@ export default function HsgResultsPage() {
         {/* Passed */}
         <Sticker className="p-5">
           <p className="mb-3 text-xs font-extrabold uppercase tracking-wider text-ink">
-            <Tx v={TRANSLATIONS.hsg.passedList} /> ({passedIds.length})
+            <Tx v={GAME_TRANSLATIONS.hsg.passedList} /> ({passedIds.length})
           </p>
           {passedIds.length === 0 ? (
-            <p className="text-sm text-ink opacity-50">
-              <Tx v={TRANSLATIONS.hsg.emptyList} />
+            <p className="text-sm text-ink opacity-80">
+              <Tx v={GAME_TRANSLATIONS.hsg.emptyList} />
             </p>
           ) : (
             <ul className="space-y-1">
@@ -169,10 +177,10 @@ export default function HsgResultsPage() {
             className="flex-1"
             onClick={() => router.push("/play/head-set-go/round")}
           >
-            <Tx v={TRANSLATIONS.hsg.playAgain} />
+            <Tx v={GAME_TRANSLATIONS.hsg.playAgain} />
           </WallButton>
           <WallLinkButton href="/play/head-set-go" variant="white" className="flex-1">
-            <Tx v={TRANSLATIONS.hsg.changeDeck} />
+            <Tx v={GAME_TRANSLATIONS.hsg.changeDeck} />
           </WallLinkButton>
         </div>
 
@@ -183,10 +191,10 @@ export default function HsgResultsPage() {
             onClick={handleShare}
             disabled={sharing}
           >
-            {sharing ? "…" : <Tx v={TRANSLATIONS.hsg.share} />}
+            {sharing ? "…" : <Tx v={GAME_TRANSLATIONS.hsg.share} />}
           </WallButton>
           <WallLinkButton href="/play" variant="white" className="flex-1">
-            <Tx v={TRANSLATIONS.hsg.home} />
+            <Tx v={GAME_TRANSLATIONS.hsg.home} />
           </WallLinkButton>
         </div>
 

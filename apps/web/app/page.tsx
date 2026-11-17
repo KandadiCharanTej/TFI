@@ -4,11 +4,20 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getGameColor } from "@tfi/config/tokens";
 import { BrandWordmark } from "@/components/app-frame";
-import { WallIcon } from "@/components/icons";
+import {
+  HalftoneBlock,
+  PopBadge,
+  SpotlightBeam,
+  Squiggle,
+  Starburst,
+  XMark,
+} from "@/components/art-kit";
 import { GameTitle } from "@/components/game-title";
 import { HeroDemo } from "@/components/hero-demo";
+import { WallIcon } from "@/components/icons";
 import { LangSwitch } from "@/components/lang-switch";
 import { Tx, useLang, useT } from "@/components/lang-provider";
+import { MarqueeTape, Reveal } from "@/components/motion-kit";
 import {
   Badge,
   SegmentedControl,
@@ -23,8 +32,9 @@ import {
   type ModeFilter,
 } from "@/lib/games";
 import { BRAND_NAME, TRANSLATIONS } from "@/lib/i18n";
+import { LANDING_TRANSLATIONS } from "@/lib/i18n-landing";
 
-const L = TRANSLATIONS.landing;
+const L = LANDING_TRANSLATIONS;
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -33,36 +43,27 @@ interface BeforeInstallPromptEvent extends Event {
 function StepMicroArt({ stepNum }: { readonly stepNum: string }) {
   if (stepNum === "1") {
     return (
-      <svg aria-hidden="true" width="44" height="44" viewBox="0 0 44 44" className="shrink-0">
-        <rect x="6" y="8" width="22" height="28" rx="4" fill="#FFFFFF" stroke="#141313" strokeWidth="2.5" />
-        <rect
-          x="14"
-          y="8"
-          width="22"
-          height="28"
-          rx="4"
-          fill="#F6BE18"
-          stroke="#141313"
-          strokeWidth="2.5"
-          className="origin-bottom transition-transform duration-500"
-        />
-        <path d="M20 20h10M20 25h6" stroke="#141313" strokeWidth="2.5" strokeLinecap="round" />
+      <svg aria-hidden="true" width="48" height="48" viewBox="0 0 48 48" className="shrink-0">
+        <rect x="6" y="10" width="22" height="28" rx="5" fill="#EAE6DF" stroke="#141313" strokeWidth="3" />
+        <rect x="16" y="8" width="24" height="30" rx="5" fill="#F6BE18" stroke="#141313" strokeWidth="3" />
+        <path d="M23 20h10M23 27h7" stroke="#141313" strokeWidth="3" strokeLinecap="round" />
       </svg>
     );
   }
   if (stepNum === "2") {
     return (
-      <svg aria-hidden="true" width="44" height="44" viewBox="0 0 44 44" className="shrink-0">
-        <rect x="8" y="13" width="28" height="18" rx="4" fill="#EC1276" stroke="#141313" strokeWidth="2.5" />
-        <circle cx="31" cy="22" r="2.2" fill="#FFFFFF" />
-        <path d="M14 22h11" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" />
+      <svg aria-hidden="true" width="48" height="48" viewBox="0 0 48 48" className="shrink-0">
+        <rect x="6" y="13" width="32" height="22" rx="6" fill="#EC1276" stroke="#141313" strokeWidth="3" />
+        <circle cx="32" cy="24" r="2.5" fill="#FFFFFF" />
+        <path d="M13 24h12" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" />
+        <path d="M36 9l5 4-5 4" fill="none" stroke="#141313" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     );
   }
   return (
-    <svg aria-hidden="true" width="44" height="44" viewBox="0 0 44 44" className="shrink-0">
-      <rect x="6" y="11" width="32" height="22" rx="4" fill="#00C853" stroke="#141313" strokeWidth="2.5" />
-      <path d="M14 22l5 5 11-11" fill="none" stroke="#141313" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+    <svg aria-hidden="true" width="48" height="48" viewBox="0 0 48 48" className="shrink-0">
+      <rect x="6" y="10" width="36" height="28" rx="6" fill="#00C853" stroke="#141313" strokeWidth="3" />
+      <path d="M15 24l6 6 12-12" fill="none" stroke="#141313" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -75,7 +76,7 @@ export default function LandingPage() {
   const t = useT();
 
   useEffect(() => {
-    const onScroll = () => setShowStickyCta(window.scrollY > 460);
+    const onScroll = () => setShowStickyCta(window.scrollY > 520);
     const onPrompt = (e: Event) => {
       e.preventDefault();
       setInstallPrompt(e as BeforeInstallPromptEvent);
@@ -98,31 +99,33 @@ export default function LandingPage() {
     testId: `filter-${cat}`,
   }));
 
+  const marqueeStrings = L.marqueeItems.map((item) => item[lang]);
+
   return (
-    <div className="w-full overflow-x-hidden text-ink" data-label="Landing page">
+    <div className="w-full overflow-x-clip text-ink" data-label="Landing page">
       <a
         href="#content"
-        className="visually-hidden fixed left-3 top-3 z-50 rounded-[12px] border-[2.5px] border-ink bg-yellow px-4 py-2 font-bold text-ink shadow-btn"
+        className="visually-hidden fixed left-3 top-3 z-50 rounded-[12px] border-[3px] border-ink bg-yellow px-4 py-2 font-extrabold text-ink shadow-btn"
       >
         <Tx v={TRANSLATIONS.common.skipToContent} />
       </a>
 
-      {/* 1. Slim sticky top bar (1px bottom line, unboxed wordmark) */}
-      <header className="sticky top-0 z-20 border-b border-ink bg-concrete/95 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-[1160px] flex-wrap items-center justify-between gap-3 px-4 py-3 md:px-8">
+      {/* 1. Slim sticky top bar (concrete) */}
+      <header className="sticky top-0 z-30 border-b-[3px] border-ink bg-concrete">
+        <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-3 px-4 py-2.5 md:px-8">
           <BrandWordmark href="#top" />
 
           <nav
             aria-label={t(TRANSLATIONS.nav.mainNav)}
-            className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[15px] font-bold md:gap-x-6"
+            className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[15px] font-bold md:gap-x-5"
           >
-            <a href="#games" className="inline-flex min-h-[44px] items-center py-2 text-ink no-underline hover:underline">
+            <a href="#games" className="inline-flex min-h-[44px] items-center px-1.5 text-ink no-underline hover:underline">
               <Tx v={TRANSLATIONS.nav.games} />
             </a>
-            <a href="#how" className="inline-flex min-h-[44px] items-center py-2 text-ink no-underline hover:underline">
+            <a href="#how" className="hidden min-h-[44px] items-center px-1.5 text-ink no-underline hover:underline sm:inline-flex">
               <Tx v={TRANSLATIONS.nav.howItPlays} />
             </a>
-            <Link href="/about" className="inline-flex min-h-[44px] items-center py-2 text-ink no-underline hover:underline">
+            <Link href="/about" className="hidden min-h-[44px] items-center px-1.5 text-ink no-underline hover:underline md:inline-flex">
               <Tx v={TRANSLATIONS.nav.about} />
             </Link>
             <LangSwitch />
@@ -134,63 +137,79 @@ export default function LandingPage() {
       </header>
 
       <main id="content" tabIndex={-1}>
-        {/* 2. Hero: 2-column layout + yellow diagonal poster shape behind the demo phone */}
-        <section
+        {/* 2. HERO: Full-bleed Yellow with halftone dots + diagonal spotlight */}
+        <HalftoneBlock
           id="top"
+          bg="yellow"
+          pattern="halftone"
           aria-label={t(L.heroLabel)}
-          className="relative overflow-x-clip pb-16 pt-8 md:pb-24 md:pt-12"
+          className="relative overflow-hidden border-b-[3px] border-ink py-10 md:py-16 lg:py-20"
         >
-          {/* Desktop yellow diagonal poster shape (~40% right side) */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute bottom-12 right-0 top-0 hidden w-[42%] border-b-[2.5px] border-ink bg-yellow lg:block"
-            style={{ clipPath: "polygon(16% 0%, 100% 0%, 100% 100%, 0% 100%)" }}
-          />
-          <div className="relative mx-auto max-w-[1160px] px-4 md:px-8">
-            <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.12fr_0.88fr] lg:gap-12">
-              {/* Left column */}
+          <SpotlightBeam />
+          <div className="relative z-10 mx-auto max-w-[1200px] px-4 md:px-8">
+            <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:gap-12">
+              {/* Left column: Giant Display headline, one word pill, subline, 2 big buttons, 3 true facts */}
               <div>
-                <p className="wall-label m-0 mb-3 inline-block rounded-full border-2 border-ink bg-card px-3.5 py-1 text-ink">
+                <PopBadge tone="white" className="mb-4">
                   <Tx v={L.betaPill} />
-                </p>
+                </PopBadge>
 
                 <h1
                   className={`${
                     lang === "te"
-                      ? "te-lead text-[36px] md:text-[56px]"
+                      ? "te-lead text-[44px] leading-[1.22] md:text-[64px]"
                       : "display-title"
                   } wall-balance m-0 text-ink`}
                 >
-                  <Tx v={L.heroHeadline} />
+                  {(() => {
+                    const full = L.heroHeadline[lang];
+                    const pill = L.heroAccentWord[lang];
+                    const idx = full.indexOf(pill);
+                    if (idx === -1) return full;
+                    const before = full.slice(0, idx);
+                    const after = full.slice(idx + pill.length);
+                    return (
+                      <>
+                        {before}
+                        <span className="inline-block rounded-[14px] border-[3px] border-ink bg-magenta px-3.5 py-0.5 text-white shadow-[0_4px_0_#141313]">
+                          {pill}
+                        </span>
+                        {after}
+                      </>
+                    );
+                  })()}
                 </h1>
 
-                <p className="body-lg wall-prose m-0 mt-4 text-ink/90 md:mt-5">
+                <p className="body-lg wall-prose m-0 mt-5 font-semibold text-ink">
                   <Tx v={L.heroSubline} />
                 </p>
 
-                <div className="mt-6 flex flex-wrap gap-3.5 md:mt-8">
-                  <WallLinkButton href="/play" variant="yellow">
-                    <Tx v={TRANSLATIONS.nav.playNow} />
+                <div className="mt-7 flex flex-wrap gap-4">
+                  <WallLinkButton href="/play" variant="ink" size="lg" data-testid="hero-play-btn">
+                    <Tx v={TRANSLATIONS.nav.playNow} /> →
                   </WallLinkButton>
-                  <WallLinkButton href="#games" variant="white">
+                  <WallLinkButton href="#games" variant="white" size="lg">
                     <Tx v={L.seeGames} />
                   </WallLinkButton>
                 </div>
 
-                {/* Small trust row: 3 true facts with yellow, magenta, green diamonds */}
+                {/* Trust row: 3 true facts */}
                 <ul
                   role="list"
-                  className="mt-7 flex list-none flex-wrap gap-x-6 gap-y-2 p-0 text-[14px] font-bold text-ink"
+                  className="mt-8 flex list-none flex-wrap gap-3 p-0 text-[14px] font-bold text-ink"
                 >
                   {[
-                    { fact: L.facts.sevenGames, dotBg: "#F6BE18" },
+                    { fact: L.facts.sevenGames, dotBg: "#00C853" },
                     { fact: L.facts.worksOffline, dotBg: "#EC1276" },
-                    { fact: L.facts.noAccount, dotBg: "#00C853" },
+                    { fact: L.facts.noAccount, dotBg: "#00E5FF" },
                   ].map(({ fact, dotBg }) => (
-                    <li key={fact.en} className="flex items-center gap-2">
+                    <li
+                      key={fact.en}
+                      className="inline-flex items-center gap-2 rounded-full border-2 border-ink bg-white px-3.5 py-1.5"
+                    >
                       <span
                         aria-hidden="true"
-                        className="inline-block h-2.5 w-2.5 rotate-45 border border-ink"
+                        className="inline-block h-2.5 w-2.5 rounded-full border border-ink"
                         style={{ backgroundColor: dotBg }}
                       />
                       <Tx v={fact} />
@@ -199,238 +218,288 @@ export default function LandingPage() {
                 </ul>
               </div>
 
-              {/* Right column: Soft yellow band on phones behind live Head Set Go demo */}
+              {/* Right column: Live Playable Phone Frame */}
               <div className="relative flex justify-center lg:justify-end">
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -inset-x-4 bottom-8 top-8 -skew-y-2 border-y-[2.5px] border-ink bg-yellow lg:hidden"
-                />
-                <div className="relative w-full max-w-[400px]">
-                  <HeroDemo />
-                </div>
+                <HeroDemo />
               </div>
             </div>
           </div>
-        </section>
+        </HalftoneBlock>
 
-        {/* 3. "How it plays" in 3 steps */}
-        <section
+        {/* 3. MARQUEE TAPES: Opposite-direction Ink & Yellow strips */}
+        <MarqueeTape
+          items={marqueeStrings}
+          label={t(L.marqueeLabel)}
+          pauseLabel={t(L.marqueePause)}
+          playLabel={t(L.marqueePlay)}
+        />
+
+        {/* 4. HOW IT PLAYS: Full-bleed Magenta block + 3 chunky White numbered cards */}
+        <HalftoneBlock
           id="how"
+          bg="magenta"
+          pattern="halftone"
           aria-labelledby="how-heading"
-          className="mx-auto max-w-[1160px] px-4 pb-16 pt-0 md:px-8 md:pb-24"
+          className="relative overflow-hidden border-y-[3px] border-ink py-16 md:py-24"
         >
-          <h2 id="how-heading" className="h2-title wall-balance m-0 text-ink">
-            <Tx v={L.howHeading} />
-          </h2>
+          <div className="mx-auto max-w-[1200px] px-4 md:px-8">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <h2 id="how-heading" className="h1-title wall-balance m-0 text-white">
+                <Tx v={L.howHeading} />
+              </h2>
+              <div className="hidden md:block" aria-hidden="true">
+                <Squiggle color="yellow" width={92} />
+              </div>
+            </div>
 
-          <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
-            {L.steps.map((step) => {
-              const badgeStyle =
-                step.num === "2"
-                  ? { backgroundColor: "#EC1276", color: "#FFFFFF", fontSize: "19px" }
-                  : step.num === "3"
-                    ? { backgroundColor: "#00C853", color: "#141313", fontSize: "16px" }
-                    : { backgroundColor: "#F6BE18", color: "#141313", fontSize: "16px" };
-              return (
-                <Sticker key={step.num} className="flex flex-col justify-between p-6">
-                  <div className="flex items-center justify-between gap-4">
-                    <span
-                      className="mono-num inline-flex h-10 w-10 items-center justify-center rounded-full border-2 border-ink font-bold"
-                      style={badgeStyle}
-                    >
-                      {step.num}
-                    </span>
-                    <StepMicroArt stepNum={step.num} />
-                  </div>
-                  <div className="mt-4">
-                    <h3 className="h3-title m-0 text-ink">
-                      <Tx v={step.title} />
-                    </h3>
-                    <p className="m-0 mt-1.5 text-[16px] font-medium leading-[1.55] text-ink/90">
-                      <Tx v={step.body} />
-                    </p>
-                  </div>
-                </Sticker>
-              );
-            })}
+            <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+              {L.steps.map((step, i) => {
+                const badgeBg =
+                  step.num === "2" ? "#00E5FF" : step.num === "3" ? "#00C853" : "#F6BE18";
+                return (
+                  <Reveal key={step.num} staggerIndex={i}>
+                    <Sticker className="flex h-full flex-col justify-between p-6 text-ink">
+                      <div className="flex items-center justify-between gap-4">
+                        <span
+                          className="mono-num inline-flex h-12 w-12 items-center justify-center rounded-[14px] border-[3px] border-ink text-[20px] font-bold text-ink"
+                          style={{ backgroundColor: badgeBg }}
+                        >
+                          {step.num.padStart(2, "0")}
+                        </span>
+                        <StepMicroArt stepNum={step.num} />
+                      </div>
+                      <div className="mt-5">
+                        <h3 className="h3-title m-0 text-ink">
+                          <Tx v={step.title} />
+                        </h3>
+                        <p className="m-0 mt-2 text-[16px] font-medium leading-[1.55] text-ink">
+                          <Tx v={step.body} />
+                        </p>
+                      </div>
+                    </Sticker>
+                  </Reveal>
+                );
+              })}
+            </div>
           </div>
-        </section>
+        </HalftoneBlock>
 
-        {/* 4. "Seven games" as an equal-height Bento Grid */}
+        {/* 5. SEVEN GAMES: Concrete block + Filter + Color Bento Grid */}
         <section
           id="games"
           aria-labelledby="pick-game-heading"
-          className="mx-auto max-w-[1160px] px-4 pb-16 pt-0 md:px-8 md:pb-24"
+          className="bg-concrete py-16 md:py-24"
         >
-          <div className="flex flex-wrap items-end justify-between gap-5">
-            <div>
-              <h2 id="pick-game-heading" className="h2-title wall-balance m-0 text-ink">
-                <Tx v={L.pickYourGameHeading} />
-              </h2>
-              <p className="body-lg m-0 mt-2 text-ink/90">
-                <Tx v={L.pickYourGameSub} />
-              </p>
+          <div className="mx-auto max-w-[1200px] px-4 md:px-8">
+            <div className="flex flex-wrap items-end justify-between gap-5">
+              <div>
+                <h2 id="pick-game-heading" className="h1-title wall-balance m-0 text-ink">
+                  <Tx v={L.pickYourGameHeading} />
+                </h2>
+                <p className="body-lg m-0 mt-2 text-ink">
+                  <Tx v={L.pickYourGameSub} />
+                </p>
+              </div>
+
+              <SegmentedControl
+                label={t(TRANSLATIONS.modeFilter.filterLabel)}
+                options={filterOptions}
+                value={filter}
+                onChange={setFilter}
+              />
             </div>
 
-            <SegmentedControl
-              label={t(TRANSLATIONS.modeFilter.filterLabel)}
-              options={filterOptions}
-              value={filter}
-              onChange={setFilter}
-            />
-          </div>
+            <div className="mt-8 grid grid-cols-1 items-stretch gap-6 md:grid-cols-2 lg:grid-cols-6">
+              {filteredGames.map((game, idx) => {
+                const displayNum = String(
+                  visibleGames.findIndex((g) => g.slug === game.slug) + 1,
+                ).padStart(2, "0");
+                const isFeatured = game.slug === "head-set-go" && filter === "All";
+                const spanClass =
+                  filter === "All" && filteredGames.length === 7
+                    ? idx === 0
+                      ? "md:col-span-2 lg:col-span-4"
+                      : idx >= 5
+                        ? "lg:col-span-3"
+                        : "lg:col-span-2"
+                    : filteredGames.length === 1
+                      ? "md:col-span-2 lg:col-span-3"
+                      : "lg:col-span-2";
+                const metaLine = formatGameMeta(game.slug, lang);
+                const gameColor = getGameColor(game.slug);
 
-          <div className="mt-8 grid grid-cols-1 items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {filteredGames.map((game) => {
-              const displayNum = String(
-                visibleGames.findIndex((g) => g.slug === game.slug) + 1,
-              ).padStart(2, "0");
-              const isFeatured = game.slug === "head-set-go" && filter === "All";
-              const metaLine = formatGameMeta(game.slug, lang);
-              const gameColor = getGameColor(game.slug);
-
-              return (
-                <Link
-                  key={game.slug}
-                  href={`/play/${game.slug}`}
-                  className={`wall-card-interactive wall-sticker flex h-full flex-col justify-between p-6 text-ink no-underline ${
-                    isFeatured ? "md:col-span-2" : ""
-                  }`}
-                >
-                  <div>
+                return (
+                  <Link
+                    key={game.slug}
+                    href={`/play/${game.slug}`}
+                    className={`wall-card-interactive wall-sticker group relative flex h-full flex-col justify-between overflow-hidden p-4 text-ink no-underline md:p-5 ${spanClass}`}
+                    style={{ backgroundColor: gameColor }}
+                  >
+                    {/* Top strip: number, mode badge, hover Play ribbon */}
                     <div className="flex items-center justify-between gap-2">
-                      <span className="mono-num text-[14px] text-ink">{displayNum}</span>
-                      <Badge tone={game.isOnlineOnly ? "card" : "white"}>
-                        {game.isOnlineOnly ? (
-                          <Tx v={TRANSLATIONS.common.comingSoon} />
-                        ) : (
-                          <Tx v={TRANSLATIONS.modes.onePhone} />
-                        )}
-                      </Badge>
+                      <div className="flex items-center gap-2">
+                        <span className="mono-num rounded-full border-2 border-ink bg-white px-2.5 py-0.5 text-[13px] text-ink">
+                          {displayNum}
+                        </span>
+                        <Badge tone={game.isOnlineOnly ? "card" : "white"}>
+                          {game.isOnlineOnly ? (
+                            <Tx v={TRANSLATIONS.common.comingSoon} />
+                          ) : (
+                            <Tx v={TRANSLATIONS.modes.onePhone} />
+                          )}
+                        </Badge>
+                      </div>
+                      {!game.isOnlineOnly ? (
+                        <span
+                          aria-hidden="true"
+                          className="wall-tile-ribbon rounded-full border-2 border-ink bg-ink px-3 py-1 text-[13px] font-extrabold text-yellow"
+                        >
+                          <Tx v={L.playRibbon} />
+                        </span>
+                      ) : null}
                     </div>
 
-                    {/* Illustration-only panel using game color (never text inside colored panels) */}
+                    {/* Oversized 120px illustration + optional live preview for featured tile */}
                     <div
-                      className={`mt-4 flex items-center justify-center rounded-[16px] border-2 border-ink p-4 text-ink ${
-                        isFeatured ? "min-h-[140px]" : "min-h-[128px]"
+                      className={`my-4 flex items-center justify-center gap-6 ${
+                        isFeatured ? "min-h-[170px] flex-wrap sm:flex-nowrap" : "min-h-[126px]"
                       }`}
-                      style={{ backgroundColor: gameColor }}
                     >
-                      <div className="h-[96px] w-[96px] shrink-0">
+                      <div
+                        className={`wall-tile-art shrink-0 ${
+                          isFeatured ? "h-[132px] w-[132px]" : "h-[116px] w-[116px]"
+                        }`}
+                      >
                         <WallIcon kind={game.iconKind} />
                       </div>
+                      {isFeatured ? (
+                        <div className="hidden rounded-[16px] border-[3px] border-ink bg-white px-5 py-4 text-center shadow-[0_4px_0_#141313] sm:block">
+                          <span className="block font-mono text-[11px] font-bold text-ink/80">2006</span>
+                          <span className="block text-[26px] font-extrabold text-ink">
+                            {lang === "te" ? "పోకిరి" : "Pokiri"}
+                          </span>
+                        </div>
+                      ) : null}
                     </div>
 
-                    <div className="mt-4 flex items-center gap-2.5">
-                      <span
-                        aria-hidden="true"
-                        className="inline-block h-3 w-3 shrink-0 rounded-full border-2 border-ink"
-                        style={{ backgroundColor: gameColor }}
-                      />
+                    {/* Body copy always sits cleanly on pure white inner panel (Guardrail A3) */}
+                    <div className="mt-auto rounded-[16px] border-[2.5px] border-ink bg-white p-4">
                       <GameTitle title={game.title} />
+                      <p className="m-0 mt-1 text-[15px] font-medium leading-[1.45] text-ink/90">
+                        <Tx v={game.description} />
+                      </p>
+                      <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t-2 border-ink/10 pt-2.5">
+                        <span className="text-[13px] font-bold text-ink/80">{metaLine}</span>
+                        {game.isOnlineOnly ? (
+                          <span className="rounded-full border-2 border-ink bg-card px-3 py-0.5 text-[13px] font-bold text-ink">
+                            <Tx v={TRANSLATIONS.common.comingSoon} />
+                          </span>
+                        ) : (
+                          <span className="rounded-full border-2 border-ink bg-yellow px-3.5 py-0.5 text-[14px] font-extrabold text-ink">
+                            <Tx v={TRANSLATIONS.playHome.playAction} /> →
+                          </span>
+                        )}
+                      </div>
                     </div>
-                    <p className="m-0 mt-1.5 text-[15px] font-medium leading-[1.5] text-ink/90">
-                      <Tx v={game.description} />
-                    </p>
-                  </div>
-
-                  <div className="mt-auto pt-5">
-                    <div className="flex flex-wrap items-center justify-between gap-2 border-t border-ink/15 pt-3.5">
-                      <span className="text-[13px] font-semibold text-ink/80">{metaLine}</span>
-                      {game.isOnlineOnly ? (
-                        <span className="inline-flex min-h-[36px] items-center rounded-full border-2 border-ink bg-card px-3.5 text-[13px] font-bold text-ink">
-                          <Tx v={TRANSLATIONS.common.comingSoon} />
-                        </span>
-                      ) : (
-                        <span className="inline-flex min-h-[36px] items-center rounded-full border-2 border-ink bg-yellow px-4 text-[14px] font-bold text-ink">
-                          <Tx v={TRANSLATIONS.playHome.playAction} /> →
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         </section>
 
-        {/* 5. "Telugu when you want it": neutral comparison cards, yellow interactive button */}
-        <section
+        {/* 6. TELUGU SWITCH BLOCK: Neutral Card background + Giant two-position toggle */}
+        <HalftoneBlock
+          bg="card"
+          pattern="none"
           aria-labelledby="telugu-heading"
           data-testid="bilingual-demo"
-          className="mx-auto max-w-[1160px] px-4 pb-16 pt-0 md:px-8 md:pb-24"
+          className="border-t-[3px] border-ink py-16 md:py-24"
         >
-          <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
-            <div>
-              <h2 id="telugu-heading" className="h2-title wall-balance m-0 text-ink">
-                <Tx v={L.teluguHeading} />
-              </h2>
-              <p className="body-lg wall-prose m-0 mt-3 text-ink/90">
-                <Tx v={L.teluguBody} />
-              </p>
-              <div className="mt-5 flex flex-wrap items-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => setLang(lang === "en" ? "te" : "en")}
-                  className="wall-btn min-h-[46px] bg-yellow px-5 text-[15px] text-ink"
+          <div className="mx-auto max-w-[1200px] px-4 md:px-8">
+            <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
+              <div>
+                <h2 id="telugu-heading" className="h2-title wall-balance m-0 text-ink">
+                  <Tx v={L.teluguHeading} />
+                </h2>
+                <p className="body-lg wall-prose m-0 mt-3 text-ink">
+                  <Tx v={L.teluguBody} />
+                </p>
+
+                {/* Giant two-position live switch: English | తెలుగు */}
+                <div
+                  role="group"
+                  aria-label={t(TRANSLATIONS.lang.switchHidden)}
+                  className="mt-6 inline-flex rounded-[18px] border-[3px] border-ink bg-white p-1.5 shadow-[0_5px_0_#141313]"
                 >
-                  {lang === "te" ? "Switch to English (EN)" : "తెలుగులో చూడండి (తె)"}
-                </button>
+                  <button
+                    type="button"
+                    aria-pressed={lang === "en"}
+                    onClick={() => setLang("en")}
+                    className="min-h-[48px] rounded-[12px] px-5 text-[18px] font-extrabold text-ink transition-colors"
+                    style={{
+                      backgroundColor: lang === "en" ? "#F6BE18" : "transparent",
+                      border: lang === "en" ? "2.5px solid #141313" : "2.5px solid transparent",
+                    }}
+                  >
+                    English
+                  </button>
+                  <button
+                    type="button"
+                    aria-pressed={lang === "te"}
+                    onClick={() => setLang("te")}
+                    className="lang-switch-te min-h-[48px] rounded-[12px] px-5 text-[19px] font-bold text-ink transition-colors"
+                    style={{
+                      backgroundColor: lang === "te" ? "#F6BE18" : "transparent",
+                      border: lang === "te" ? "2.5px solid #141313" : "2.5px solid transparent",
+                    }}
+                  >
+                    తెలుగు
+                  </button>
+                </div>
               </div>
-            </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <Sticker bg={lang === "en" ? "white" : "card"} className="p-5 text-center">
-                <span
-                  className={`wall-label inline-block rounded-full px-2.5 py-0.5 text-ink ${
-                    lang === "en" ? "border-2 border-ink bg-yellow" : "text-ink/70"
-                  }`}
+              {/* Sample Card changing live with language */}
+              <Sticker bg="white" className="p-6 text-center">
+                <div className="flex items-center justify-between gap-2 border-b-2 border-ink/15 pb-3">
+                  <Badge tone="cyan">
+                    {lang === "te" ? "తెలుగు కార్డ్" : "Sample card"}
+                  </Badge>
+                  <span className="mono-num text-[14px] text-ink">2006</span>
+                </div>
+                <p
+                  className={
+                    lang === "te"
+                      ? "te-lead m-0 mt-6 text-[56px] leading-tight text-ink"
+                      : "m-0 mt-6 font-display text-[56px] font-extrabold leading-none text-ink"
+                  }
                 >
-                  English mode
-                </span>
-                <p className="m-0 mt-3 font-display text-[32px] font-extrabold leading-tight text-ink">
-                  Pokiri
+                  {lang === "te" ? "పోకిరి" : "Pokiri"}
                 </p>
-                <p className="m-0 mt-2 text-[13px] font-semibold text-ink/80">
-                  2006 · Puri Jagannadh
-                </p>
-              </Sticker>
-
-              <Sticker bg={lang === "te" ? "white" : "card"} className="p-5 text-center">
-                <span
-                  className={`wall-label inline-block rounded-full px-2.5 py-0.5 text-ink ${
-                    lang === "te" ? "border-2 border-ink bg-yellow" : "text-ink/80"
-                  }`}
-                >
-                  Telugu mode (తె)
-                </span>
-                <p className="te-lead m-0 mt-2 text-[34px] text-ink">పోకిరి</p>
-                <p className="te-sub m-0 text-[14px] text-ink">Pokiri</p>
-                <p className="m-0 mt-1.5 text-[13px] font-semibold text-ink/85">
-                  2006 · పూరి జగన్నాథ్
+                <p className="m-0 mt-2 text-[16px] font-bold text-ink/80">
+                  {lang === "te" ? "Pokiri · పూరి జగన్నాథ్" : "Puri Jagannadh"}
                 </p>
               </Sticker>
             </div>
           </div>
-        </section>
+        </HalftoneBlock>
 
-        {/* 6. Slim "Coming next" strip: cyan band (online = cyan) */}
-        <section
+        {/* 7. COMING NEXT: Full-bleed Cyan strip */}
+        <HalftoneBlock
           id="auction"
+          bg="cyan"
+          pattern="stripes"
           aria-label="Coming next"
-          className="mx-auto max-w-[1160px] px-4 pb-16 pt-0 md:px-8 md:pb-24"
+          className="border-y-[3px] border-ink py-10 md:py-14"
         >
-          <Sticker
-            bg="cyan"
-            className="flex flex-wrap items-center justify-between gap-4 px-6 py-5"
-          >
-            <div className="flex items-center gap-3">
+          <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-5 px-4 md:px-8">
+            <div className="flex flex-wrap items-center gap-3">
               <Badge tone="white">Online</Badge>
               <div>
-                <p className="m-0 text-[17px] font-bold text-ink">
+                <p className="h3-title m-0 text-ink">
                   <Tx v={L.comingNextStrip} />
                 </p>
-                <p className="m-0 text-[13px] font-semibold text-ink/85">
+                <p className="m-0 mt-0.5 text-[15px] font-bold text-ink/90">
                   <Tx v={TRANSLATIONS.common.coinsOnly} />
                 </p>
               </div>
@@ -440,85 +509,100 @@ export default function LandingPage() {
                 href={feedbackUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="wall-btn min-h-[44px] bg-sticker px-4 text-[15px] text-ink"
+                className="wall-btn min-h-[48px] bg-white px-5 text-[17px] text-ink"
               >
                 <Tx v={L.tellMeWhenOpens} /> →
               </a>
             ) : (
-              <Link
-                href="/play/box-office-auction"
-                className="wall-btn min-h-[44px] bg-sticker px-4 text-[15px] text-ink"
-              >
+              <WallLinkButton href="/play/box-office-auction" variant="white">
                 <Tx v={L.tellMeWhenOpens} /> →
-              </Link>
+              </WallLinkButton>
             )}
-          </Sticker>
+          </div>
+        </HalftoneBlock>
 
-          {installPrompt ? (
-            <Sticker bg="white" className="mt-6 flex flex-wrap items-center justify-between gap-4 p-5">
-              <div>
-                <p className="h3-title m-0 text-ink">
-                  <Tx v={TRANSLATIONS.pwa.installTitle} />
-                </p>
-                <p className="m-0 text-[14px] font-medium text-ink/80">
-                  <Tx v={TRANSLATIONS.pwa.installBody} />
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => void installPrompt.prompt()}
-                className="wall-btn min-h-[44px] bg-yellow px-4 text-[15px] text-ink"
-              >
-                <Tx v={TRANSLATIONS.pwa.installBtn} />
-              </button>
-            </Sticker>
-          ) : null}
-        </section>
+        {installPrompt ? (
+          <div className="bg-concrete py-6">
+            <div className="mx-auto max-w-[1200px] px-4 md:px-8">
+              <Sticker bg="white" className="flex flex-wrap items-center justify-between gap-4 p-5">
+                <div>
+                  <p className="h3-title m-0 text-ink">
+                    <Tx v={TRANSLATIONS.pwa.installTitle} />
+                  </p>
+                  <p className="m-0 text-[14px] font-medium text-ink/80">
+                    <Tx v={TRANSLATIONS.pwa.installBody} />
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => void installPrompt.prompt()}
+                  className="wall-btn min-h-[44px] bg-yellow px-4 text-[15px] text-ink"
+                >
+                  <Tx v={TRANSLATIONS.pwa.installBtn} />
+                </button>
+              </Sticker>
+            </div>
+          </div>
+        ) : null}
 
-        {/* 7. Closing block: white card with yellow Play now button */}
-        <section
+        {/* 8. CLOSING: Full-bleed Yellow with decorative confetti shapes + giant Play now */}
+        <HalftoneBlock
+          bg="yellow"
+          pattern="halftone"
           aria-labelledby="closing-heading"
-          className="mx-auto max-w-[1160px] px-4 pb-16 pt-0 md:px-8 md:pb-24"
+          className="relative overflow-hidden py-16 md:py-24"
         >
-          <Sticker bg="white" className="px-6 py-12 text-center md:py-16">
-            <h2 id="closing-heading" className="h1-title wall-balance m-0 text-ink">
+          <div aria-hidden="true" className="pointer-events-none absolute left-8 top-8 hidden md:block">
+            <Starburst color="white" size={64} />
+          </div>
+          <div aria-hidden="true" className="pointer-events-none absolute bottom-8 right-10 hidden md:block">
+            <XMark color="magenta" size={44} tilt={-14} />
+          </div>
+
+          <div className="relative z-10 mx-auto max-w-[1200px] px-4 text-center md:px-8">
+            <h2
+              id="closing-heading"
+              className={`${
+                lang === "te" ? "te-lead text-[40px] md:text-[60px]" : "display-title"
+              } wall-balance m-0 text-ink`}
+            >
               <Tx v={L.closingHeading} />
             </h2>
-            <div className="mt-6">
-              <WallLinkButton href="/play" variant="yellow">
-                <Tx v={TRANSLATIONS.nav.playNow} />
+            <div className="mt-8">
+              <WallLinkButton href="/play" variant="ink" size="lg">
+                <Tx v={TRANSLATIONS.nav.playNow} /> →
               </WallLinkButton>
             </div>
-          </Sticker>
-        </section>
+          </div>
+        </HalftoneBlock>
       </main>
 
       {/* Sticky mobile Play Now CTA after scrolling past hero */}
       {showStickyCta ? (
         <div className="fixed bottom-3 left-4 right-4 z-40 md:hidden">
-          <Link href="/play" className="wall-btn w-full bg-yellow text-[16px] text-ink">
-            <Tx v={TRANSLATIONS.nav.playNow} />
+          <Link href="/play" className="wall-btn w-full bg-yellow text-[18px] text-ink">
+            <Tx v={TRANSLATIONS.nav.playNow} /> →
           </Link>
         </div>
       ) : null}
 
-      {/* Footer with unofficial disclaimer */}
-      <footer className="border-t border-ink bg-ink text-concrete">
-        <div className="mx-auto flex max-w-[1160px] flex-wrap items-center justify-between gap-x-8 gap-y-3 px-4 py-8 text-[14px] leading-[1.5] md:px-8">
-          <span className="keep-case font-display text-[20px] font-extrabold text-concrete">
+      {/* 9. FOOTER: Ink background with unofficial fan-made line */}
+      <footer className="border-t-[3px] border-ink bg-ink text-concrete">
+        <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-x-8 gap-y-4 px-4 py-10 text-[14px] leading-[1.5] md:px-8">
+          <span className="keep-case text-[22px] font-extrabold text-yellow">
             {BRAND_NAME}
           </span>
           <p className="m-0 max-w-[640px] text-concrete">
             <Tx v={TRANSLATIONS.brand.unofficialDisclaimer} />
           </p>
-          <nav aria-label={t(TRANSLATIONS.nav.footerNav)} className="flex gap-4 font-bold">
-            <Link href="/about" className="underline">
+          <nav aria-label={t(TRANSLATIONS.nav.footerNav)} className="flex gap-5 font-bold">
+            <Link href="/about" className="text-concrete underline">
               <Tx v={TRANSLATIONS.nav.about} />
             </Link>
-            <Link href="/privacy" className="underline">
+            <Link href="/privacy" className="text-concrete underline">
               <Tx v={TRANSLATIONS.nav.privacy} />
             </Link>
-            <Link href="/terms" className="underline">
+            <Link href="/terms" className="text-concrete underline">
               <Tx v={TRANSLATIONS.nav.terms} />
             </Link>
             {feedbackUrl ? (
@@ -526,7 +610,7 @@ export default function LandingPage() {
                 href={feedbackUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline"
+                className="text-concrete underline"
               >
                 <Tx v={TRANSLATIONS.nav.feedback} />
               </a>
