@@ -8,10 +8,9 @@ import { useFlags } from "@/components/flags-provider";
 import { Tx, useLang } from "@/components/lang-provider";
 import { Badge, Sticker, TicketStub, WallButton, WallLinkButton } from "@/components/sticker-kit";
 import { TRANSLATIONS } from "@/lib/i18n";
+import { ROOMS_TRANSLATIONS as R } from "@/lib/i18n-rooms";
 import { lookupRoomOnServer, savePendingRoomName } from "@/lib/room-client";
 import { usePreferencesStore } from "@/lib/store";
-
-const R = TRANSLATIONS.rooms;
 
 export default function InviteConfirmPage({ params }: { params: Promise<{ code: string }> }) {
   const { code: rawCode } = use(params);

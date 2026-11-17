@@ -23,17 +23,29 @@ export interface WallIconProps extends SVGProps<SVGSVGElement> {
   readonly label?: string;
 }
 
+const GAME_KINDS = new Set<WallIconKind>([
+  "head",
+  "trans",
+  "charades",
+  "emoji",
+  "rapid",
+  "most",
+  "auction",
+]);
+
 /**
- * Monoline icon set (Section 4):
- * stroke = currentColor, 2.2px stroke with a 16% fill tint.
+ * Party Art Kit illustrations:
+ * - 7 beta game icons drawn natively at 120x120 with 3px ink stroke, flat palette fills, and offset ink backing shadow.
+ * - Nav & control icons use 64x64 monoline.
  */
 export function WallIcon({ kind, label, ...props }: WallIconProps) {
   const isDecorative = !label;
+  const viewBox = GAME_KINDS.has(kind) ? "0 0 120 120" : "0 0 64 64";
   return (
     <svg
       width="100%"
       height="100%"
-      viewBox="0 0 64 64"
+      viewBox={viewBox}
       aria-hidden={isDecorative ? "true" : undefined}
       role={isDecorative ? undefined : "img"}
       {...props}
@@ -46,6 +58,116 @@ export function WallIcon({ kind, label, ...props }: WallIconProps) {
 
 function renderIconPath(kind: WallIconKind) {
   switch (kind) {
+    case "head":
+      return (
+        <g stroke="#141313" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+          {/* Offset shadow */}
+          <rect x="26" y="18" width="76" height="36" rx="10" fill="#141313" stroke="none" />
+          <circle cx="64" cy="78" r="28" fill="#141313" stroke="none" />
+          {/* Main flat art */}
+          <circle cx="60" cy="74" r="28" fill="#FFFFFF" />
+          <circle cx="48" cy="71" r="4" fill="#141313" stroke="none" />
+          <circle cx="72" cy="71" r="4" fill="#141313" stroke="none" />
+          <path d="M48 84q12 10 24 0" fill="none" strokeWidth="3.5" />
+          <rect x="22" y="14" width="76" height="36" rx="10" fill="#EC1276" />
+          <path d="M35 28h36M35 38h22" stroke="#FFFFFF" strokeWidth="3.5" />
+          <circle cx="85" cy="32" r="5" fill="#F6BE18" />
+        </g>
+      );
+    case "trans":
+      return (
+        <g stroke="#141313" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+          {/* Offset shadows */}
+          <path
+            d="M48 52h54a8 8 0 0 1 8 8v28a8 8 0 0 1-8 8H92v14l-18-14H48a8 8 0 0 1-8-8V60a8 8 0 0 1 8-8z"
+            fill="#141313"
+            stroke="none"
+          />
+          <path
+            d="M22 20h54a8 8 0 0 1 8 8v28a8 8 0 0 1-8 8H48L32 78V64H22a8 8 0 0 1-8-8V28a8 8 0 0 1 8-8z"
+            fill="#141313"
+            stroke="none"
+          />
+          {/* Main flat bubbles */}
+          <path
+            d="M44 48h54a8 8 0 0 1 8 8v28a8 8 0 0 1-8 8H88v14L70 92H44a8 8 0 0 1-8-8V56a8 8 0 0 1 8-8z"
+            fill="#00E5FF"
+          />
+          <path
+            d="M18 16h54a8 8 0 0 1 8 8v28a8 8 0 0 1-8 8H44L28 74V60H18a8 8 0 0 1-8-8V24a8 8 0 0 1 8-8z"
+            fill="#FFFFFF"
+          />
+          <path d="M26 32h34M26 44h20" fill="none" strokeWidth="3.5" />
+          <path d="M54 66h34M54 78h18" fill="none" strokeWidth="3.5" />
+          <circle cx="88" cy="24" r="6" fill="#F6BE18" />
+        </g>
+      );
+    case "charades":
+      return (
+        <g stroke="#141313" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="20" y="54" width="88" height="52" rx="8" fill="#141313" stroke="none" />
+          <rect x="16" y="50" width="88" height="52" rx="8" fill="#FFFFFF" />
+          <g transform="rotate(-10 16 50)">
+            <rect x="20" y="26" width="88" height="22" rx="6" fill="#141313" stroke="none" />
+            <rect x="16" y="22" width="88" height="22" rx="6" fill="#EC1276" />
+            <path d="M36 22l-8 22M58 22l-8 22M80 22l-8 22" stroke="#FFFFFF" strokeWidth="4" />
+          </g>
+          <path d="M32 68h56M32 82h34" fill="none" strokeWidth="3.5" />
+          <circle cx="88" cy="84" r="7" fill="#F6BE18" />
+        </g>
+      );
+    case "emoji":
+      return (
+        <g stroke="#141313" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="64" cy="68" r="40" fill="#141313" stroke="none" />
+          <circle cx="60" cy="64" r="40" fill="#FFFFFF" />
+          <circle cx="46" cy="54" r="5" fill="#141313" stroke="none" />
+          <circle cx="74" cy="54" r="5" fill="#141313" stroke="none" />
+          <path d="M38 72q22 22 44 0z" fill="#EC1276" />
+          <path d="M96 16l5 10 10 5-10 5-5 10-5-10-10-5 10-5z" fill="#00E5FF" />
+          <circle cx="20" cy="28" r="6" fill="#EC1276" />
+        </g>
+      );
+    case "rapid":
+      return (
+        <g stroke="#141313" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M74 14L32 70h26l-8 40 44-58H68z" fill="#141313" stroke="none" />
+          <path d="M70 10L28 66h26l-8 40 44-58H64z" fill="#F6BE18" />
+          <circle cx="96" cy="24" r="8" fill="#00E5FF" />
+          <circle cx="26" cy="96" r="6" fill="#FFFFFF" />
+        </g>
+      );
+    case "most":
+      return (
+        <g stroke="#141313" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="84" cy="48" r="15" fill="#141313" stroke="none" />
+          <path d="M56 106q0-26 28-26t28 26z" fill="#141313" stroke="none" />
+          <circle cx="42" cy="50" r="16" fill="#141313" stroke="none" />
+          <path d="M14 108q0-28 28-28t28 28z" fill="#141313" stroke="none" />
+          {/* Main flat people + crown */}
+          <circle cx="80" cy="44" r="15" fill="#00E5FF" />
+          <path d="M52 102q0-26 28-26t28 26z" fill="#00E5FF" />
+          <circle cx="38" cy="46" r="16" fill="#FFFFFF" />
+          <path d="M10 104q0-28 28-28t28 28z" fill="#FFFFFF" />
+          <path d="M22 25l8-11 8 10 8-10 8 11v10H22z" fill="#EC1276" />
+          <circle cx="94" cy="20" r="6" fill="#F6BE18" />
+        </g>
+      );
+    case "auction":
+      return (
+        <g stroke="#141313" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="18" y="96" width="60" height="14" rx="5" fill="#141313" stroke="none" />
+          <rect x="14" y="92" width="60" height="14" rx="5" fill="#FFFFFF" />
+          <g transform="rotate(-35 66 54)">
+            <rect x="61" y="54" width="14" height="44" rx="5" fill="#141313" stroke="none" />
+            <rect x="38" y="22" width="60" height="32" rx="7" fill="#141313" stroke="none" />
+            <rect x="57" y="50" width="14" height="44" rx="5" fill="#FFFFFF" />
+            <rect x="34" y="18" width="60" height="32" rx="7" fill="#F6BE18" />
+          </g>
+          <path d="M88 78l16-8M92 90h16" strokeWidth="4" />
+          <circle cx="24" cy="30" r="7" fill="#EC1276" />
+        </g>
+      );
     case "mark":
       return (
         <g
@@ -58,63 +180,6 @@ function renderIconPath(kind: WallIconKind) {
           <path d="M32 4l28 28-28 28L4 32z" />
           <path d="M32 18l14 14-14 14-14-14z" fill="currentColor" fillOpacity="0.25" />
           <circle cx="32" cy="32" r="3.5" fill="currentColor" />
-        </g>
-      );
-    case "head":
-      return (
-        <g stroke="#141313" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="32" cy="40" r="15" fill="#FFFFFF" />
-          <rect x="11" y="9" width="42" height="20" rx="5" fill="#EC1276" />
-          <path d="M19 19h18M19 24h10" stroke="#FFFFFF" />
-          <circle cx="26" cy="39" r="2" fill="#141313" stroke="none" />
-          <circle cx="38" cy="39" r="2" fill="#141313" stroke="none" />
-          <path d="M26 46q6 5 12 0" fill="none" />
-        </g>
-      );
-    case "trans":
-      return (
-        <g stroke="#141313" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-          <path
-            d="M26 27h28a4 4 0 0 1 4 4v14a4 4 0 0 1-4 4h-5v7l-9-7H26a4 4 0 0 1-4-4V31a4 4 0 0 1 4-4z"
-            fill="#00E5FF"
-          />
-          <path
-            d="M10 9h30a4 4 0 0 1 4 4v14a4 4 0 0 1-4 4H26l-8 7v-7h-8a4 4 0 0 1-4-4V13a4 4 0 0 1 4-4z"
-            fill="#FFFFFF"
-          />
-          <path d="M14 17h20M14 23h11M31 38h18" fill="none" />
-        </g>
-      );
-    case "charades":
-      return (
-        <g stroke="#141313" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="8" y="27" width="48" height="29" rx="4" fill="#FFFFFF" />
-          <g transform="rotate(-8 8 27)">
-            <rect x="8" y="13" width="48" height="12" rx="3" fill="#EC1276" />
-            <path d="M19 13l-5 12M31 13l-5 12M43 13l-5 12" stroke="#FFFFFF" />
-          </g>
-          <path d="M18 39h28M18 47h16" fill="none" />
-        </g>
-      );
-    case "emoji":
-      return (
-        <g stroke="#141313" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="32" cy="35" r="20" fill="#FFFFFF" />
-          <circle cx="25" cy="31" r="2.5" fill="#141313" stroke="none" />
-          <circle cx="39" cy="31" r="2.5" fill="#141313" stroke="none" />
-          <path d="M22 41q10 10 20 0" fill="#EC1276" />
-          <path d="M51 8l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#EC1276" />
-        </g>
-      );
-    case "auction":
-      return (
-        <g stroke="#141313" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="8" y="51" width="32" height="7" rx="3" fill="#FFFFFF" />
-          <g transform="rotate(-35 34 30)">
-            <rect x="29" y="29" width="8" height="24" rx="3" fill="#FFFFFF" />
-            <rect x="16" y="11" width="34" height="17" rx="4" fill="#F6BE18" />
-          </g>
-          <path d="M46 42l8-4M49 48h8" fill="none" />
         </g>
       );
     case "cricketiq":
@@ -186,35 +251,19 @@ function renderIconPath(kind: WallIconKind) {
           </text>
         </g>
       );
-    case "rapid":
-      return (
-        <g stroke="#141313" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M38 6L15 36h15l-4 22 23-32H34z" fill="#F6BE18" />
-        </g>
-      );
-    case "most":
-      return (
-        <g stroke="#141313" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="44" cy="22" r="8" fill="#00E5FF" />
-          <path d="M29 54q0-14 15-14t15 14z" fill="#00E5FF" />
-          <circle cx="22" cy="24" r="8" fill="#FFFFFF" />
-          <path d="M6 56q0-14 16-14t16 14z" fill="#FFFFFF" />
-          <path d="M14 13l4-5 4 5 4-5v8H14z" fill="#EC1276" />
-        </g>
-      );
     case "play":
       return (
         <g
           fill="none"
           stroke="currentColor"
-          strokeWidth="2.2"
+          strokeWidth="3"
           strokeLinecap="round"
           strokeLinejoin="round"
         >
           <polygon
             points="18,12 52,32 18,52"
             fill="currentColor"
-            fillOpacity="0.16"
+            fillOpacity="0.22"
           />
         </g>
       );
@@ -223,7 +272,7 @@ function renderIconPath(kind: WallIconKind) {
         <g
           fill="none"
           stroke="currentColor"
-          strokeWidth="2.2"
+          strokeWidth="3"
           strokeLinecap="round"
           strokeLinejoin="round"
         >
@@ -234,7 +283,7 @@ function renderIconPath(kind: WallIconKind) {
             height="36"
             rx="6"
             fill="currentColor"
-            fillOpacity="0.16"
+            fillOpacity="0.22"
           />
           <path d="M22 32h20M34 24l8 8-8 8" />
         </g>
@@ -244,12 +293,12 @@ function renderIconPath(kind: WallIconKind) {
         <g
           fill="none"
           stroke="currentColor"
-          strokeWidth="2.2"
+          strokeWidth="3"
           strokeLinecap="round"
           strokeLinejoin="round"
         >
-          <circle cx="32" cy="22" r="10" fill="currentColor" fillOpacity="0.16" />
-          <path d="M14 54q0-16 18-16t18 16z" fill="currentColor" fillOpacity="0.16" />
+          <circle cx="32" cy="22" r="10" fill="currentColor" fillOpacity="0.22" />
+          <path d="M14 54q0-16 18-16t18 16z" fill="currentColor" fillOpacity="0.22" />
         </g>
       );
     case "check":
@@ -257,11 +306,11 @@ function renderIconPath(kind: WallIconKind) {
         <g
           fill="none"
           stroke="currentColor"
-          strokeWidth="3"
+          strokeWidth="3.5"
           strokeLinecap="round"
           strokeLinejoin="round"
         >
-          <circle cx="32" cy="32" r="22" fill="currentColor" fillOpacity="0.16" />
+          <circle cx="32" cy="32" r="22" fill="currentColor" fillOpacity="0.22" />
           <path d="M21 33l8 8 15-16" />
         </g>
       );
@@ -270,11 +319,11 @@ function renderIconPath(kind: WallIconKind) {
         <g
           fill="none"
           stroke="currentColor"
-          strokeWidth="3"
+          strokeWidth="3.5"
           strokeLinecap="round"
           strokeLinejoin="round"
         >
-          <circle cx="32" cy="32" r="22" fill="currentColor" fillOpacity="0.16" />
+          <circle cx="32" cy="32" r="22" fill="currentColor" fillOpacity="0.22" />
           <path d="M23 23l18 18M41 23L23 41" />
         </g>
       );

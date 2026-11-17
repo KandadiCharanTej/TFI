@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { AppFrame } from "@/components/app-frame";
+import { Starburst } from "@/components/art-kit";
 import { useFlags } from "@/components/flags-provider";
 import { InstallSticker } from "@/components/install-sticker";
 import { LangSwitch } from "@/components/lang-switch";
@@ -45,8 +46,11 @@ export default function MePage() {
     <AppFrame>
       <div className="mx-auto max-w-[540px] space-y-5">
         <InstallSticker />
-        <Sticker className="space-y-6 p-6">
-          <div>
+        <Sticker className="relative space-y-6 p-6">
+          <div className="pointer-events-none absolute right-4 top-4" aria-hidden="true">
+            <Starburst color="yellow" size={40} />
+          </div>
+          <div className="pr-12">
             <h1 className="h2-title m-0 text-ink">
               <Tx v={P.meTitle} />
             </h1>
@@ -93,13 +97,20 @@ export default function MePage() {
               <Chip active={vibrationEnabled} onClick={() => setVibrationEnabled(!vibrationEnabled)}>
                 {t(P.meVibration)}: {vibrationEnabled ? onLabel : offLabel}
               </Chip>
-              <Chip active={reducedMotion} onClick={() => setReducedMotion(!reducedMotion)}>
+              <Chip
+                active={reducedMotion}
+                data-testid="toggle-calm-mode"
+                onClick={() => setReducedMotion(!reducedMotion)}
+              >
                 {t(P.meReducedMotion)}: {reducedMotion ? onLabel : offLabel}
               </Chip>
               <Chip active={largeText} onClick={() => setLargeText(!largeText)}>
                 {t(P.meLargeText)}: {largeText ? onLabel : offLabel}
               </Chip>
             </div>
+            <p className="m-0 pt-1 text-[13px] font-medium text-ink/80">
+              <Tx v={P.meCalmHint} />
+            </p>
           </div>
 
           {/* Clear my data */}

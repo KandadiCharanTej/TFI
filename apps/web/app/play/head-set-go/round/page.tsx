@@ -8,14 +8,16 @@
 import { useEffect, useRef, useCallback, useMemo, useState, useReducer } from "react";
 import { useRouter } from "next/navigation";
 import * as Dialog from "@radix-ui/react-dialog";
+import { ConfettiBurst } from "@/components/confetti-burst";
 import { Tx, useLang } from "@/components/lang-provider";
 import {
-  ConfettiBurst,
   HowToPlayDialog,
   QuitRoundDialog,
   RoundSkeleton,
 } from "@/components/round-ui";
-import { TRANSLATIONS } from "@/lib/i18n";
+import { GAME_TRANSLATIONS } from "@/lib/i18n-games";
+import { markUserAudioInteraction, playPartySound, triggerPartyHaptic } from "@/lib/sound";
+import { isCalmActive } from "@/lib/store";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -86,7 +88,7 @@ const INITIAL: RS = { cards: [], currentIndex: 0, correctIds: [], passedIds: [],
 function useAudio(muted: boolean) {
   const ctxRef = useRef<AudioContext | null>(null);
   const beep = useCallback((freq: number, dur: number, vol = 0.3) => {
-    if (muted) return;
+    if (muted || isCalmActive()) return;
     if (typeof navigator !== "undefined" && "userActivation" in navigator && !navigator.userActivation.hasBeenActive) return;
     try {
       ctxRef.current ??= new AudioContext();
@@ -99,7 +101,7 @@ function useAudio(muted: boolean) {
     } catch { /* silent */ }
   }, [muted]);
   const clack = useCallback(() => {
-    if (muted) return;
+    if (muted || isCalmActive()) return;
     if (typeof navigator !== "undefined" && "userActivation" in navigator && !navigator.userActivation.hasBeenActive) return;
     try {
       ctxRef.current ??= new AudioContext();
@@ -198,16 +200,21 @@ export default function HsgRoundPage() {
     void load();
   }, []);
 
-  // Countdown
+  // Countdown + clack on start + last 3s tick
   useEffect(() => {
     if (s.phase !== "getReady") return;
     const id = setInterval(() => {
-      if (s.countdown <= 1) audio.clack();
-      else audio.countdown();
+      if (s.countdown <= 1) {
+        audio.clack();
+        if (!s.muted) playPartySound("clack");
+      } else {
+        audio.countdown();
+        if (!s.muted) playPartySound("tick");
+      }
       dispatch({ type: "COUNTDOWN_TICK" });
     }, 1000);
     return () => clearInterval(id);
-  }, [s.phase, s.countdown, audio]);
+  }, [s.phase, s.countdown, s.muted, audio]);
 
   // Round timer
   useEffect(() => {
@@ -215,6 +222,13 @@ export default function HsgRoundPage() {
     const id = setInterval(() => dispatch({ type: "TICK" }), 1000);
     return () => clearInterval(id);
   }, [s.phase]);
+
+  // Last 3 seconds urgency tick
+  useEffect(() => {
+    if (s.phase === "playing" && !s.muted && s.secondsLeft <= 3 && s.secondsLeft > 0) {
+      playPartySound("tick");
+    }
+  }, [s.phase, s.secondsLeft, s.muted]);
 
   // Auto-pause on tab hide
   useEffect(() => {
@@ -251,19 +265,31 @@ export default function HsgRoundPage() {
 
   const handlePass = useCallback(() => {
     if (s.phase !== "playing") return;
-    audio.pass(); navigator.vibrate?.(30); setStreak(0); dispatch({ type: "PASS" });
-  }, [s.phase, audio]);
+    markUserAudioInteraction();
+    if (!s.muted) {
+      audio.pass();
+      playPartySound("pass");
+    }
+    triggerPartyHaptic("pass");
+    setStreak(0);
+    dispatch({ type: "PASS" });
+  }, [s.phase, s.muted, audio]);
 
   const handleCorrect = useCallback(() => {
     if (s.phase !== "playing") return;
-    audio.correct(); navigator.vibrate?.(50);
+    markUserAudioInteraction();
+    if (!s.muted) {
+      audio.correct();
+      playPartySound("correct");
+    }
+    triggerPartyHaptic("correct");
     setStreak((prev) => {
       const next = prev + 1;
       if (next >= 3) setConfettiTrigger((c) => c + 1);
       return next;
     });
     dispatch({ type: "CORRECT" });
-  }, [s.phase, audio]);
+  }, [s.phase, s.muted, audio]);
 
   const currentCard = s.cards[s.currentIndex];
   const cardText = currentCard ? (lang === "te" ? currentCard.te : currentCard.en) : "—";
@@ -285,17 +311,22 @@ export default function HsgRoundPage() {
     return (
       <main className="wall-safe-round flex flex-col items-center justify-center gap-4 bg-yellow p-8 text-center">
         <div className="text-6xl" aria-hidden>📱➡️</div>
-        <p className="h1-title text-ink"><Tx v={TRANSLATIONS.hsg.turnSideways} /></p>
-        <p className="text-[15px] font-bold text-ink"><Tx v={TRANSLATIONS.hsg.turnSidewaysNote} /></p>
+        <p className="h1-title text-ink"><Tx v={GAME_TRANSLATIONS.hsg.turnSideways} /></p>
+        <p className="text-[15px] font-bold text-ink"><Tx v={GAME_TRANSLATIONS.hsg.turnSidewaysNote} /></p>
       </main>
     );
   }
 
   return (
-    <main className="wall-safe-round relative flex flex-col overflow-hidden p-0 transition-colors duration-150" style={{ background: bg }}>
+    <main
+      className={`wall-safe-round bg-halftone relative flex flex-col overflow-hidden p-0 transition-colors duration-150 ${
+        s.phase === "done" ? "wall-shake" : ""
+      }`}
+      style={{ backgroundColor: bg }}
+    >
       {s.phase === "getReady" ? (
-        <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-yellow/95">
-          <p className="wall-label text-[16px] text-ink"><Tx v={TRANSLATIONS.hsg.getReady} /></p>
+        <div className="bg-halftone absolute inset-0 z-30 flex flex-col items-center justify-center bg-yellow/95">
+          <p className="wall-label text-[16px] text-ink"><Tx v={GAME_TRANSLATIONS.hsg.getReady} /></p>
           <p className="mono-num text-[120px] font-bold leading-none text-ink" aria-live="assertive">{s.countdown}</p>
         </div>
       ) : null}
@@ -314,13 +345,20 @@ export default function HsgRoundPage() {
         ]}
       />
       {/* Timer bar: ink on white, turns magenta at 10s */}
-      <div className="relative h-3 w-full border-b-2 border-ink bg-white">
+      <div className="relative h-3.5 w-full border-b-[3px] border-ink bg-white">
         <div className="h-full transition-[width]" style={{ width: `${pct}%`, backgroundColor: timerColor }} />
       </div>
 
       {/* Top pills */}
       <div className="flex items-center justify-between px-6 pt-3">
-        <div className="mono-num rounded-full border-2 border-ink bg-sticker px-4 py-1.5 text-[18px] font-black text-ink shadow-[2px_2px_0px_#141313]" aria-label={TRANSLATIONS.hsg.timeLeft.en}>
+        <div
+          className={`mono-num rounded-full border-[2.5px] border-ink px-4 py-1.5 text-[18px] font-black shadow-[0_3px_0_#141313] ${
+            s.secondsLeft <= 10 && s.secondsLeft > 0
+              ? "v4-pulse-urgent bg-magenta text-white"
+              : "bg-sticker text-ink"
+          }`}
+          aria-label={GAME_TRANSLATIONS.hsg.timeLeft.en}
+        >
           {s.secondsLeft}s
         </div>
 
@@ -335,17 +373,17 @@ export default function HsgRoundPage() {
           </button>
           <Dialog.Root open={pauseOpen} onOpenChange={(o) => { setPauseOpen(o); if (o) dispatch({ type: "PAUSE" }); }}>
             <Dialog.Trigger asChild>
-              <button type="button" aria-label={TRANSLATIONS.hsg.pause.en} className="rounded-full border-2 border-ink bg-sticker px-4 py-1.5 text-sm font-extrabold text-ink shadow-[2px_2px_0px_#141313]">⏸</button>
+              <button type="button" aria-label={GAME_TRANSLATIONS.hsg.pause.en} className="rounded-full border-2 border-ink bg-sticker px-4 py-1.5 text-sm font-extrabold text-ink shadow-[2px_2px_0px_#141313]">⏸</button>
             </Dialog.Trigger>
             <Dialog.Portal>
               <Dialog.Overlay className="fixed inset-0 bg-ink/60" />
               <Dialog.Content className="fixed left-1/2 top-1/2 w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-[20px] border-[2.5px] border-ink bg-sticker p-6 shadow-[0_5px_0_#141313]">
-                <Dialog.Title className="h2-title text-ink"><Tx v={TRANSLATIONS.hsg.paused} /></Dialog.Title>
+                <Dialog.Title className="h2-title text-ink"><Tx v={GAME_TRANSLATIONS.hsg.paused} /></Dialog.Title>
                 <div className="mt-5 flex flex-col gap-3">
                   <Dialog.Close asChild>
-                    <button type="button" onClick={() => dispatch({ type: "RESUME" })} className="wall-btn bg-yellow text-ink"><Tx v={TRANSLATIONS.hsg.resume} /></button>
+                    <button type="button" onClick={() => dispatch({ type: "RESUME" })} className="wall-btn bg-yellow text-ink"><Tx v={GAME_TRANSLATIONS.hsg.resume} /></button>
                   </Dialog.Close>
-                  <button type="button" onClick={() => { setPauseOpen(false); setQuitOpen(true); }} className="wall-btn bg-card text-ink"><Tx v={TRANSLATIONS.hsg.quit} /></button>
+                  <button type="button" onClick={() => { setPauseOpen(false); setQuitOpen(true); }} className="wall-btn bg-card text-ink"><Tx v={GAME_TRANSLATIONS.hsg.quit} /></button>
                 </div>
               </Dialog.Content>
             </Dialog.Portal>
@@ -358,28 +396,30 @@ export default function HsgRoundPage() {
               🔥 {streak}
             </div>
           ) : null}
-          <div className="mono-num rounded-full border-2 border-ink bg-sticker px-4 py-1.5 text-[18px] font-bold text-ink" aria-label={TRANSLATIONS.hsg.correctCount.en}>
+          <div className="mono-num rounded-full border-2 border-ink bg-sticker px-4 py-1.5 text-[18px] font-bold text-ink" aria-label={GAME_TRANSLATIONS.hsg.correctCount.en}>
             ✓ {s.correctIds.length}
           </div>
         </div>
       </div>
 
-      {/* Card word — hero of the screen: 96px+ TE with EN below, 72px+ EN in English mode */}
-      <div className="flex flex-1 flex-col items-center justify-center px-8 text-center" aria-live="polite" aria-label={TRANSLATIONS.hsg.currentCard.en}>
-        {lang === "te" && currentCard ? (
-          <div>
-            <p className="te-lead m-0 text-[clamp(56px,9vw,96px)] text-ink">
-              {currentCard.te}
+      {/* Card word — hero of the screen: 96px+ TE with EN below */}
+      <div className="flex flex-1 flex-col items-center justify-center px-8 text-center" aria-live="polite" aria-label={GAME_TRANSLATIONS.hsg.currentCard.en}>
+        <div className="rounded-[22px] border-[3px] border-ink bg-white px-8 py-4 shadow-[0_6px_0_#141313]">
+          {lang === "te" && currentCard ? (
+            <div>
+              <p className="te-lead m-0 text-[clamp(56px,10vw,98px)] text-ink">
+                {currentCard.te}
+              </p>
+              <p className="te-sub m-0 mt-1 text-[20px] text-ink/85">
+                {currentCard.en}
+              </p>
+            </div>
+          ) : (
+            <p className="m-0 font-display text-[clamp(48px,8vw,84px)] font-extrabold leading-[1.04] tracking-[-0.02em] text-ink">
+              {cardText}
             </p>
-            <p className="te-sub m-0 mt-1 text-[22px] text-ink/85">
-              {currentCard.en}
-            </p>
-          </div>
-        ) : (
-          <p className="m-0 font-display text-[clamp(52px,8vw,80px)] font-extrabold leading-[1.06] tracking-[-0.02em] text-ink">
-            {cardText}
-          </p>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Tap zones — Pass (magenta / white large bold) and Correct! (green / ink) */}
@@ -387,18 +427,18 @@ export default function HsgRoundPage() {
         <button
           type="button"
           onClick={handlePass}
-          aria-label={TRANSLATIONS.hsg.passStamp.en}
+          aria-label={GAME_TRANSLATIONS.hsg.passStamp.en}
           className="flex flex-1 items-center justify-center border-r-2 border-ink bg-magenta text-[24px] font-bold text-white"
         >
-          <Tx v={TRANSLATIONS.hsg.passStamp} />
+          <Tx v={GAME_TRANSLATIONS.hsg.passStamp} />
         </button>
         <button
           type="button"
           onClick={handleCorrect}
-          aria-label={TRANSLATIONS.hsg.correctStamp.en}
+          aria-label={GAME_TRANSLATIONS.hsg.correctStamp.en}
           className="flex flex-1 items-center justify-center bg-green text-[24px] font-bold text-ink"
         >
-          <Tx v={TRANSLATIONS.hsg.correctStamp} />
+          <Tx v={GAME_TRANSLATIONS.hsg.correctStamp} />
         </button>
       </div>
     </main>

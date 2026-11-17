@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import { getGameColor } from "@tfi/config/tokens";
 import { GAME_REGISTRY, getGameById } from "@tfi/game-core";
 import { AppFrame } from "@/components/app-frame";
-import { GameTitle } from "@/components/game-title";
-import { WallIcon } from "@/components/icons";
+import { GameSetupHero } from "@/components/game-setup-hero";
 import { Tx } from "@/components/lang-provider";
-import { Badge, Sticker, WallLinkButton } from "@/components/sticker-kit";
+import { Sticker, WallLinkButton } from "@/components/sticker-kit";
 import { readShowMvpFlag } from "@/lib/games";
 import { getServerLang } from "@/lib/lang-server";
 import { GAMES_CATALOG, TRANSLATIONS } from "@/lib/i18n";
+import { GAME_TRANSLATIONS } from "@/lib/i18n-games";
 import SetupClient from "./setup-client";
 
 export async function generateMetadata({
@@ -40,10 +39,10 @@ export function generateStaticParams() {
 }
 
 const RULES_MAP: Record<string, { en: string; te: string }> = {
-  transify: TRANSLATIONS.gamesMeta.transifyRule,
-  "emoji-cinema": TRANSLATIONS.gamesMeta.emojiCinemaRule,
-  "rapid-fire": TRANSLATIONS.gamesMeta.rapidFireRule,
-  "cricket-iq": TRANSLATIONS.gamesMeta.cricketIqRule,
+  transify: GAME_TRANSLATIONS.gamesMeta.transifyRule,
+  "emoji-cinema": GAME_TRANSLATIONS.gamesMeta.emojiCinemaRule,
+  "rapid-fire": GAME_TRANSLATIONS.gamesMeta.rapidFireRule,
+  "cricket-iq": GAME_TRANSLATIONS.gamesMeta.cricketIqRule,
 };
 
 export default async function GameSetupPage({
@@ -78,58 +77,30 @@ export default async function GameSetupPage({
   }
 
   // Otherwise, it's a Coming Soon game (Box Office Auction or Wave 2)
-  const panelColor = getGameColor(regGame.id);
-
   return (
     <AppFrame>
-      <div className="mx-auto max-w-[480px] space-y-6 p-4">
-        <Sticker className="p-6">
-          <div className="flex items-center justify-between">
-            <Badge tone="yellow">Game #{regGame.number}</Badge>
-            <Badge tone={regGame.mode === "Online" ? "cyan" : "white"}>
-              {regGame.mode}
-            </Badge>
-          </div>
+      <div className="mx-auto max-w-[540px] space-y-5">
+        <GameSetupHero
+          slug={regGame.id}
+          gameNumber={regGame.number}
+          iconKind={regGame.iconId}
+          title={catalogGame.title}
+          description={catalogGame.description}
+          modeLabel={regGame.mode === "Online" ? TRANSLATIONS.modes.online : TRANSLATIONS.modes.onePhone}
+          isComingSoon
+        />
 
-          <div className="mt-4 flex items-center gap-4">
-            <div
-              className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[14px] border-[2.5px] border-ink text-ink"
-              style={{ backgroundColor: panelColor }}
-            >
-              <div className="h-14 w-14">
-                <WallIcon kind={regGame.iconId} />
-              </div>
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span
-                  aria-hidden="true"
-                  className="inline-block h-3 w-3 shrink-0 rounded-full border-2 border-ink"
-                  style={{ backgroundColor: panelColor }}
-                />
-                <GameTitle
-                  title={catalogGame.title}
-                  as="h1"
-                  teClassName="text-[28px]"
-                  enClassName="text-[26px]"
-                />
-              </div>
-              <p className="m-0 mt-1 text-[14px] font-bold text-ink">
-                <Tx v={catalogGame.description} />
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-6 rounded-[14px] border-2 border-ink bg-card p-4">
-            <p className="m-0 text-[15px] font-black text-ink">
-              <Tx v={TRANSLATIONS.judge.comingSoon} />
+        <Sticker className="space-y-4 p-6">
+          <div className="rounded-[14px] border-[2.5px] border-ink bg-card p-4">
+            <p className="m-0 text-[16px] font-extrabold text-ink">
+              <Tx v={GAME_TRANSLATIONS.judge.comingSoon} />
             </p>
-            <p className="m-0 mt-1 text-[13px] font-bold text-ink/70">
-              <Tx v={TRANSLATIONS.judge.comingSoonNote} />
+            <p className="m-0 mt-1 text-[14px] font-semibold text-ink/80">
+              <Tx v={GAME_TRANSLATIONS.judge.comingSoonNote} />
             </p>
           </div>
 
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-3">
             <WallLinkButton href="/play" variant="white">
               ← <Tx v={TRANSLATIONS.common.backToPlayHome} />
             </WallLinkButton>

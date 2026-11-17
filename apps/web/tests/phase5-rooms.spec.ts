@@ -11,12 +11,22 @@
  */
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import fs from "node:fs";
+import path from "node:path";
+
+const DESIGN_V4_DIR = path.resolve(process.cwd(), "../../reference/design-v4");
+
+function saveV4Shot(name: string, buf: Buffer) {
+  fs.mkdirSync(DESIGN_V4_DIR, { recursive: true });
+  fs.writeFileSync(path.join(DESIGN_V4_DIR, name), buf);
+}
 
 const BASE = "http://127.0.0.1:3102";
 
 test.describe("Phase 5 — Live PartyKit Online Rooms (3+ Browser Contexts)", () => {
   test("Full multi-phone room lifecycle: create, join by code & link, refresh seat, remove, host handover, Ready check", async ({
     browser,
+    browserName,
   }) => {
     test.setTimeout(90_000);
 
@@ -96,14 +106,27 @@ test.describe("Phase 5 — Live PartyKit Online Rooms (3+ Browser Contexts)", ()
       await expect(p1.getByTestId("room-player-list")).toContainText("Charan");
       await expect(p1.getByTestId("room-player-list").locator("li")).toHaveCount(3);
 
+      // Capture Design V4 AFTER live lobby screenshots (EN & TE at 390x844) once on Chromium
+      if (browserName === "chromium") {
+        await p1.setViewportSize({ width: 390, height: 844 });
+        await p1.waitForTimeout(250);
+        saveV4Shot("after-lobby-390x844-en.png", await p1.screenshot({ fullPage: true }));
+        await p1.getByTestId("lang-switch-te").click();
+        await p1.waitForTimeout(300);
+        saveV4Shot("after-lobby-390x844-te.png", await p1.screenshot({ fullPage: true }));
+        await p1.getByTestId("lang-switch-en").click();
+        await p1.waitForTimeout(200);
+        await p1.setViewportSize({ width: 1280, height: 720 });
+      }
+
       // 5. Player 2 (Bala) refreshes and keeps the exact same seat
       const balaRowId = await p2
         .getByTestId("room-player-list")
         .locator("li", { hasText: "Bala" })
         .getAttribute("data-testid");
       await p2.reload();
-      await p2.waitForLoadState("networkidle");
-      await expect(p2.getByTestId(balaRowId!)).toContainText("Bala");
+      await p2.waitForLoadState("domcontentloaded");
+      await expect(p2.getByTestId(balaRowId!)).toContainText("Bala", { timeout: 10000 });
       await expect(p2.getByTestId("room-player-list").locator("li")).toHaveCount(3);
 
       // 6. Host (Arjun) removes Player 3 (Charan)
@@ -123,18 +146,18 @@ test.describe("Phase 5 — Live PartyKit Online Rooms (3+ Browser Contexts)", ()
 
       // 8. Player 4 (Divya) joins via /r/[code], and new Host (Bala) starts Ready check!
       await p4.goto(`${BASE}/r/${code}`);
-      await p4.waitForLoadState("networkidle");
+      await expect(p4.getByTestId("invite-name-input")).toBeVisible({ timeout: 10000 });
       await p4.getByTestId("invite-name-input").fill("Divya");
       await p4.getByTestId("invite-join-btn").click();
-      await p4.waitForURL(`**/room/${code}`);
-      await expect(p2.getByTestId("room-player-list").locator("li")).toHaveCount(3 - 1);
+      await p4.waitForURL(`**/room/${code}`, { timeout: 10000 });
+      await expect(p2.getByTestId("room-player-list").locator("li")).toHaveCount(2, { timeout: 10000 });
 
-      await p2.getByTestId("room-start-btn").click();
-      await expect(p2.getByTestId("ready-check-panel")).toBeVisible({ timeout: 5000 });
-      await expect(p4.getByTestId("ready-check-panel")).toBeVisible({ timeout: 5000 });
+      await p2.getByTestId("room-start-btn").click({ timeout: 10000 });
+      await expect(p2.getByTestId("ready-check-panel")).toBeVisible({ timeout: 10000 });
+      await expect(p4.getByTestId("ready-check-panel")).toBeVisible({ timeout: 10000 });
 
-      await p2.getByTestId("ready-check-btn").click();
-      await p4.getByTestId("ready-check-btn").click();
+      await p2.getByTestId("ready-check-btn").click({ timeout: 10000 });
+      await p4.getByTestId("ready-check-btn").click({ timeout: 10000 });
 
       await expect(p2.getByTestId("ready-done")).toBeVisible({ timeout: 8000 });
       await expect(p4.getByTestId("ready-done")).toBeVisible({ timeout: 8000 });

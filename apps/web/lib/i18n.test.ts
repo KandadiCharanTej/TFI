@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { FAN_VIBES, GAMES_CATALOG, TELUGU_CONJUNCT_SAMPLES, TRANSLATIONS } from "./i18n";
+import { GAME_TRANSLATIONS } from "./i18n-games";
+import { LANDING_TRANSLATIONS } from "./i18n-landing";
+import { ROOMS_TRANSLATIONS } from "./i18n-rooms";
 import { TELUGU_CHAR_PATTERN, fmt, parseLang, readLangFromCookieString } from "./lang";
 
 interface Leaf {
@@ -33,6 +36,9 @@ function collectLeaves(node: unknown, path: string, out: Leaf[]): void {
 
 const leaves: Leaf[] = [];
 collectLeaves(TRANSLATIONS, "", leaves);
+collectLeaves(GAME_TRANSLATIONS, "", leaves);
+collectLeaves(LANDING_TRANSLATIONS, "landing", leaves);
+collectLeaves(ROOMS_TRANSLATIONS, "rooms", leaves);
 for (const game of GAMES_CATALOG) {
   collectLeaves(game.title, `games.${game.slug}.title`, leaves);
   collectLeaves(game.description, `games.${game.slug}.description`, leaves);

@@ -2,16 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getGameColor } from "@tfi/config/tokens";
 import { AppFrame } from "@/components/app-frame";
-import { GameTitle } from "@/components/game-title";
-import { WallIcon } from "@/components/icons";
+import { GameSetupHero } from "@/components/game-setup-hero";
 import { Tx, useLang, useT } from "@/components/lang-provider";
-import { Badge, Chip, Sticker, WallButton, WallLinkButton } from "@/components/sticker-kit";
+import { Chip, Sticker, WallButton, WallLinkButton } from "@/components/sticker-kit";
 import { recordRecentlyPlayed } from "@/lib/games";
 import { GAMES_CATALOG, TRANSLATIONS } from "@/lib/i18n";
+import { GAME_TRANSLATIONS } from "@/lib/i18n-games";
 
-const V = TRANSLATIONS.vote;
+const V = GAME_TRANSLATIONS.vote;
 const PLAYERS_KEY = "tfi.vote.players";
 const CONFIG_KEY = "tfi.vote.config";
 const HIDE_HOWTO_KEY = "tfi.vote.hideHowTo";
@@ -103,62 +102,30 @@ export default function MostLikelySetupPage() {
 
   return (
     <AppFrame>
-      <div className="mx-auto max-w-[520px] space-y-6 p-4">
+      <div className="mx-auto max-w-[540px] space-y-5">
         <div className="flex items-center justify-between gap-2">
           <WallLinkButton href="/play" variant="white" size="sm">
             ← <Tx v={TRANSLATIONS.common.backToPlay} />
           </WallLinkButton>
-          <button
-            type="button"
-            onClick={resetHowTo}
-            aria-label={t(V.howToTitle)}
-            data-testid="vote-help-btn"
-            className="flex h-11 w-11 items-center justify-center rounded-full border-[2.5px] border-ink bg-white text-lg font-black text-ink shadow-btn active:translate-y-0.5"
-          >
-            ?
-          </button>
         </div>
 
+        <GameSetupHero
+          slug="most-likely"
+          gameNumber={catalogGame.number}
+          iconKind="most"
+          title={catalogGame.title}
+          description={GAME_TRANSLATIONS.gamesMeta.mostLikelyRule}
+          onOpenHowTo={resetHowTo}
+          howToTestId="vote-help-btn"
+        />
+
         <Sticker className="p-5 sm:p-6">
-          <div className="flex items-center justify-between gap-2">
-            <Badge tone="yellow">Game #{catalogGame.number}</Badge>
-            <Badge tone="white"><Tx v={TRANSLATIONS.modes.onePhone} /></Badge>
-          </div>
-          <p className="wall-label m-0 mt-3 text-ink/75">
+          <p className="wall-label m-0 text-ink/75">
             <Tx v={TRANSLATIONS.gameSetup.stepFlow} />
           </p>
 
-          <div className="mt-4 flex items-center gap-4">
-            <div
-              className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[14px] border-[2.5px] border-ink text-ink"
-              style={{ backgroundColor: getGameColor("most-likely") }}
-            >
-              <div className="h-10 w-10">
-                <WallIcon kind="most" />
-              </div>
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span
-                  aria-hidden="true"
-                  className="inline-block h-3 w-3 shrink-0 rounded-full border-2 border-ink"
-                  style={{ backgroundColor: getGameColor("most-likely") }}
-                />
-                <GameTitle
-                  title={catalogGame.title}
-                  as="h1"
-                  teClassName="text-[28px]"
-                  enClassName="text-[26px]"
-                />
-              </div>
-              <p className="m-0 mt-1 text-[13px] font-bold text-ink/80">
-                <Tx v={TRANSLATIONS.gamesMeta.mostLikelyRule} />
-              </p>
-            </div>
-          </div>
-
           {/* Players (3 to 10) */}
-          <div className="mt-6 space-y-2.5">
+          <div className="mt-4 space-y-2.5">
             <label className="block text-[13px] font-black uppercase tracking-wider text-ink">
               <Tx v={V.playersLabel} />
             </label>
@@ -170,8 +137,8 @@ export default function MostLikelySetupPage() {
                     value={name}
                     maxLength={20}
                     onChange={(e) => handlePlayerNameChange(idx, e.target.value)}
-                    placeholder={t(TRANSLATIONS.judge.playerNamePlaceholder)}
-                    aria-label={`${t(TRANSLATIONS.judge.playerNamePlaceholder)} ${idx + 1}`}
+                    placeholder={t(GAME_TRANSLATIONS.judge.playerNamePlaceholder)}
+                    aria-label={`${t(GAME_TRANSLATIONS.judge.playerNamePlaceholder)} ${idx + 1}`}
                     data-testid={`vote-player-input-${idx}`}
                     className="min-h-[44px] flex-1 rounded-[10px] border-2 border-ink bg-card px-3 text-[15px] font-bold text-ink focus:bg-white focus:outline-none"
                   />
@@ -179,7 +146,7 @@ export default function MostLikelySetupPage() {
                     <button
                       type="button"
                       onClick={() => handleRemovePlayer(idx)}
-                      aria-label={`${t(TRANSLATIONS.judge.removePlayer)} ${name}`}
+                      aria-label={`${t(GAME_TRANSLATIONS.judge.removePlayer)} ${name}`}
                       className="min-h-[44px] rounded-[10px] border-2 border-ink bg-white px-3 text-xs font-black text-ink"
                     >
                       ✕
@@ -201,8 +168,8 @@ export default function MostLikelySetupPage() {
                       handleAddPlayer();
                     }
                   }}
-                  placeholder={t(TRANSLATIONS.judge.playerNamePlaceholder)}
-                  aria-label={t(TRANSLATIONS.judge.addPlayer)}
+                  placeholder={t(GAME_TRANSLATIONS.judge.playerNamePlaceholder)}
+                  aria-label={t(GAME_TRANSLATIONS.judge.addPlayer)}
                   data-testid="vote-add-player-input"
                   className="min-h-[44px] flex-1 rounded-[10px] border-2 border-dashed border-ink bg-white px-3 text-[14px] font-bold text-ink focus:border-solid focus:outline-none"
                 />
@@ -213,7 +180,7 @@ export default function MostLikelySetupPage() {
                   onClick={handleAddPlayer}
                   data-testid="vote-add-player-btn"
                 >
-                  + <Tx v={TRANSLATIONS.judge.addPlayer} />
+                  + <Tx v={GAME_TRANSLATIONS.judge.addPlayer} />
                 </WallButton>
               </div>
             ) : null}
@@ -246,7 +213,7 @@ export default function MostLikelySetupPage() {
               onClick={handleStart}
               data-testid="vote-start-btn"
             >
-              <Tx v={TRANSLATIONS.judge.startGame} /> →
+              <Tx v={GAME_TRANSLATIONS.judge.startGame} /> →
             </WallButton>
           </div>
         </Sticker>
@@ -280,7 +247,7 @@ export default function MostLikelySetupPage() {
                 className="w-full"
                 onClick={() => setShowRulesModal(false)}
               >
-                <Tx v={TRANSLATIONS.charades.gotItStart} />
+                <Tx v={GAME_TRANSLATIONS.charades.gotItStart} />
               </WallButton>
             </Sticker>
           </div>

@@ -8,9 +8,11 @@ import { Tx, useLang, useT } from "@/components/lang-provider";
 import { ConfettiBurst } from "@/components/confetti-burst";
 import { Badge, Sticker, TicketStub, WallButton, WallLinkButton } from "@/components/sticker-kit";
 import { TRANSLATIONS } from "@/lib/i18n";
+import { GAME_TRANSLATIONS } from "@/lib/i18n-games";
 import { drawWallSharePoster, SHARE_TEMPLATES, type ShareTemplate } from "@/lib/share-card";
+import { playPartySound } from "@/lib/sound";
 
-const V = TRANSLATIONS.vote;
+const V = GAME_TRANSLATIONS.vote;
 const RESULTS_KEY = "tfi.vote.results";
 
 interface StoredVoteResults {
@@ -33,6 +35,7 @@ export default function MostLikelyResultsPage() {
       const raw = sessionStorage.getItem(RESULTS_KEY);
       if (raw) {
         setResults(JSON.parse(raw) as StoredVoteResults);
+        playPartySound("win");
       }
     } catch {
       /* ignore */
@@ -51,7 +54,7 @@ export default function MostLikelyResultsPage() {
               No recent game found. Start a new round of Most Likely!
             </p>
             <WallLinkButton href="/play/most-likely" variant="yellow">
-              <Tx v={TRANSLATIONS.judge.playAgain} /> →
+              <Tx v={GAME_TRANSLATIONS.judge.playAgain} /> →
             </WallLinkButton>
           </Sticker>
         </div>
@@ -73,17 +76,18 @@ export default function MostLikelyResultsPage() {
       rows: sorted.map((item) => ({ label: item.player.name, value: `${item.crowns} 👑` })),
       showNames,
       unofficialFooter: TRANSLATIONS.brand.unofficialDisclaimer.en,
+      gameColor: "#00C853",
     });
     const blob = await new Promise<Blob | null>((res) => canvas.toBlob(res, "image/png"));
     if (!blob) {
-      setShareMsg(t(TRANSLATIONS.judge.shareFailed));
+      setShareMsg(t(GAME_TRANSLATIONS.judge.shareFailed));
       return;
     }
     const file = new File([blob], "tfi-most-likely.png", { type: "image/png" });
     if (navigator.share && navigator.canShare?.({ files: [file] })) {
       try {
         await navigator.share({ files: [file], title: "TFI & Pitch — Most Likely" });
-        setShareMsg(t(TRANSLATIONS.judge.shareDone));
+        setShareMsg(t(GAME_TRANSLATIONS.judge.shareDone));
         return;
       } catch {
         /* fallback */
@@ -95,15 +99,16 @@ export default function MostLikelyResultsPage() {
     a.download = "tfi-most-likely.png";
     a.click();
     URL.revokeObjectURL(url);
-    setShareMsg(t(TRANSLATIONS.judge.shareSaved));
+    setShareMsg(t(GAME_TRANSLATIONS.judge.shareSaved));
   };
 
   return (
     <AppFrame>
+      <ConfettiBurst trigger={1} />
       <div className="mx-auto max-w-[520px] space-y-6 p-4">
         <Sticker className="space-y-5 p-6 text-center">
           <Badge tone={isTie ? "cyan" : "yellow"}>
-            <Tx v={isTie ? TRANSLATIONS.judge.tie : V.titlesHeading} />
+            <Tx v={isTie ? GAME_TRANSLATIONS.judge.tie : V.titlesHeading} />
           </Badge>
 
           <TicketStub
@@ -112,7 +117,7 @@ export default function MostLikelyResultsPage() {
             header={
               <div className="flex items-center justify-between text-ink">
                 <span className="wall-label">
-                  <Tx v={TRANSLATIONS.landing.admitOneGang} />
+                  <Tx v={TRANSLATIONS.common.admitOneGang} />
                 </span>
                 <span className="wall-label">
                   <Tx v={V.crownedMostOften} />
@@ -165,7 +170,7 @@ export default function MostLikelyResultsPage() {
                 onChange={(e) => setShowNames(e.target.checked)}
                 className="h-5 w-5 accent-ink"
               />
-              <Tx v={TRANSLATIONS.judge.showNames} />
+              <Tx v={GAME_TRANSLATIONS.judge.showNames} />
             </label>
 
             <div className="flex gap-2">
@@ -178,11 +183,11 @@ export default function MostLikelyResultsPage() {
                 🎨 {template.toUpperCase()}
               </WallButton>
               <WallButton type="button" variant="white" onClick={handleShare} className="flex-1">
-                📸 <Tx v={TRANSLATIONS.judge.shareSticker} />
+                📸 <Tx v={GAME_TRANSLATIONS.judge.shareSticker} />
               </WallButton>
             </div>
             {shareMsg ? <p className="m-0 text-xs font-bold text-ink">{shareMsg}</p> : null}
-            <p className="m-0 text-[11px] font-semibold text-ink/60">
+            <p className="m-0 text-[11px] font-semibold text-ink/80">
               <Tx v={TRANSLATIONS.brand.unofficialDisclaimer} />
             </p>
             <ConfettiBurst trigger={1} />
@@ -190,7 +195,7 @@ export default function MostLikelyResultsPage() {
 
           <div className="flex flex-col gap-3 pt-2 sm:flex-row">
             <WallLinkButton href="/play/most-likely" variant="yellow" className="flex-1">
-              <Tx v={TRANSLATIONS.judge.playAgain} />
+              <Tx v={GAME_TRANSLATIONS.judge.playAgain} />
             </WallLinkButton>
             <WallLinkButton href="/play" variant="white" className="flex-1">
               <Tx v={TRANSLATIONS.common.backToPlayHome} />

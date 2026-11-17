@@ -8,7 +8,9 @@ import { Tx, useLang, useT } from "@/components/lang-provider";
 import { ConfettiBurst } from "@/components/confetti-burst";
 import { Badge, Sticker, TicketStub, WallButton, WallLinkButton } from "@/components/sticker-kit";
 import { TRANSLATIONS } from "@/lib/i18n";
+import { GAME_TRANSLATIONS } from "@/lib/i18n-games";
 import { drawWallSharePoster, SHARE_TEMPLATES, type ShareTemplate } from "@/lib/share-card";
+import { playPartySound } from "@/lib/sound";
 
 const RESULTS_KEY = "tfi.charades.results";
 
@@ -31,6 +33,7 @@ export default function DumbCharadesResultsPage() {
       const raw = sessionStorage.getItem(RESULTS_KEY);
       if (raw) {
         setResults(JSON.parse(raw) as StoredCharadesResults);
+        playPartySound("win");
       }
     } catch {
       /* ignore */
@@ -43,13 +46,13 @@ export default function DumbCharadesResultsPage() {
         <div className="mx-auto max-w-[480px] p-4">
           <Sticker className="space-y-4 p-6 text-center">
             <h1 className="h2-title m-0 text-ink">
-              <Tx v={TRANSLATIONS.judge.resultsTitle} />
+              <Tx v={GAME_TRANSLATIONS.judge.resultsTitle} />
             </h1>
             <p className="m-0 text-sm font-bold text-ink/75">
               No recent game found. Start a new round of Dumb Charades!
             </p>
             <WallLinkButton href="/play/dumb-charades" variant="yellow">
-              <Tx v={TRANSLATIONS.judge.playAgain} /> →
+              <Tx v={GAME_TRANSLATIONS.judge.playAgain} /> →
             </WallLinkButton>
           </Sticker>
         </div>
@@ -71,17 +74,18 @@ export default function DumbCharadesResultsPage() {
       rows: sorted.map((sc) => ({ label: sc.team.name, value: `${sc.score} pts` })),
       showNames,
       unofficialFooter: TRANSLATIONS.brand.unofficialDisclaimer.en,
+      gameColor: "#00C853",
     });
     const blob = await new Promise<Blob | null>((res) => canvas.toBlob(res, "image/png"));
     if (!blob) {
-      setShareMsg(t(TRANSLATIONS.judge.shareFailed));
+      setShareMsg(t(GAME_TRANSLATIONS.judge.shareFailed));
       return;
     }
     const file = new File([blob], "tfi-dumb-charades.png", { type: "image/png" });
     if (navigator.share && navigator.canShare?.({ files: [file] })) {
       try {
         await navigator.share({ files: [file], title: "TFI & Pitch — Dumb Charades" });
-        setShareMsg(t(TRANSLATIONS.judge.shareDone));
+        setShareMsg(t(GAME_TRANSLATIONS.judge.shareDone));
         return;
       } catch {
         /* fallback */
@@ -93,7 +97,7 @@ export default function DumbCharadesResultsPage() {
     a.download = "tfi-dumb-charades.png";
     a.click();
     URL.revokeObjectURL(url);
-    setShareMsg(t(TRANSLATIONS.judge.shareSaved));
+    setShareMsg(t(GAME_TRANSLATIONS.judge.shareSaved));
   };
 
   return (
@@ -102,7 +106,7 @@ export default function DumbCharadesResultsPage() {
       <div className="mx-auto max-w-[520px] space-y-6 p-4">
         <Sticker className="space-y-5 p-6 text-center">
           <Badge tone={isTie ? "cyan" : "yellow"}>
-            <Tx v={isTie ? TRANSLATIONS.judge.tie : TRANSLATIONS.judge.winner} />
+            <Tx v={isTie ? GAME_TRANSLATIONS.judge.tie : GAME_TRANSLATIONS.judge.winner} />
           </Badge>
 
           <TicketStub
@@ -111,7 +115,7 @@ export default function DumbCharadesResultsPage() {
             header={
               <div className="flex items-center justify-between text-ink">
                 <span className="wall-label">
-                  <Tx v={TRANSLATIONS.landing.admitOneGang} />
+                  <Tx v={TRANSLATIONS.common.admitOneGang} />
                 </span>
                 <span className="wall-label">Dumb Charades</span>
               </div>
@@ -155,7 +159,7 @@ export default function DumbCharadesResultsPage() {
                 onChange={(e) => setShowNames(e.target.checked)}
                 className="h-5 w-5 accent-ink"
               />
-              <Tx v={TRANSLATIONS.judge.showNames} />
+              <Tx v={GAME_TRANSLATIONS.judge.showNames} />
             </label>
 
             <div className="flex gap-2">
@@ -168,18 +172,18 @@ export default function DumbCharadesResultsPage() {
                 🎨 {template.toUpperCase()}
               </WallButton>
               <WallButton type="button" variant="white" onClick={handleShare} className="flex-1">
-                📸 <Tx v={TRANSLATIONS.judge.shareSticker} />
+                📸 <Tx v={GAME_TRANSLATIONS.judge.shareSticker} />
               </WallButton>
             </div>
             {shareMsg ? <p className="m-0 text-xs font-bold text-ink">{shareMsg}</p> : null}
-            <p className="m-0 text-[11px] font-semibold text-ink/60">
+            <p className="m-0 text-[11px] font-semibold text-ink/80">
               <Tx v={TRANSLATIONS.brand.unofficialDisclaimer} />
             </p>
           </div>
 
           <div className="flex flex-col gap-3 pt-2 sm:flex-row">
             <WallLinkButton href="/play/dumb-charades" variant="yellow" className="flex-1">
-              <Tx v={TRANSLATIONS.judge.playAgain} />
+              <Tx v={GAME_TRANSLATIONS.judge.playAgain} />
             </WallLinkButton>
             <WallLinkButton href="/play" variant="white" className="flex-1">
               <Tx v={TRANSLATIONS.common.backToPlayHome} />

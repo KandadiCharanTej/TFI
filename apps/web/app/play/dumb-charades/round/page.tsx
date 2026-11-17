@@ -16,8 +16,10 @@ import {
 import { Tx, useLang, useT } from "@/components/lang-provider";
 import { Badge, Sticker, WallButton } from "@/components/sticker-kit";
 import { TRANSLATIONS } from "@/lib/i18n";
+import { GAME_TRANSLATIONS } from "@/lib/i18n-games";
+import { isCalmActive } from "@/lib/store";
 
-const C = TRANSLATIONS.charades;
+const C = GAME_TRANSLATIONS.charades;
 const CONFIG_KEY = "tfi.charades.config";
 const RESULTS_KEY = "tfi.charades.results";
 const HIDE_HOWTO_KEY = "tfi.charades.hideHowTo";
@@ -179,7 +181,7 @@ function reducer(state: State, action: Action): State {
 }
 
 function playClack(muted: boolean) {
-  if (muted || typeof window === "undefined") return;
+  if (muted || isCalmActive() || typeof window === "undefined") return;
   try {
     const AC =
       window.AudioContext ||
@@ -209,7 +211,7 @@ function playClack(muted: boolean) {
 }
 
 function playBeep(freq: number, ms: number, muted: boolean) {
-  if (muted || typeof window === "undefined") return;
+  if (muted || isCalmActive() || typeof window === "undefined") return;
   try {
     const AC =
       window.AudioContext ||
@@ -413,7 +415,7 @@ function CharadesRoundRunner({
 
   return (
     <main
-      className="wall-tap-safe flex min-h-[100dvh] flex-col justify-between bg-concrete px-4 pb-[max(16px,env(safe-area-inset-bottom))] pt-[max(16px,env(safe-area-inset-top))]"
+      className="wall-tap-safe bg-halftone flex min-h-[100dvh] flex-col justify-between bg-green px-4 pb-[max(16px,env(safe-area-inset-bottom))] pt-[max(16px,env(safe-area-inset-top))]"
       style={{ WebkitUserSelect: "none", userSelect: "none" }}
     >
       <header className="mx-auto flex w-full max-w-[520px] items-center justify-between gap-2">
@@ -424,7 +426,7 @@ function CharadesRoundRunner({
           <button
             type="button"
             onClick={() => setMuted((m) => !m)}
-            aria-label={muted ? t(TRANSLATIONS.judge.unmuteSound) : t(TRANSLATIONS.judge.muteSound)}
+            aria-label={muted ? t(GAME_TRANSLATIONS.judge.unmuteSound) : t(GAME_TRANSLATIONS.judge.muteSound)}
             className="flex h-11 min-w-[44px] items-center justify-center rounded-full border-2 border-ink bg-white px-3 text-sm font-black text-ink"
           >
             {muted ? "🔇" : "🔊"}
@@ -443,7 +445,7 @@ function CharadesRoundRunner({
             <button
               type="button"
               onClick={() => setConfirmQuit(true)}
-              aria-label={t(TRANSLATIONS.judge.quit)}
+              aria-label={t(GAME_TRANSLATIONS.judge.quit)}
               className="flex h-11 min-w-[44px] items-center justify-center rounded-full border-2 border-ink bg-white px-3 text-sm font-black text-ink"
             >
               ✕
@@ -629,7 +631,7 @@ function CharadesRoundRunner({
               data-testid="charades-next-turn-btn"
               className="w-full"
             >
-              <Tx v={TRANSLATIONS.judge.nextTurn} />
+              <Tx v={GAME_TRANSLATIONS.judge.nextTurn} />
             </WallButton>
           </Sticker>
         ) : null}
@@ -687,12 +689,12 @@ function CharadesRoundRunner({
         <div
           role="dialog"
           aria-modal="true"
-          aria-label={t(TRANSLATIONS.judge.paused)}
+          aria-label={t(GAME_TRANSLATIONS.judge.paused)}
           className="fixed inset-0 z-50 flex items-center justify-center bg-ink/80 p-4"
         >
           <Sticker className="w-full max-w-[360px] space-y-4 p-6 text-center">
             <h2 className="h2-title m-0 text-ink">
-              <Tx v={TRANSLATIONS.judge.paused} />
+              <Tx v={GAME_TRANSLATIONS.judge.paused} />
             </h2>
             <div className="flex flex-col gap-3">
               <WallButton
@@ -703,14 +705,14 @@ function CharadesRoundRunner({
                   if (state.phase === "paused") dispatch({ type: "RESUME" });
                 }}
               >
-                <Tx v={TRANSLATIONS.judge.resume} />
+                <Tx v={GAME_TRANSLATIONS.judge.resume} />
               </WallButton>
               <WallButton
                 type="button"
                 variant="white"
                 onClick={() => router.push("/play/dumb-charades")}
               >
-                <Tx v={TRANSLATIONS.judge.quit} />
+                <Tx v={GAME_TRANSLATIONS.judge.quit} />
               </WallButton>
             </div>
           </Sticker>

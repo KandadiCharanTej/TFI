@@ -7,6 +7,7 @@ import { BidDisplay, Badge, Chip, Sticker, TapeStrip, TimerBar, WallButton } fro
 import { WallIcon } from "@/components/icons";
 import { getVisibleCatalog } from "@/lib/games";
 import { BRAND_NAME, TELUGU_CONJUNCT_SAMPLES, TRANSLATIONS } from "@/lib/i18n";
+import { LANDING_TRANSLATIONS } from "@/lib/i18n-landing";
 import { getServerLang } from "@/lib/lang-server";
 
 export const metadata = {
@@ -80,13 +81,13 @@ export default async function HealthPage() {
               <div>
                 <p className="wall-label m-0 text-ink">Bricolage Grotesque (Display)</p>
                 <p className="display-title m-0 mt-1 text-3xl text-ink">
-                  <Tx v={TRANSLATIONS.landing.heroLine1} /> <Tx v={TRANSLATIONS.landing.heroLine2} />
+                  <Tx v={LANDING_TRANSLATIONS.heroLine1} /> <Tx v={LANDING_TRANSLATIONS.heroLine2} />
                 </p>
               </div>
               <div>
                 <p className="wall-label m-0 text-ink">Bricolage Grotesque (Body)</p>
                 <p className="body-lg m-0 mt-1 text-ink">
-                  <Tx v={TRANSLATIONS.landing.heroSubline} />
+                  <Tx v={LANDING_TRANSLATIONS.heroSubline} />
                 </p>
               </div>
               <div>
@@ -158,7 +159,7 @@ export default async function HealthPage() {
         </section>
 
         <TapeStrip
-          label={TRANSLATIONS.landing.pickYourGameHeading[lang]}
+          label={LANDING_TRANSLATIONS.pickYourGameHeading[lang]}
           items={getVisibleCatalog(false).map((g) => g.title[lang])}
         />
       </main>

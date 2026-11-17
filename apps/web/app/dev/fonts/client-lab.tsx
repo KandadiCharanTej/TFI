@@ -8,9 +8,15 @@ interface Candidate {
   code: string;
   name: string;
   winner?: boolean;
+  license: string;
+  weights: string;
   tagline: string;
-  latinFont: string;
-  teluguFont: string;
+  displayFont: string;
+  displayStretch?: string;
+  displayWeight: number;
+  bodyFont: string;
+  teluguDisplayFont: string;
+  teluguBodyFont: string;
   monoFont: string;
   enKb: string;
   teKb: string;
@@ -19,85 +25,119 @@ interface Candidate {
 
 const CANDIDATES: Candidate[] = [
   {
-    id: "p1",
-    code: "P1",
-    name: "Anek Latin (subset) + Anek Telugu + Space Mono",
-    tagline: "Ek Type's multi-script Anek family (bundled Latin subset) + Space Mono",
-    latinFont: "'Anek Latin Lab', sans-serif",
-    teluguFont: "'Anek Telugu', sans-serif",
-    monoFont: "'Space Mono', monospace",
-    enKb: "51.7 KB (42.4 KB Latin + 9.3 KB Mono)",
-    teKb: "188.1 KB (+ 136.4 KB Telugu)",
-    notes:
-      "Note: Standalone 'Anek Latin' is not published as a separate Google Fonts family; it ships bundled inside regional Anek subsets. Per the brief, we therefore select P2 as production winner.",
-  },
-  {
-    id: "p2",
-    code: "P2",
-    name: "Bricolage Grotesque + Anek Telugu + Space Mono",
+    id: "l1",
+    code: "L1",
     winner: true,
-    tagline: "Optical-size humanist grotesque (12..96 opsz, 500..800) + Anek Telugu + Space Mono",
-    latinFont: "'Bricolage Grotesque', sans-serif",
-    teluguFont: "'Anek Telugu', sans-serif",
+    name: "Bricolage Grotesque Condensed (75%) + Bricolage + Anek Telugu 800",
+    license: "SIL OFL 1.1",
+    weights: "Display: 800 Condensed (wdth 75%); Body: 500..800; Telugu: 700..800; Mono: 700",
+    tagline: "Single multi-axis optical family with punchy 75% condensed ExtraBold posters",
+    displayFont: "'Bricolage Grotesque', sans-serif",
+    displayStretch: "75%",
+    displayWeight: 800,
+    bodyFont: "'Bricolage Grotesque', sans-serif",
+    teluguDisplayFont: "'Anek Telugu', 'Bricolage Grotesque', sans-serif",
+    teluguBodyFont: "'Anek Telugu', 'Bricolage Grotesque', sans-serif",
     monoFont: "'Space Mono', monospace",
-    enKb: "39.3 KB (30.0 KB Latin + 9.3 KB Mono)",
-    teKb: "175.7 KB (+ 136.4 KB Telugu)",
+    enKb: "62.3 KB (21 KB Cond + 30 KB Body + 9.3 KB Mono + 2 KB తె)",
+    teKb: "198.7 KB (+ 136.4 KB Anek Telugu)",
     notes:
-      "WINNER: Optical-size variable axis keeps 14-19px body open and legible while tightening curves at 40-72px display sizes; matches Anek Telugu's warm stroke modulation at 39.3 KB total in EN mode.",
+      "WINNER: Condensed 75% width gives loud 120px poster height without breaking 390px or 1280px lines; opsz axis keeps 14px labels crisp; pairs naturally with Anek Telugu 800 well under 140/280 KB budgets.",
   },
   {
-    id: "p3",
-    code: "P3",
-    name: "Archivo Expanded (700–800) + Anek Telugu + Space Mono",
-    tagline: "Expanded grotesque display (125% width, 700..800) + Anek Telugu + Space Mono",
-    latinFont: "'Archivo Expanded Lab', sans-serif",
-    teluguFont: "'Anek Telugu', sans-serif",
+    id: "l2",
+    code: "L2",
+    name: "Unbounded 800/900 (display) + Bricolage Grotesque + Anek Telugu 800",
+    license: "SIL OFL 1.1",
+    weights: "Display: 800..900; Body: 500..800; Telugu: 700..800; Mono: 700",
+    tagline: "Ultra-wide geometric display paired with Bricolage body",
+    displayFont: "'Unbounded Lab', sans-serif",
+    displayWeight: 900,
+    bodyFont: "'Bricolage Grotesque', sans-serif",
+    teluguDisplayFont: "'Anek Telugu', sans-serif",
+    teluguBodyFont: "'Anek Telugu', sans-serif",
     monoFont: "'Space Mono', monospace",
-    enKb: "40.3 KB (31.0 KB Latin + 9.3 KB Mono)",
-    teKb: "176.7 KB (+ 136.4 KB Telugu)",
+    enKb: "91.3 KB (50 KB Unbounded + 30 KB Body + 9.3 KB Mono + 2 KB తె)",
+    teKb: "227.7 KB (+ 136.4 KB Anek Telugu)",
     notes:
-      "Wide 125% stance feels assertive at 44-64px, but takes ~22% more horizontal room per word on 390px phone screens and feels stiffer at 14-16px body sizes.",
+      "Loud geometric swagger, but Unbounded's extra-wide stance forces multi-word headlines onto 4+ lines at 120px and risks orphan words on narrow phones.",
+  },
+  {
+    id: "l3",
+    code: "L3",
+    name: "Lilita One (display) + Figtree + Baloo Tammudu 2 800 + Anek Telugu",
+    license: "SIL OFL 1.1",
+    weights: "Lilita One: 400 only; Figtree: 500..800; Baloo Tammudu 2: 700..800; Anek: 700..800",
+    tagline: "Chunky rounded toy display with friendly sans and rounded Telugu",
+    displayFont: "'Lilita One Lab', sans-serif",
+    displayWeight: 400,
+    bodyFont: "'Figtree Lab', sans-serif",
+    teluguDisplayFont: "'Baloo Tammudu 2 Lab', 'Anek Telugu', sans-serif",
+    teluguBodyFont: "'Anek Telugu', sans-serif",
+    monoFont: "'Space Mono', monospace",
+    enKb: "41.3 KB (10 KB Lilita + 20 KB Figtree + 9.3 KB Mono + 2 KB తె)",
+    teKb: "262.7 KB (+ 85 KB Baloo + 136.4 KB Anek Telugu)",
+    notes:
+      "Note: Lilita One ships in weight 400 only (no 800 weight); Baloo Tammudu 2 adds 85 KB in Telugu mode and tall rounded vowels risk tighter clipping at 96px.",
   },
 ];
 
-const SAMPLE_WORDS = ["పోకిరి", "మగధీర", "బొమ్మరిల్లు", "అతడు", "ఈగ"];
-const CONJUNCTS = ["శ్రీ", "క్ష", "స్త్ర", "ప్రే"];
-
 export default function ClientFontLab() {
   const [lang, setLang] = useState<"en" | "te">("en");
+  const [heroAccent, setHeroAccent] = useState<"none" | "shrikhand">("none");
 
   return (
     <div className="min-h-screen bg-[#EAE6DF] p-4 text-[#141313] md:p-8" data-testid="font-lab-page">
       <style>{`
         @font-face {
-          font-family: 'Anek Latin Lab';
+          font-family: 'Unbounded Lab';
+          font-style: normal;
+          font-weight: 800 900;
+          font-display: swap;
+          src: url('/fonts/unbounded-800-900-latin.woff2') format('woff2');
+        }
+        @font-face {
+          font-family: 'Lilita One Lab';
+          font-style: normal;
+          font-weight: 400;
+          font-display: swap;
+          src: url('/fonts/lilita-one-latin.woff2') format('woff2');
+        }
+        @font-face {
+          font-family: 'Figtree Lab';
           font-style: normal;
           font-weight: 500 800;
           font-display: swap;
-          src: url('/fonts/anek-telugu-latin.woff2') format('woff2');
+          src: url('/fonts/figtree-latin.woff2') format('woff2');
         }
         @font-face {
-          font-family: 'Archivo Expanded Lab';
+          font-family: 'Baloo Tammudu 2 Lab';
           font-style: normal;
           font-weight: 700 800;
-          font-stretch: 125%;
           font-display: swap;
-          src: url('/fonts/archivo-expanded-latin.woff2') format('woff2');
+          src: url('/fonts/baloo-tammudu-2-telugu.woff2') format('woff2');
+        }
+        @font-face {
+          font-family: 'Shrikhand Lab';
+          font-style: italic;
+          font-weight: 400;
+          font-display: swap;
+          src: url('/fonts/shrikhand-latin.woff2') format('woff2');
         }
       `}</style>
 
-      <header className="mx-auto max-w-[1160px] rounded-[20px] border-[2.5px] border-[#141313] bg-white p-6 shadow-[0_5px_0_#141313]">
+      <header className="mx-auto max-w-[1280px] rounded-[20px] border-[3px] border-[#141313] bg-white p-6 shadow-[0_6px_0_#141313]">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="wall-label m-0 text-[#141313]">Font Lab · Round 2 (Sentence Case, 3 Families Max)</p>
-            <h1 className="h1-title m-0 mt-1 text-[#141313]">
-              One voice, two scripts, zero shouting
+            <p className="wall-label m-0 text-[#141313]">Font Lab · Round 3 (Party Mode Loud Display)</p>
+            <h1 className="h2-title m-0 mt-1 text-[#141313]">
+              Loud enough to throw a party, tight enough to read in 5 seconds
             </h1>
-            <p className="m-0 mt-2 max-w-[62ch] text-[16px] font-medium">
-              Comparing P1 (Anek Latin + Anek Telugu), P2 (Bricolage Grotesque + Anek Telugu), and P3 (Archivo Expanded + Anek Telugu) with Space Mono for tabular numbers.
+            <p className="m-0 mt-2 max-w-[66ch] text-[16px] font-medium">
+              Comparing L1 (Bricolage Condensed 800), L2 (Unbounded 800/900), and L3 (Lilita One + Figtree + Baloo Tammudu 2 800) with Space Mono + Anek Telugu 800, at 120 px Display and 14 px Labels.
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
               onClick={() => setLang("en")}
@@ -118,149 +158,162 @@ export default function ClientFontLab() {
             >
               తెలుగు (TE)
             </button>
+            <button
+              type="button"
+              onClick={() => setHeroAccent(heroAccent === "none" ? "shrikhand" : "none")}
+              data-testid="lab-toggle-accent"
+              className={`wall-btn min-h-[44px] px-4 text-[15px] ${
+                heroAccent === "shrikhand" ? "bg-[#00E5FF]" : "bg-[#F4F1EA]"
+              }`}
+            >
+              Hero 1-word accent: {heroAccent === "shrikhand" ? "Shrikhand Italic Serif (15 KB)" : "None (Winner)"}
+            </button>
           </div>
         </div>
 
         <div className="mt-5 rounded-[14px] border-[2px] border-[#141313] bg-[#F4F1EA] p-4">
-          <p className="wall-label m-0">Winner Selected: P2 (Bricolage Grotesque + Anek Telugu + Space Mono)</p>
+          <p className="wall-label m-0">Winner Selected: L1 (Bricolage Grotesque Condensed 800 + Bricolage + Anek Telugu + Space Mono)</p>
           <ol className="m-0 mt-2 space-y-1 pl-5 text-[14px] font-medium leading-[1.5]">
-            <li>Standalone &ldquo;Anek Latin&rdquo; is not a separate Google Fonts family (bundled only inside regional Anek subsets), so per the brief we select P2.</li>
-            <li>Bricolage Grotesque&apos;s 12..96 optical-size axis keeps 14–19 px body text open and clear while tightening proportions at 40–72 px display sizes.</li>
-            <li>Its warm humanist stroke modulation and rounded ink traps harmonize naturally with Ek Type&apos;s Anek Telugu at weights 700–800.</li>
-            <li>Gives a confident, studio-grade editorial personality in sentence case without needing all-caps or tilted marker text.</li>
-            <li>Weighs only 39.3 KB total in English mode (30 KB Latin + 9.3 KB Space Mono) and 175.7 KB in Telugu mode (+136.4 KB Anek Telugu), well under the 120 KB / 250 KB budgets.</li>
+            <li>Condensed 75% ExtraBold packs 120 px poster loudness without wrapping short party lines onto 4+ rows on 390 px phones or 1280 px laptops.</li>
+            <li>Sharing one optical-size family across display and UI keeps 14 px labels ultra-crisp without visual clash.</li>
+            <li>Harmonizes optically with Anek Telugu 800 without Baloo Tammudu 2&apos;s tall glyph clipping on 96 px round cards or its +85 KB font weight.</li>
+            <li>Skipped Latin-only italic Shrikhand on production hero pills so Telugu mode has the exact same optical weight, energy, and polish as English mode.</li>
+            <li>Weighs only 62.3 KB total in English mode (&lt;140 KB budget) and 198.7 KB in Telugu mode (&lt;280 KB budget), all self-hosted under SIL OFL 1.1.</li>
           </ol>
         </div>
       </header>
 
-      <div className="mx-auto mt-8 grid max-w-[1160px] gap-6 lg:grid-cols-3">
+      <div className="mx-auto mt-8 space-y-8 max-w-[1280px]">
         {CANDIDATES.map((c) => {
-          const activeHeadingFont = lang === "te" ? `${c.teluguFont}, ${c.latinFont}` : c.latinFont;
-          const activeBodyFont = lang === "te" ? `${c.teluguFont}, ${c.latinFont}` : c.latinFont;
+          const headingFamily = lang === "te" ? c.teluguDisplayFont : c.displayFont;
+          const bodyFamily = lang === "te" ? c.teluguBodyFont : c.bodyFont;
+          const isCondensed = lang === "en" && c.displayStretch === "75%";
           return (
             <section
               key={c.id}
               data-testid={`font-card-${c.id}`}
-              className="flex flex-col justify-between space-y-5 rounded-[20px] border-[2.5px] border-[#141313] bg-white p-6 shadow-[0_5px_0_#141313]"
+              className="rounded-[20px] border-[3px] border-[#141313] bg-white p-6 shadow-[0_6px_0_#141313]"
             >
-              <div className="space-y-4">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="mono-num rounded-full border-[2px] border-[#141313] bg-[#EAE6DF] px-3 py-1 text-[12px]">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-[#141313] pb-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="mono-num rounded-full border-[2px] border-[#141313] bg-[#EAE6DF] px-3 py-1 text-[13px]">
                     {c.code}
                   </span>
                   {c.winner ? (
-                    <span className="rounded-full border-[2px] border-[#141313] bg-[#F6BE18] px-3 py-1 text-[12px] font-bold">
-                      Production winner
+                    <span className="rounded-full border-[2px] border-[#141313] bg-[#F6BE18] px-3 py-1 text-[13px] font-extrabold">
+                      Party Mode Winner
                     </span>
                   ) : null}
-                </div>
-
-                <div>
-                  <h2 className="m-0 text-[20px] font-bold" style={{ fontFamily: c.latinFont }}>
+                  <h2 className="m-0 text-[20px] font-bold" style={{ fontFamily: c.bodyFont }}>
                     {c.name}
                   </h2>
-                  <p className="m-0 mt-1 text-[13px] text-[#141313]/80">{c.tagline}</p>
-                  <p className="mono-num m-0 mt-1.5 text-[12px]">
-                    EN: {c.enKb} · TE: {c.teKb}
-                  </p>
                 </div>
+                <span className="mono-num text-[12px]">{c.license}</span>
+              </div>
 
-                {/* Display Hero sample (sentence case) */}
-                <div className="rounded-[16px] border-[2px] border-[#141313] bg-[#F4F1EA] p-4">
-                  <p className="wall-label m-0">Display Hero (800, sentence case)</p>
+              <div className="mt-4 grid gap-2 text-[13px] font-semibold md:grid-cols-3">
+                <p className="m-0 rounded-[12px] border-2 border-[#141313] bg-[#F4F1EA] p-3">
+                  <span className="block text-[11px] font-bold uppercase text-[#141313]/75">Weights &amp; Axes</span>
+                  {c.weights}
+                </p>
+                <p className="m-0 rounded-[12px] border-2 border-[#141313] bg-[#F4F1EA] p-3">
+                  <span className="block text-[11px] font-bold uppercase text-[#141313]/75">EN Transfer</span>
+                  <span style={{ fontFamily: c.monoFont }}>{c.enKb}</span>
+                </p>
+                <p className="m-0 rounded-[12px] border-2 border-[#141313] bg-[#F4F1EA] p-3">
+                  <span className="block text-[11px] font-bold uppercase text-[#141313]/75">TE Transfer</span>
+                  <span style={{ fontFamily: c.monoFont }}>{c.teKb}</span>
+                </p>
+              </div>
+
+              {/* 120px Hero Display Preview */}
+              <div className="mt-5 rounded-[18px] border-[3px] border-[#141313] bg-[#F6BE18] p-6">
+                <span className="mono-num inline-block rounded-full border-2 border-[#141313] bg-white px-3 py-0.5 text-[12px]">
+                  120px Display · {lang.toUpperCase()}
+                </span>
+                <p
+                  className="m-0 mt-3 break-words"
+                  style={{
+                    fontFamily: headingFamily,
+                    fontWeight: lang === "te" ? 800 : c.displayWeight,
+                    fontStretch: isCondensed ? "75%" : "100%",
+                    fontSize: "clamp(48px, 8vw, 120px)",
+                    lineHeight: lang === "te" ? 1.2 : 0.96,
+                    letterSpacing: lang === "te" ? "0" : "-0.02em",
+                    textTransform: lang === "en" ? "uppercase" : "none",
+                  }}
+                >
+                  {lang === "en" ? (
+                    <>
+                      Game night for{" "}
+                      <span
+                        className="inline-block rounded-[14px] border-[3px] border-[#141313] bg-[#EC1276] px-4 py-1 text-white"
+                        style={
+                          heroAccent === "shrikhand"
+                            ? {
+                                fontFamily: "'Shrikhand Lab', serif",
+                                fontStyle: "italic",
+                                fontWeight: 400,
+                                textTransform: "none",
+                                letterSpacing: "0",
+                              }
+                            : undefined
+                        }
+                      >
+                        Telugu
+                      </span>{" "}
+                      movie fans
+                    </>
+                  ) : (
+                    <>
+                      <span className="inline-block rounded-[14px] border-[3px] border-[#141313] bg-[#EC1276] px-4 py-1 text-white">
+                        తెలుగు
+                      </span>{" "}
+                      సినిమా ఫ్యాన్స్‌కు గేమ్ నైట్
+                    </>
+                  )}
+                </p>
+              </div>
+
+              {/* Real Small Labels + Button + Tabular Numbers Check */}
+              <div className="mt-4 grid gap-4 md:grid-cols-2">
+                <div className="rounded-[16px] border-[3px] border-[#141313] bg-white p-4">
                   <p
-                    className="m-0 mt-2 text-[32px] font-extrabold leading-[1.08] tracking-[-0.02em]"
+                    className="m-0 text-[14px] font-bold uppercase tracking-[0.06em]"
                     style={{
-                      fontFamily: activeHeadingFont,
-                      lineHeight: lang === "te" ? 1.45 : 1.08,
+                      fontFamily: bodyFamily,
+                      textTransform: lang === "en" ? "uppercase" : "none",
+                      letterSpacing: lang === "en" ? "0.06em" : "0",
                     }}
                   >
-                    {lang === "te"
-                      ? "తెలుగు సినిమా అభిమానుల కోసం గేమ్ నైట్."
-                      : "Game night for Telugu movie fans."}
+                    {lang === "en" ? "14px Small Label · 60 sec · 3–12 players" : "14px చిన్న లేబుల్ · 60 సెకన్లు · 3–12 ఆటగాళ్లు"}
+                  </p>
+                  <p className="m-0 mt-2 text-[17px] font-medium leading-[1.5]" style={{ fontFamily: bodyFamily }}>
+                    {lang === "en"
+                      ? "Guess, act and bid on your favourite films. One phone or online. No sign-up."
+                      : "మీ ఫేవరెట్ సినిమాలను గెస్ చేయండి, యాక్ట్ చేయండి, బిడ్ వేయండి. సైన్-అప్ లేదు."}
                   </p>
                 </div>
 
-                {/* Real Card & Ticket Stub Sample */}
-                <div className="wall-ticket p-4">
-                  <div className="flex items-center justify-between">
-                    <span className="wall-label">Judge card · Round 1</span>
-                    <span className="mono-num rounded-[8px] border-[2px] border-[#141313] bg-[#F6BE18] px-2 py-0.5 text-[14px]">
-                      00:45
-                    </span>
-                  </div>
-                  <div className="wall-ticket-perf my-3 pt-3">
-                    <p
-                      className="m-0 text-[28px] font-extrabold leading-[1.45]"
-                      style={{ fontFamily: c.teluguFont }}
-                    >
-                      పోకిరి
+                <div className="flex flex-wrap items-center justify-between gap-4 rounded-[16px] border-[3px] border-[#141313] bg-[#00E5FF] p-4">
+                  <div>
+                    <p className="m-0 text-[12px] font-bold uppercase" style={{ fontFamily: bodyFamily }}>
+                      {lang === "en" ? "Room stub preview" : "రూమ్ కోడ్"}
                     </p>
-                    <p
-                      className="m-0 text-[15px] font-bold"
-                      style={{ fontFamily: c.latinFont }}
-                    >
-                      Pokiri (2006)
+                    <p className="m-0 text-[36px] font-bold leading-none" style={{ fontFamily: c.monoFont }}>
+                      KXQM · 01:45
                     </p>
                   </div>
-                  <div className="mt-3 flex gap-2">
-                    <button
-                      type="button"
-                      className="wall-btn min-h-[42px] flex-1 bg-white px-3 text-[15px]"
-                      style={{ fontFamily: activeBodyFont }}
-                    >
-                      {lang === "te" ? "పాస్" : "Pass"}
-                    </button>
-                    <button
-                      type="button"
-                      className="wall-btn min-h-[42px] flex-1 bg-[#F6BE18] px-3 text-[15px]"
-                      style={{ fontFamily: activeBodyFont }}
-                    >
-                      {lang === "te" ? "సరైనది!" : "Correct!"}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Body scale 19 / 16 / 14 */}
-                <div className="space-y-1.5" style={{ fontFamily: activeBodyFont }}>
-                  <p className="m-0 text-[19px] font-medium leading-[1.55]">
-                    19px: Guess, act and bid on your favourite films.
-                  </p>
-                  <p className="m-0 text-[16px] font-medium leading-[1.55]">
-                    16px: Play on one phone with friends, or online with a room code.
-                  </p>
-                  <p className="m-0 text-[14px] font-medium leading-[1.45]">
-                    14px: 2 to 8 players · 5 min · Works offline
-                  </p>
-                </div>
-
-                {/* Telugu Conjuncts & Sample Words at 24px and 48px */}
-                <div className="rounded-[14px] border-[2px] border-[#141313] bg-[#F4F1EA] p-3">
-                  <p className="wall-label m-0">Telugu conjuncts &amp; titles (Anek Telugu 800)</p>
-                  <p
-                    className="m-0 mt-1 text-[24px] font-extrabold leading-[1.55]"
-                    style={{ fontFamily: c.teluguFont }}
+                  <span
+                    className="inline-flex min-h-[48px] items-center rounded-[16px] border-[3px] border-[#141313] bg-white px-5 text-[18px] font-extrabold shadow-[0_5px_0_#141313]"
+                    style={{ fontFamily: bodyFamily }}
                   >
-                    {CONJUNCTS.join(" · ")}
-                  </p>
-                  <p
-                    className="m-0 mt-1 text-[24px] font-extrabold leading-[1.55]"
-                    style={{ fontFamily: c.teluguFont }}
-                  >
-                    {SAMPLE_WORDS.join(" · ")}
-                  </p>
-                  <p
-                    className="m-0 mt-1 text-[44px] font-extrabold leading-[1.45]"
-                    style={{ fontFamily: c.teluguFont }}
-                  >
-                    మగధీర · ఈగ
-                  </p>
+                    {lang === "en" ? "Play now →" : "ఆడండి →"}
+                  </span>
                 </div>
               </div>
 
-              <p className="m-0 rounded-[12px] bg-[#EAE6DF] p-3 text-[13px] font-medium leading-[1.45]">
-                {c.notes}
-              </p>
+              <p className="m-0 mt-4 text-[14px] font-semibold text-[#141313]/85">{c.notes}</p>
             </section>
           );
         })}
