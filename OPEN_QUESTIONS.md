@@ -99,3 +99,22 @@ Currently player names apply character/length hygiene (1–16 characters, strip 
 
 ### PartyKit / Cloudflare hosting cost note
 PartyKit runs on Cloudflare Durable Objects. Hobby/beta traffic fits inside Cloudflare Workers/DO free allowances, while sustained concurrent rooms at launch require the Workers Paid plan (minimum \$5/month + usage).
+
+## Phase 5b Party Mode Copy & Slang Review
+
+### Hero headline alternatives (Section H)
+Current Party Mode hero headline:
+- **Active:** `"Game night for Telugu movie fans."` (`"తెలుగు సినిమా ఫ్యాన్స్‌కు గేమ్ నైట్."`)
+
+Three alternative hero headlines offered for human choice:
+1. **Option 1 (Three verbs):** `"Guess it. Act it. Bid on it."` (`"ఊహించండి. నటించండి. వేలం వేయండి."`)
+2. **Option 2 (Gang focus):** `"Your gang. Telugu cinema. One phone."` (`"మీ గ్యాంగ్. తెలుగు సినిమా. ఒకే ఫోన్."`)
+3. **Option 3 (Showtime party):** `"Telugu cinema game night starts now."` (`"తెలుగు సినిమా గేమ్ నైట్ ఇప్పుడే మొదలైంది."`)
+
+### Decorative "FDFS" fan-slang usage (Section G)
+Native-speaker check requested for decorative fan-slang callouts (first day, first show):
+- **Hero decorative SpeechSticker:** `TRANSLATIONS.landing.fdfsCallout` (`"FDFS vibes"` / `"FDFS వైబ్స్"`) in `apps/web/components/hero-demo.tsx` (`aria-hidden="true"`).
+- **Landing Marquee tape item 1:** `TRANSLATIONS.landing.marqueeItems[0]` (`"First day, first show energy"` / `"ఫస్ట్ డే ఫస్ట్ షో జోష్"`).
+
+### New Phase 5b Telugu lines for native-speaker check
+- `landing.heroSuffix`, `landing.heroSubline`, `landing.fdfsCallout`, `landing.playRibbon`, `landing.marqueeItems[*]`, `landing.pickYourGameHeading`, `landing.comingNextStrip`, `landing.closingHeading`, `pages.meReducedMotion` ("కామ్ మోడ్"), and `pages.meCalmHint` (also exported in `i18n-review.csv`).

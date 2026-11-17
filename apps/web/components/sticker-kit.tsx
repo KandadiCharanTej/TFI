@@ -107,15 +107,15 @@ export function TicketStub({
 }
 
 export interface WallButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  readonly variant?: "yellow" | "white" | "magenta" | "green" | "cyan";
-  readonly size?: "md" | "sm";
+  readonly variant?: "yellow" | "white" | "magenta" | "green" | "cyan" | "ink";
+  readonly size?: "md" | "sm" | "lg";
   readonly lightBorder?: boolean;
   readonly children: ReactNode;
 }
 
 /**
- * Button V2: 2.5px ink border, 14px radius, 0 4px 0 #141313 shadow; sentence case, weight 700, 17px.
- * Contrast rule: Use ink (#141313) text on yellow, green, cyan, and magenta buttons so contrast is >= 4.5:1.
+ * Button V4: 3px ink border, 16px radius, 0 5px 0 #141313 shadow; weight 800, 18-20px.
+ * Note: "ink" (ink fill + yellow text) is reserved exclusively for landing hero CTA clarity.
  */
 export function WallButton({
   variant = "yellow",
@@ -133,6 +133,16 @@ export function WallButton({
     magenta: "#EC1276",
     green: "#00C853",
     cyan: "#00E5FF",
+    ink: "#141313",
+  } as const;
+
+  const textMap = {
+    yellow: "#141313",
+    white: "#141313",
+    magenta: "#FFFFFF",
+    green: "#141313",
+    cyan: "#141313",
+    ink: "#F6BE18",
   } as const;
 
   return (
@@ -141,13 +151,20 @@ export function WallButton({
       className={`wall-btn ${className}`}
       style={{
         backgroundColor: bgMap[variant],
-        color: variant === "magenta" ? "#FFFFFF" : "#141313",
-        minHeight: size === "sm" ? "44px" : "52px",
-        padding: size === "sm" ? "0 18px" : "0 24px",
-        fontSize: variant === "magenta" ? "19px" : size === "sm" ? "15px" : "17px",
-        fontWeight: variant === "magenta" ? 700 : undefined,
+        color: textMap[variant],
+        minHeight: size === "lg" ? "58px" : size === "sm" ? "44px" : "52px",
+        padding: size === "lg" ? "0 30px" : size === "sm" ? "0 18px" : "0 24px",
+        fontSize:
+          variant === "magenta"
+            ? "19px"
+            : size === "lg"
+              ? "20px"
+              : size === "sm"
+                ? "15px"
+                : "18px",
+        fontWeight: 800,
         borderColor: lightBorder ? "#EAE6DF" : "#141313",
-        boxShadow: lightBorder ? "0 4px 0 #EAE6DF" : undefined,
+        boxShadow: lightBorder ? "0 5px 0 #EAE6DF" : undefined,
         ...style,
       }}
       {...props}
@@ -159,10 +176,11 @@ export function WallButton({
 
 export interface WallLinkButtonProps {
   readonly href: string;
-  readonly variant?: "yellow" | "white" | "magenta" | "green" | "cyan";
-  readonly size?: "md" | "sm";
+  readonly variant?: "yellow" | "white" | "magenta" | "green" | "cyan" | "ink";
+  readonly size?: "md" | "sm" | "lg";
   readonly lightBorder?: boolean;
   readonly className?: string;
+  readonly "data-testid"?: string;
   readonly children: ReactNode;
 }
 
@@ -172,6 +190,7 @@ export function WallLinkButton({
   size = "md",
   lightBorder = false,
   className = "",
+  "data-testid": testId,
   children,
 }: WallLinkButtonProps) {
   const bgMap = {
@@ -180,21 +199,39 @@ export function WallLinkButton({
     magenta: "#EC1276",
     green: "#00C853",
     cyan: "#00E5FF",
+    ink: "#141313",
+  } as const;
+
+  const textMap = {
+    yellow: "#141313",
+    white: "#141313",
+    magenta: "#FFFFFF",
+    green: "#141313",
+    cyan: "#141313",
+    ink: "#F6BE18",
   } as const;
 
   return (
     <Link
       href={href}
+      data-testid={testId}
       className={`wall-btn ${className}`}
       style={{
         backgroundColor: bgMap[variant],
-        color: variant === "magenta" ? "#FFFFFF" : "#141313",
-        minHeight: size === "sm" ? "44px" : "52px",
-        padding: size === "sm" ? "0 18px" : "0 24px",
-        fontSize: variant === "magenta" ? "19px" : size === "sm" ? "15px" : "17px",
-        fontWeight: variant === "magenta" ? 700 : undefined,
+        color: textMap[variant],
+        minHeight: size === "lg" ? "58px" : size === "sm" ? "44px" : "52px",
+        padding: size === "lg" ? "0 30px" : size === "sm" ? "0 18px" : "0 24px",
+        fontSize:
+          variant === "magenta"
+            ? "19px"
+            : size === "lg"
+              ? "20px"
+              : size === "sm"
+                ? "15px"
+                : "18px",
+        fontWeight: 800,
         borderColor: lightBorder ? "#EAE6DF" : "#141313",
-        boxShadow: lightBorder ? "0 4px 0 #EAE6DF" : undefined,
+        boxShadow: lightBorder ? "0 5px 0 #EAE6DF" : undefined,
       }}
     >
       {children}
@@ -390,19 +427,27 @@ export function TimerBar({ secondsRemaining, totalSeconds, label }: TimerBarProp
   const pct = Math.max(0, Math.min(100, Math.round((secondsRemaining / totalSeconds) * 100)));
   const mins = Math.floor(secondsRemaining / 60);
   const secs = String(secondsRemaining % 60).padStart(2, "0");
+  const isUrgent = secondsRemaining <= 10 && secondsRemaining > 0;
 
   return (
     <div className="flex w-full items-center gap-3" role="timer" aria-label={label}>
       <div
-        className="h-3 flex-1 overflow-hidden rounded-full border-2 border-ink bg-sticker"
+        className="h-3.5 flex-1 overflow-hidden rounded-full border-[2.5px] border-ink bg-sticker"
         aria-hidden="true"
       >
         <div
-          className="h-full bg-ink transition-all duration-200"
-          style={{ width: `${pct}%` }}
+          className="h-full transition-all duration-200"
+          style={{
+            width: `${pct}%`,
+            backgroundColor: isUrgent ? "#EC1276" : "#141313",
+          }}
         />
       </div>
-      <span className="mono-num rounded-full border-2 border-ink bg-yellow px-3 py-0.5 text-sm text-ink">
+      <span
+        className={`mono-num rounded-full border-[2.5px] border-ink px-3 py-0.5 ${
+          isUrgent ? "v4-pulse-urgent bg-magenta text-[19px] text-white" : "bg-yellow text-sm text-ink"
+        }`}
+      >
         {mins}:{secs}
       </span>
     </div>

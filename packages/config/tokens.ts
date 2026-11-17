@@ -1,16 +1,16 @@
 /**
- * Design System: "THE WALL" V2 (LOCKED PALETTE, COLOR JOBS, STUDIO TYPOGRAPHY)
- * Single 2.5px ink borders, hard shadows, zero gradients/blur/purple.
+ * Design System: "THE WALL" V4 — PARTY MODE
+ * Locked 8-color palette, color-blocked sections, 3px ink borders, chunky hard shadows.
  */
 export const WALL_COLORS = {
-  concrete: "#EAE6DF", // page background
-  sticker: "#FFFFFF", // cards and ticket stubs
-  card: "#F4F1EA", // quiet panels
-  ink: "#141313", // text, borders, shadows
-  yellow: "#F6BE18", // primary action and one large block per page
-  magenta: "#EC1276", // Pass/Skip, live moments, Admit one gang stub, warning, game color
-  green: "#00C853", // Correct/Got it, success, Ready offline ticks, game color
-  cyan: "#00E5FF", // online only: room codes, Online badge, online tiles, Coming next strip
+  concrete: "#EAE6DF", // neutral page background & sticky slim header
+  sticker: "#FFFFFF", // cards, ticket stubs, clean body panels
+  card: "#F4F1EA", // quiet secondary surfaces
+  ink: "#141313", // text, 3px borders, hard shadows, marquee tape, footer
+  yellow: "#F6BE18", // main CTA, hero block, closing CTA block, game color
+  magenta: "#EC1276", // Pass/Skip, live moments, How-it-plays block, stubs, game color
+  green: "#00C853", // Correct/Got it, success ticks, game color
+  cyan: "#00E5FF", // online rooms, Coming next strip, room code stubs, Box Office Auction
 } as const;
 
 export type WallColorKey = keyof typeof WALL_COLORS;
@@ -23,7 +23,17 @@ export const COLOR_JOBS = {
   onlineAndRooms: WALL_COLORS.cyan,
 } as const;
 
-/** Game panel identity color (illustration panels & matching dots only — no text inside colored panels). */
+/** Surface rules (Design V4 Party Mode). */
+export const SURFACE_SPECS = {
+  cardBorderPx: 3,
+  cardRadiusPx: 20,
+  cardShadow: "0 6px 0 #141313",
+  btnBorderPx: 3,
+  btnRadiusPx: 16,
+  btnShadow: "0 5px 0 #141313",
+} as const;
+
+/** Game identity color (setup bands, tile backgrounds, round full-bleed backgrounds). */
 export const GAME_COLOR_KEYS: Record<string, "yellow" | "magenta" | "green" | "cyan"> = {
   "head-set-go": "yellow",
   transify: "magenta",
@@ -60,8 +70,9 @@ export function getGameColor(slug: string): string {
 }
 
 /**
- * V2 Typography System: one voice across two scripts, three families at most.
- * P2 Winner: Bricolage Grotesque + Anek Telugu + Space Mono.
+ * V4 Typography System (Font Lab Round 3 L1 Winner):
+ * Bricolage Grotesque Condensed ExtraBold (display) + Bricolage Grotesque (body)
+ * + Anek Telugu 800 (Telugu mode only) + Space Mono (tabular numbers).
  */
 export const WALL_FONTS = {
   display: "'Bricolage Grotesque', 'Anek Telugu', system-ui, sans-serif",

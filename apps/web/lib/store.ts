@@ -14,6 +14,7 @@ export interface PreferencesState {
   soundEnabled: boolean;
   vibrationEnabled: boolean;
   reducedMotion: boolean;
+  osReducedMotion: boolean;
   largeText: boolean;
   fanVibe: string;
   setDeviceName: (name: string) => void;
@@ -23,7 +24,7 @@ export interface PreferencesState {
   setLargeText: (large: boolean) => void;
   setFanVibe: (vibe: string) => void;
   clearDeviceData: () => void;
-  /** Load remembered choices from this device. Called once on the client. */
+  /** Load remembered choices and subscribe to OS reduced-motion. */
   hydrate: () => void;
 }
 
@@ -31,16 +32,30 @@ export function getDefaultGuestName(): string {
   return "Guest Tiger";
 }
 
-function getOsReducedMotion(): boolean {
+export function getOsReducedMotion(): boolean {
   if (typeof window === "undefined") return false;
   return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 }
 
-export const usePreferencesStore = create<PreferencesState>((set) => ({
+function syncDocumentMotionFlag(userCalm: boolean, osReduce: boolean) {
+  if (typeof document === "undefined") return;
+  document.documentElement.dataset.reducedMotion = String(Boolean(userCalm || osReduce));
+}
+
+export function isCalmActive(): boolean {
+  if (typeof window === "undefined") return false;
+  const state = usePreferencesStore.getState();
+  return state.reducedMotion || state.osReducedMotion || getOsReducedMotion();
+}
+
+let osMediaBound = false;
+
+export const usePreferencesStore = create<PreferencesState>((set, get) => ({
   deviceName: getDefaultGuestName(),
   soundEnabled: true,
   vibrationEnabled: true,
   reducedMotion: false,
+  osReducedMotion: false,
   largeText: false,
   fanVibe: "bhAAi",
   setDeviceName: (deviceName) => {
@@ -56,12 +71,14 @@ export const usePreferencesStore = create<PreferencesState>((set) => ({
     set({ vibrationEnabled });
   },
   setReducedMotion: (reducedMotion) => {
-    document.documentElement.dataset.reducedMotion = String(reducedMotion);
+    syncDocumentMotionFlag(reducedMotion, get().osReducedMotion);
     writeBoolPref(PREF_KEYS.reducedMotion, reducedMotion);
     set({ reducedMotion });
   },
   setLargeText: (largeText) => {
-    document.documentElement.dataset.largeText = String(largeText);
+    if (typeof document !== "undefined") {
+      document.documentElement.dataset.largeText = String(largeText);
+    }
     writeBoolPref(PREF_KEYS.largeText, largeText);
     set({ largeText });
   },
@@ -73,13 +90,16 @@ export const usePreferencesStore = create<PreferencesState>((set) => ({
       // Ignore storage errors
     }
     const osReduced = getOsReducedMotion();
-    document.documentElement.dataset.reducedMotion = String(osReduced);
-    document.documentElement.dataset.largeText = "false";
+    syncDocumentMotionFlag(osReduced, osReduced);
+    if (typeof document !== "undefined") {
+      document.documentElement.dataset.largeText = "false";
+    }
     set({
       deviceName: getDefaultGuestName(),
       soundEnabled: true,
       vibrationEnabled: true,
       reducedMotion: osReduced,
+      osReducedMotion: osReduced,
       largeText: false,
       fanVibe: "bhAAi",
     });
@@ -88,10 +108,31 @@ export const usePreferencesStore = create<PreferencesState>((set) => ({
     const deviceName = readStringPref(PREF_KEYS.deviceName, getDefaultGuestName());
     const soundEnabled = readBoolPref(PREF_KEYS.sound, true);
     const vibrationEnabled = readBoolPref(PREF_KEYS.vibration, true);
-    const reducedMotion = readBoolPref(PREF_KEYS.reducedMotion, getOsReducedMotion());
+    const osReducedMotion = getOsReducedMotion();
+    const reducedMotion = readBoolPref(PREF_KEYS.reducedMotion, osReducedMotion);
     const largeText = readBoolPref(PREF_KEYS.largeText, false);
-    document.documentElement.dataset.reducedMotion = String(reducedMotion);
-    document.documentElement.dataset.largeText = String(largeText);
-    set({ deviceName, soundEnabled, vibrationEnabled, reducedMotion, largeText });
+    syncDocumentMotionFlag(reducedMotion, osReducedMotion);
+    if (typeof document !== "undefined") {
+      document.documentElement.dataset.largeText = String(largeText);
+    }
+    set({
+      deviceName,
+      soundEnabled,
+      vibrationEnabled,
+      reducedMotion,
+      osReducedMotion,
+      largeText,
+    });
+
+    if (!osMediaBound && typeof window !== "undefined" && window.matchMedia) {
+      osMediaBound = true;
+      const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const onChange = (e: MediaQueryListEvent) => {
+        const nextOs = e.matches;
+        syncDocumentMotionFlag(get().reducedMotion, nextOs);
+        set({ osReducedMotion: nextOs });
+      };
+      mql.addEventListener?.("change", onChange);
+    }
   },
 }));

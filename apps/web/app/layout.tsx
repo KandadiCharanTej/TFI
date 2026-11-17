@@ -63,7 +63,14 @@ export default async function RootLayout({
   return (
     <html lang={lang}>
       <head>
-        {/* Preload the single variable Latin font (30 KB) and tiny switch subset (2.0 KB). */}
+        {/* Preload V4 Latin fonts (51 KB total) and tiny switch subset (2.0 KB). */}
+        <link
+          rel="preload"
+          href="/fonts/bricolage-grotesque-condensed-latin.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
         <link
           rel="preload"
           href="/fonts/bricolage-grotesque-latin.woff2"
