@@ -3,7 +3,7 @@ import { spawn } from "node:child_process";
 
 function getLanIps() {
   const nets = os.networkInterfaces();
-  const ips: string[] = [];
+  const ips = [];
   for (const list of Object.values(nets)) {
     for (const iface of list ?? []) {
       if (iface.family === "IPv4" && !iface.internal) {
