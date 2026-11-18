@@ -33,7 +33,11 @@ const DEMO_CARDS: readonly DemoCard[] = [
   { en: "Kalki 2898 AD", te: "కల్కి 2898 AD", year: 2024 },
 ] as const;
 
-export function HeroDemo() {
+export function HeroDemo({
+  onActionFeedback,
+}: {
+  readonly onActionFeedback?: (kind: "pass" | "correct") => void;
+}) {
   const { lang } = useLang();
   const calmMode = usePreferencesStore((s) => s.reducedMotion || s.osReducedMotion);
   const [idx, setIdx] = useState(0);
@@ -56,6 +60,7 @@ export function HeroDemo() {
     markUserAudioInteraction();
     setUserInteracted(true);
     setFlash(kind);
+    onActionFeedback?.(kind);
 
     if (kind === "correct") {
       setScore((s) => s + 1);
@@ -84,28 +89,28 @@ export function HeroDemo() {
   const progressPct = Math.round(((idx + 1) / DEMO_CARDS.length) * 100);
 
   return (
-    <div className="relative flex w-full max-w-[410px] flex-col items-center">
+    <div className="relative flex w-full max-w-[360px] flex-col items-center lg:max-w-[410px]">
       <ConfettiBurst trigger={confettiCount} />
 
-      {/* Decorative Starburst + FDFS SpeechSticker (pointer-events none, aria-hidden, desktop spaced cleanly) */}
-      <div className="pointer-events-none absolute -left-8 -top-3 hidden md:block" aria-hidden="true">
-        <Starburst color="white" size={52} />
+      {/* Decorative Starburst + XMark spaced safely away from Pass/Correct buttons */}
+      <div className="pointer-events-none absolute -left-8 -top-3 hidden lg:block" aria-hidden="true">
+        <Starburst color="white" size={50} />
       </div>
-      <div className="pointer-events-none absolute -left-10 bottom-20 z-10 hidden sm:block" aria-hidden="true">
-        <SpeechSticker tone="cyan" tilt={-2}>
-          <Tx v={LANDING_TRANSLATIONS.fdfsCallout} />
-        </SpeechSticker>
-      </div>
-      <div className="pointer-events-none absolute -right-6 bottom-10 hidden md:block" aria-hidden="true">
-        <XMark color="magenta" size={34} tilt={12} />
+      <div className="pointer-events-none absolute -right-7 top-24 hidden lg:block" aria-hidden="true">
+        <XMark color="magenta" size={32} tilt={12} />
       </div>
 
-      {/* Decorative Tilted #1: Magenta TicketStub */}
-      <div className="z-10 -mb-3 self-end pr-2">
+      {/* Top callout badges sitting neatly above phone bezel */}
+      <div className="z-10 -mb-2.5 flex w-full items-end justify-between px-2">
+        <div className="hidden sm:block" aria-hidden="true">
+          <SpeechSticker tone="cyan" tilt={0}>
+            <Tx v={LANDING_TRANSLATIONS.fdfsCallout} />
+          </SpeechSticker>
+        </div>
         <TicketStub
           bg="magenta"
-          tilt={-3}
-          className="px-1 py-0.5 shadow-[0_5px_0_#141313]"
+          tilt={0}
+          className="ml-auto px-1 py-0.5 shadow-[0_5px_0_#141313]"
           data-testid="hero-ticket-stub"
         >
           <span className="block text-[19px] font-extrabold leading-none text-white">
@@ -191,13 +196,13 @@ export function HeroDemo() {
             )}
           </div>
 
-          {/* Interactive Pass (Magenta/White) & Correct! (Green/Ink) tap zones */}
+          {/* Interactive Pass (Magenta/White) & Correct! (Green/Ink) tap zones (>=56px thumb targets) */}
           <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
               data-testid="hero-demo-pass"
               onClick={() => handleAction("pass")}
-              className="wall-btn min-h-[50px] w-full bg-magenta px-3 text-[19px] font-extrabold text-white"
+              className="wall-btn min-h-[56px] w-full bg-magenta px-3 text-[19px] font-extrabold text-white"
             >
               <Tx v={TRANSLATIONS.common.pass} />
             </button>
@@ -205,7 +210,7 @@ export function HeroDemo() {
               type="button"
               data-testid="hero-demo-correct"
               onClick={() => handleAction("correct")}
-              className="wall-btn min-h-[50px] w-full bg-green px-3 text-[18px] font-extrabold text-ink"
+              className="wall-btn min-h-[56px] w-full bg-green px-3 text-[18px] font-extrabold text-ink"
             >
               <Tx v={TRANSLATIONS.common.correct} />
             </button>
