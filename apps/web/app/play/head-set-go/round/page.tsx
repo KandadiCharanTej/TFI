@@ -349,8 +349,8 @@ export default function HsgRoundPage() {
         <div className="h-full transition-[width]" style={{ width: `${pct}%`, backgroundColor: timerColor }} />
       </div>
 
-      {/* Top pills */}
-      <div className="flex items-center justify-between px-6 pt-3">
+      {/* Top pills (notch-safe padding, >=44x44 buttons) */}
+      <div className="flex items-center justify-between px-[max(20px,env(safe-area-inset-left))] pr-[max(20px,env(safe-area-inset-right))] pt-3">
         <div
           className={`mono-num rounded-full border-[2.5px] border-ink px-4 py-1.5 text-[18px] font-black shadow-[0_3px_0_#141313] ${
             s.secondsLeft <= 10 && s.secondsLeft > 0
@@ -367,13 +367,13 @@ export default function HsgRoundPage() {
             type="button"
             onClick={() => { dispatch({ type: "PAUSE" }); setHelpOpen(true); }}
             aria-label="How to play"
-            className="rounded-full border-2 border-ink bg-sticker px-3 py-1.5 text-sm font-extrabold text-ink shadow-[2px_2px_0px_#141313]"
+            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border-2 border-ink bg-sticker px-3 text-sm font-extrabold text-ink shadow-[2px_2px_0px_#141313]"
           >
             ?
           </button>
           <Dialog.Root open={pauseOpen} onOpenChange={(o) => { setPauseOpen(o); if (o) dispatch({ type: "PAUSE" }); }}>
             <Dialog.Trigger asChild>
-              <button type="button" aria-label={GAME_TRANSLATIONS.hsg.pause.en} className="rounded-full border-2 border-ink bg-sticker px-4 py-1.5 text-sm font-extrabold text-ink shadow-[2px_2px_0px_#141313]">⏸</button>
+              <button type="button" aria-label={GAME_TRANSLATIONS.hsg.pause.en} className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border-2 border-ink bg-sticker px-4 text-sm font-extrabold text-ink shadow-[2px_2px_0px_#141313]">⏸</button>
             </Dialog.Trigger>
             <Dialog.Portal>
               <Dialog.Overlay className="fixed inset-0 bg-ink/60" />
@@ -402,28 +402,28 @@ export default function HsgRoundPage() {
         </div>
       </div>
 
-      {/* Card word — hero of the screen: 96px+ TE with EN below */}
-      <div className="flex flex-1 flex-col items-center justify-center px-8 text-center" aria-live="polite" aria-label={GAME_TRANSLATIONS.hsg.currentCard.en}>
-        <div className="rounded-[22px] border-[3px] border-ink bg-white px-8 py-4 shadow-[0_6px_0_#141313]">
+      {/* Card word — fluid vw sizing so longest Telugu/English titles fit 667x375 & 740x360 */}
+      <div className="flex flex-1 flex-col items-center justify-center px-[max(20px,env(safe-area-inset-left))] pr-[max(20px,env(safe-area-inset-right))] text-center" aria-live="polite" aria-label={GAME_TRANSLATIONS.hsg.currentCard.en}>
+        <div className="max-w-full rounded-[22px] border-[3px] border-ink bg-white px-6 py-3 shadow-[0_6px_0_#141313]">
           {lang === "te" && currentCard ? (
             <div>
-              <p className="te-lead m-0 text-[clamp(56px,10vw,98px)] text-ink">
+              <p className="te-lead m-0 break-words text-[clamp(28px,8vw,86px)] text-ink">
                 {currentCard.te}
               </p>
-              <p className="te-sub m-0 mt-1 text-[20px] text-ink/85">
+              <p className="te-sub m-0 mt-1 text-[clamp(16px,2.4vw,22px)] text-ink/85">
                 {currentCard.en}
               </p>
             </div>
           ) : (
-            <p className="m-0 font-display text-[clamp(48px,8vw,84px)] font-extrabold leading-[1.04] tracking-[-0.02em] text-ink">
+            <p className="m-0 break-words font-display text-[clamp(28px,7.4vw,80px)] font-extrabold leading-[1.04] tracking-[-0.02em] text-ink">
               {cardText}
             </p>
           )}
         </div>
       </div>
 
-      {/* Tap zones — Pass (magenta / white large bold) and Correct! (green / ink) */}
-      <div className="flex border-t-2 border-ink" style={{ height: "36%" }}>
+      {/* Tap zones — >=96px height in lower half for comfortable thumb reach */}
+      <div className="flex min-h-[96px] border-t-2 border-ink" style={{ height: "clamp(96px, 35dvh, 175px)" }}>
         <button
           type="button"
           onClick={handlePass}

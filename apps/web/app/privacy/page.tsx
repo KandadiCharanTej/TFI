@@ -22,7 +22,7 @@ export default function PrivacyPage() {
           <h2 className="m-0 text-base font-extrabold text-ink">
             <Tx v={P.privacyHeadingStored} />
           </h2>
-          <p className="m-0 text-sm font-medium leading-relaxed text-ink">
+          <p className="m-0 text-base font-medium leading-relaxed text-ink">
             <Tx v={P.privacyStored} />
           </p>
         </div>
@@ -30,7 +30,7 @@ export default function PrivacyPage() {
           <h2 className="m-0 text-base font-extrabold text-ink">
             <Tx v={P.privacyHeadingAnalytics} />
           </h2>
-          <p className="m-0 text-sm font-medium leading-relaxed text-ink">
+          <p className="m-0 text-base font-medium leading-relaxed text-ink">
             <Tx v={P.privacyAnalytics} />
           </p>
         </div>
@@ -38,7 +38,7 @@ export default function PrivacyPage() {
           <h2 className="m-0 text-base font-extrabold text-ink">
             <Tx v={P.privacyHeadingRights} />
           </h2>
-          <p className="m-0 text-sm font-medium leading-relaxed text-ink">
+          <p className="m-0 text-base font-medium leading-relaxed text-ink">
             <Tx v={P.privacyRights} />
           </p>
         </div>

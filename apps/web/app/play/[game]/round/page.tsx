@@ -699,7 +699,7 @@ export default function JudgeRoundPage({
               setHelpOpen(true);
             }}
             aria-label="How to play"
-            className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink bg-white text-sm font-black text-ink shadow-[2px_2px_0_#141313]"
+            className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-ink bg-white text-sm font-black text-ink shadow-[2px_2px_0_#141313]"
           >
             ?
           </button>
@@ -707,7 +707,7 @@ export default function JudgeRoundPage({
             type="button"
             onClick={() => dispatch({ type: "TOGGLE_MUTE" })}
             aria-label={s.muted ? "Unmute" : "Mute"}
-            className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink bg-white text-sm font-black text-ink shadow-[2px_2px_0_#141313]"
+            className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-ink bg-white text-sm font-black text-ink shadow-[2px_2px_0_#141313]"
           >
             {s.muted ? "🔇" : "🔊"}
           </button>
@@ -724,7 +724,7 @@ export default function JudgeRoundPage({
               <button
                 type="button"
                 aria-label="Pause"
-                className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink bg-white text-sm font-black text-ink shadow-[2px_2px_0_#141313]"
+                className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-ink bg-white text-sm font-black text-ink shadow-[2px_2px_0_#141313]"
                 data-testid="judge-pause-btn"
               >
                 ⏸
@@ -814,7 +814,7 @@ export default function JudgeRoundPage({
               {answerText}
             </div>
             {currentCard?.hint && (
-              <div className="mt-1 text-[11px] font-bold text-ink/70">
+              <div className="mt-1 text-[13px] font-bold text-ink/80">
                 {currentCard.hint}
               </div>
             )}
@@ -822,12 +822,12 @@ export default function JudgeRoundPage({
         </div>
       </div>
 
-      {/* Bottom Thumb Action Buttons: Skip = magenta/white, Correct = green/ink */}
-      <footer className="grid grid-cols-2 gap-3 p-4">
+      {/* Bottom Thumb Action Buttons (>=64px high): Skip = magenta/white, Correct = green/ink */}
+      <footer className="grid grid-cols-2 gap-3 p-4 pb-[max(16px,env(safe-area-inset-bottom))]">
         <button
           type="button"
           onClick={handleSkip}
-          className="wall-btn min-h-[58px] bg-magenta text-[19px] font-bold text-white shadow-[4px_4px_0_#141313]"
+          className="wall-btn min-h-[64px] bg-magenta text-[19px] font-bold text-white shadow-[4px_4px_0_#141313]"
           data-testid="judge-skip-btn"
         >
           <Tx v={J.skip} />
@@ -835,7 +835,7 @@ export default function JudgeRoundPage({
         <button
           type="button"
           onClick={handleCorrect}
-          className="wall-btn min-h-[58px] bg-green text-[19px] font-bold text-ink shadow-[4px_4px_0_#141313]"
+          className="wall-btn min-h-[64px] bg-green text-[19px] font-bold text-ink shadow-[4px_4px_0_#141313]"
           data-testid="judge-correct-btn"
         >
           <Tx v={J.correct} />

@@ -154,7 +154,7 @@ export default function MostLikelyResultsPage() {
                   <span className="mono-num block text-[16px] font-black text-ink">
                     {t(V.crownsCount, { n: item.crowns })}
                   </span>
-                  <span className="mono-num block text-[11px] font-bold text-ink/70">
+                  <span className="mono-num block text-[12px] font-bold text-ink/75">
                     {t(V.votesCount, { n: item.totalVotes })}
                   </span>
                 </div>
@@ -173,27 +173,27 @@ export default function MostLikelyResultsPage() {
               <Tx v={GAME_TRANSLATIONS.judge.showNames} />
             </label>
 
-            <div className="flex gap-2">
+            <div className="grid grid-cols-1 gap-2 sm:flex">
               <WallButton
                 type="button"
                 variant="white"
                 onClick={() => setTemplateIdx((i) => (i + 1) % SHARE_TEMPLATES.length)}
-                className="px-4 text-xs"
+                className="px-4 text-sm"
               >
                 🎨 {template.toUpperCase()}
               </WallButton>
-              <WallButton type="button" variant="white" onClick={handleShare} className="flex-1">
+              <WallButton type="button" variant="white" onClick={handleShare} className="w-full sm:flex-1">
                 📸 <Tx v={GAME_TRANSLATIONS.judge.shareSticker} />
               </WallButton>
             </div>
-            {shareMsg ? <p className="m-0 text-xs font-bold text-ink">{shareMsg}</p> : null}
-            <p className="m-0 text-[11px] font-semibold text-ink/80">
+            {shareMsg ? <p className="m-0 text-base font-bold text-ink">{shareMsg}</p> : null}
+            <p className="m-0 text-[12px] font-semibold text-ink/80">
               <Tx v={TRANSLATIONS.brand.unofficialDisclaimer} />
             </p>
             <ConfettiBurst trigger={1} />
           </div>
 
-          <div className="flex flex-col gap-3 pt-2 sm:flex-row">
+          <div className="sticky bottom-[calc(72px+env(safe-area-inset-bottom))] z-20 flex flex-col gap-3 rounded-[18px] border-[3px] border-ink bg-concrete p-2 shadow-[0_4px_0_#141313] sm:flex-row md:static md:border-0 md:bg-transparent md:p-0 md:pt-2 md:shadow-none">
             <WallLinkButton href="/play/most-likely" variant="yellow" className="flex-1">
               <Tx v={GAME_TRANSLATIONS.judge.playAgain} />
             </WallLinkButton>

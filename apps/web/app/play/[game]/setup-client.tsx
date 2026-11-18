@@ -149,7 +149,7 @@ export default function SetupClient({ game, title, description, rule }: SetupCli
               <button
                 type="button"
                 onClick={handleAddPlayer}
-                className="rounded-full border-2 border-ink bg-yellow px-3 py-1 text-xs font-black text-ink shadow-[2px_2px_0_#141313]"
+                className="min-h-[44px] min-w-[44px] rounded-full border-2 border-ink bg-yellow px-4 py-1 text-sm font-black text-ink shadow-[2px_2px_0_#141313]"
                 data-testid="add-player-btn"
               >
                 + <Tx v={J.addPlayer} />
@@ -160,7 +160,7 @@ export default function SetupClient({ game, title, description, rule }: SetupCli
           <div className="mt-3 space-y-2.5">
             {players.map((name, i) => (
               <div key={i} className="flex items-center gap-2">
-                <span className="mono-num flex h-8 w-8 shrink-0 items-center justify-center rounded-[8px] border-2 border-ink bg-card text-xs font-black text-ink">
+                <span className="mono-num flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] border-2 border-ink bg-card text-xs font-black text-ink">
                   {i + 1}
                 </span>
                 <input
@@ -170,7 +170,7 @@ export default function SetupClient({ game, title, description, rule }: SetupCli
                   placeholder={lang === "te" ? `ఆటగాడు ${i + 1}` : `Player ${i + 1}`}
                   aria-label={`Player ${i + 1} name`}
                   maxLength={18}
-                  className="flex-1 rounded-[10px] border-2 border-ink bg-white px-3 py-2 text-sm font-bold text-ink shadow-[2px_2px_0_#141313] focus:outline-none focus:ring-2 focus:ring-ink"
+                  className="min-h-[44px] flex-1 rounded-[10px] border-2 border-ink bg-white px-3 py-2 text-[16px] font-bold text-ink shadow-[2px_2px_0_#141313] focus:outline-none focus:ring-2 focus:ring-ink"
                   data-testid={`player-input-${i}`}
                 />
                 {players.length > 2 && (
@@ -178,7 +178,7 @@ export default function SetupClient({ game, title, description, rule }: SetupCli
                     type="button"
                     onClick={() => handleRemovePlayer(i)}
                     aria-label={`Remove player ${i + 1}`}
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[8px] border-2 border-ink bg-card text-base font-black text-ink shadow-[2px_2px_0_#141313] hover:bg-yellow hover:text-ink"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] border-2 border-ink bg-card text-base font-black text-ink shadow-[2px_2px_0_#141313] hover:bg-yellow hover:text-ink"
                   >
                     ×
                   </button>
@@ -221,14 +221,14 @@ export default function SetupClient({ game, title, description, rule }: SetupCli
             </button>
           </div>
 
-          <div className="mt-3 flex justify-center gap-2">
+          <div className="mt-3 flex flex-wrap justify-center gap-2">
             {game.timerOptions.map((opt) => (
               <button
                 key={opt}
                 type="button"
                 onClick={() => setDuration(opt)}
-                className={`rounded-full border-2 border-ink px-3 py-1 text-xs font-black transition-all ${
-                  opt === duration ? "bg-yellow shadow-[2px_2px_0_#141313]" : "bg-card text-ink/70"
+                className={`min-h-[44px] min-w-[44px] rounded-full border-2 border-ink px-3.5 py-1 text-sm font-black transition-all ${
+                  opt === duration ? "bg-yellow shadow-[2px_2px_0_#141313]" : "bg-card text-ink/80"
                 }`}
               >
                 {opt}s
@@ -237,15 +237,17 @@ export default function SetupClient({ game, title, description, rule }: SetupCli
           </div>
         </Sticker>
 
-        {/* Start Game Button */}
-        <WallButton
-          variant="yellow"
-          className="w-full text-[19px]"
-          onClick={handleStart}
-          data-testid="judge-start-btn"
-        >
-          <Tx v={J.startGame} /> →
-        </WallButton>
+        {/* Start Game Button (sticky thumb zone on phones) */}
+        <div className="sticky bottom-[calc(72px+env(safe-area-inset-bottom))] z-20 rounded-[18px] border-[3px] border-ink bg-concrete p-2 shadow-[0_4px_0_#141313] md:static md:border-0 md:bg-transparent md:p-0 md:shadow-none">
+          <WallButton
+            variant="yellow"
+            className="w-full text-[19px]"
+            onClick={handleStart}
+            data-testid="judge-start-btn"
+          >
+            <Tx v={J.startGame} /> →
+          </WallButton>
+        </div>
 
         {/* Back Link */}
         <div className="text-center pt-2">

@@ -40,7 +40,7 @@ export default function JoinRoomPage() {
             <h1 className="h2-title m-0 text-ink">
               <Tx v={TRANSLATIONS.pages.joinTitle} />
             </h1>
-            <p className="m-0 mt-1.5 text-[14px] font-medium text-ink/80">
+            <p className="m-0 mt-1.5 text-[16px] font-medium text-ink/85">
               <Tx v={R.roomsOpeningSoonBody} />
             </p>
           </div>
@@ -154,7 +154,7 @@ export default function JoinRoomPage() {
           <h1 className="h1-title m-0 text-ink">
             <Tx v={R.joinTitle} />
           </h1>
-          <p className="m-0 mt-1.5 text-[15px] font-medium text-ink/85">
+          <p className="m-0 mt-1.5 text-[16px] font-medium text-ink/85">
             <Tx v={R.joinSub} />
           </p>
         </div>
@@ -216,7 +216,7 @@ export default function JoinRoomPage() {
               <span className="inline-block h-3 w-3 rounded-full bg-magenta" aria-hidden="true" />
               {errTitle}
             </p>
-            <p className="m-0 text-[14px] font-medium text-ink/90">{errNext}</p>
+            <p className="m-0 text-[16px] font-medium text-ink/90">{errNext}</p>
             {canRetry ? (
               <WallButton variant="white" size="sm" onClick={() => void handleJoinSubmit()}>
                 <Tx v={R.retryBtn} />

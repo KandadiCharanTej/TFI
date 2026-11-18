@@ -106,7 +106,7 @@ export function SwManager() {
         <button
           type="button"
           onClick={handleRefresh}
-          className="wall-btn min-h-[38px] bg-sticker px-3 text-[12px] text-ink"
+          className="wall-btn min-h-[44px] min-w-[44px] bg-sticker px-3 text-[12px] text-ink"
         >
           <Tx v={TRANSLATIONS.pwa.swRefreshBtn} />
         </button>
@@ -114,7 +114,7 @@ export function SwManager() {
           type="button"
           aria-label="Dismiss update"
           onClick={() => setDismissed(true)}
-          className="min-h-[38px] px-2 text-[14px] font-extrabold text-ink"
+          className="min-h-[44px] min-w-[44px] px-2 text-[14px] font-extrabold text-ink"
         >
           ✕
         </button>

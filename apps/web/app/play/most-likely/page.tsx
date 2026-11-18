@@ -140,14 +140,14 @@ export default function MostLikelySetupPage() {
                     placeholder={t(GAME_TRANSLATIONS.judge.playerNamePlaceholder)}
                     aria-label={`${t(GAME_TRANSLATIONS.judge.playerNamePlaceholder)} ${idx + 1}`}
                     data-testid={`vote-player-input-${idx}`}
-                    className="min-h-[44px] flex-1 rounded-[10px] border-2 border-ink bg-card px-3 text-[15px] font-bold text-ink focus:bg-white focus:outline-none"
+                    className="min-h-[44px] flex-1 rounded-[10px] border-2 border-ink bg-card px-3 text-[16px] font-bold text-ink focus:bg-white focus:outline-none"
                   />
                   {players.length > 3 ? (
                     <button
                       type="button"
                       onClick={() => handleRemovePlayer(idx)}
                       aria-label={`${t(GAME_TRANSLATIONS.judge.removePlayer)} ${name}`}
-                      className="min-h-[44px] rounded-[10px] border-2 border-ink bg-white px-3 text-xs font-black text-ink"
+                      className="min-h-[44px] min-w-[44px] rounded-[10px] border-2 border-ink bg-white px-3 text-sm font-black text-ink"
                     >
                       ✕
                     </button>
@@ -171,7 +171,7 @@ export default function MostLikelySetupPage() {
                   placeholder={t(GAME_TRANSLATIONS.judge.playerNamePlaceholder)}
                   aria-label={t(GAME_TRANSLATIONS.judge.addPlayer)}
                   data-testid="vote-add-player-input"
-                  className="min-h-[44px] flex-1 rounded-[10px] border-2 border-dashed border-ink bg-white px-3 text-[14px] font-bold text-ink focus:border-solid focus:outline-none"
+                  className="min-h-[44px] flex-1 rounded-[10px] border-2 border-dashed border-ink bg-white px-3 text-[16px] font-bold text-ink focus:border-solid focus:outline-none"
                 />
                 <WallButton
                   type="button"
@@ -205,7 +205,7 @@ export default function MostLikelySetupPage() {
             </div>
           </div>
 
-          <div className="mt-7">
+          <div className="sticky bottom-[calc(72px+env(safe-area-inset-bottom))] z-20 mt-7 rounded-[18px] border-[3px] border-ink bg-concrete p-2 shadow-[0_4px_0_#141313] md:static md:border-0 md:bg-transparent md:p-0 md:shadow-none">
             <WallButton
               type="button"
               variant="yellow"

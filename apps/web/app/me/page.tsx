@@ -54,7 +54,7 @@ export default function MePage() {
             <h1 className="h2-title m-0 text-ink">
               <Tx v={P.meTitle} />
             </h1>
-            <p className="m-0 mt-1 text-sm font-bold text-ink">
+            <p className="m-0 mt-1 text-base font-bold text-ink">
               <Tx v={P.meNoSignIn} />
             </p>
           </div>
@@ -108,7 +108,7 @@ export default function MePage() {
                 {t(P.meLargeText)}: {largeText ? onLabel : offLabel}
               </Chip>
             </div>
-            <p className="m-0 pt-1 text-[13px] font-medium text-ink/80">
+            <p className="m-0 pt-1 text-[16px] font-medium text-ink/85">
               <Tx v={P.meCalmHint} />
             </p>
           </div>

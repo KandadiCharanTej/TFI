@@ -270,14 +270,14 @@ export default function JudgeResultsPage({
           </WallButton>
 
           {shareMsg && (
-            <p className="text-center text-xs font-bold text-ink" role="status">
+            <p className="text-center text-base font-bold text-ink" role="status">
               {shareMsg}
             </p>
           )}
         </Sticker>
 
-        {/* Action Buttons */}
-        <div className="flex flex-col gap-3 pt-2">
+        {/* Action Buttons (sticky Play again on phones) */}
+        <div className="sticky bottom-[calc(72px+env(safe-area-inset-bottom))] z-20 flex flex-col gap-3 rounded-[18px] border-[3px] border-ink bg-concrete p-2 shadow-[0_4px_0_#141313] md:static md:border-0 md:bg-transparent md:p-0 md:pt-2 md:shadow-none">
           <WallButton
             variant="white"
             className="w-full text-base"

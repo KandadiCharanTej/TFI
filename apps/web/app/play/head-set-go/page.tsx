@@ -164,17 +164,17 @@ export default function HsgSetupPage() {
               +
             </button>
           </div>
-          <div className="mt-3 flex justify-center gap-1.5">
+          <div className="mt-3 flex flex-wrap justify-center gap-1">
             {TIMER_OPTIONS.map((t) => (
               <button
                 key={t}
                 type="button"
                 onClick={() => setDuration(t)}
-                className="flex min-h-[32px] min-w-[32px] items-center justify-center rounded-full"
+                className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full"
                 aria-label={`${t} seconds`}
               >
                 <span
-                  className={`block h-3 w-3 rounded-full border-2 border-ink transition-all ${
+                  className={`block h-3.5 w-3.5 rounded-full border-2 border-ink transition-all ${
                     t === duration ? "bg-ink" : "bg-card"
                   }`}
                 />
@@ -183,15 +183,17 @@ export default function HsgSetupPage() {
           </div>
         </Sticker>
 
-        <WallButton
-          variant="yellow"
-          size="lg"
-          className="w-full"
-          onClick={handleStart}
-          data-testid="hsg-start-btn"
-        >
-          <Tx v={GAME_TRANSLATIONS.hsg.start} /> →
-        </WallButton>
+        <div className="sticky bottom-[calc(72px+env(safe-area-inset-bottom))] z-20 rounded-[18px] border-[3px] border-ink bg-concrete p-2 shadow-[0_4px_0_#141313] md:static md:border-0 md:bg-transparent md:p-0 md:shadow-none">
+          <WallButton
+            variant="yellow"
+            size="lg"
+            className="w-full"
+            onClick={handleStart}
+            data-testid="hsg-start-btn"
+          >
+            <Tx v={GAME_TRANSLATIONS.hsg.start} /> →
+          </WallButton>
+        </div>
       </div>
     </AppFrame>
   );

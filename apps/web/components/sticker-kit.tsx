@@ -366,7 +366,7 @@ export function SegmentedControl<T extends string>({
             aria-pressed={active}
             data-testid={opt.testId}
             onClick={() => onChange(opt.value)}
-            className="min-h-[40px] rounded-full px-4 py-1.5 text-[14px] font-bold text-ink transition-colors"
+            className="min-h-[44px] min-w-[44px] rounded-full px-4 py-1.5 text-[14px] font-bold text-ink transition-colors"
             style={{
               backgroundColor: active ? "#F6BE18" : "transparent",
               border: active ? "2px solid #141313" : "2px solid transparent",

@@ -145,14 +145,14 @@ export default function DumbCharadesSetupPage() {
                     placeholder={t(C.teamPlaceholder)}
                     aria-label={`${t(C.teamPlaceholder)} ${idx + 1}`}
                     data-testid={`team-input-${idx}`}
-                    className="min-h-[44px] flex-1 rounded-[10px] border-2 border-ink bg-card px-3 text-[15px] font-bold text-ink focus:bg-white focus:outline-none"
+                    className="min-h-[44px] flex-1 rounded-[10px] border-2 border-ink bg-card px-3 text-[16px] font-bold text-ink focus:bg-white focus:outline-none"
                   />
                   {teams.length > 2 ? (
                     <button
                       type="button"
                       onClick={() => handleRemoveTeam(idx)}
                       aria-label={`${t(GAME_TRANSLATIONS.judge.removePlayer)} ${name}`}
-                      className="min-h-[44px] rounded-[10px] border-2 border-ink bg-white px-3 text-xs font-black text-ink"
+                      className="min-h-[44px] min-w-[44px] rounded-[10px] border-2 border-ink bg-white px-3 text-sm font-black text-ink"
                     >
                       ✕
                     </button>
@@ -176,7 +176,7 @@ export default function DumbCharadesSetupPage() {
                   placeholder={t(C.teamPlaceholder)}
                   aria-label={t(C.addTeam)}
                   data-testid="add-team-input"
-                  className="min-h-[44px] flex-1 rounded-[10px] border-2 border-dashed border-ink bg-white px-3 text-[14px] font-bold text-ink focus:border-solid focus:outline-none"
+                  className="min-h-[44px] flex-1 rounded-[10px] border-2 border-dashed border-ink bg-white px-3 text-[16px] font-bold text-ink focus:border-solid focus:outline-none"
                 />
                 <WallButton type="button" variant="white" size="sm" onClick={handleAddTeam} data-testid="add-team-btn">
                   + <Tx v={C.addTeam} />
@@ -249,7 +249,7 @@ export default function DumbCharadesSetupPage() {
             </div>
           </div>
 
-          <div className="mt-7">
+          <div className="sticky bottom-[calc(72px+env(safe-area-inset-bottom))] z-20 mt-7 rounded-[18px] border-[3px] border-ink bg-concrete p-2 shadow-[0_4px_0_#141313] md:static md:border-0 md:bg-transparent md:p-0 md:shadow-none">
             <WallButton
               type="button"
               variant="yellow"
