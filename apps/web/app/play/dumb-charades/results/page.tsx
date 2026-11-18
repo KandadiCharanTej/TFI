@@ -162,21 +162,21 @@ export default function DumbCharadesResultsPage() {
               <Tx v={GAME_TRANSLATIONS.judge.showNames} />
             </label>
 
-            <div className="flex gap-2">
+            <div className="grid grid-cols-1 gap-2 sm:flex">
               <WallButton
                 type="button"
                 variant="white"
                 onClick={() => setTemplateIdx((i) => (i + 1) % SHARE_TEMPLATES.length)}
-                className="px-4 text-xs"
+                className="px-4 text-sm"
               >
                 🎨 {template.toUpperCase()}
               </WallButton>
-              <WallButton type="button" variant="white" onClick={handleShare} className="flex-1">
+              <WallButton type="button" variant="white" onClick={handleShare} className="w-full sm:flex-1">
                 📸 <Tx v={GAME_TRANSLATIONS.judge.shareSticker} />
               </WallButton>
             </div>
-            {shareMsg ? <p className="m-0 text-xs font-bold text-ink">{shareMsg}</p> : null}
-            <p className="m-0 text-[11px] font-semibold text-ink/80">
+            {shareMsg ? <p className="m-0 text-base font-bold text-ink">{shareMsg}</p> : null}
+            <p className="m-0 text-[12px] font-semibold text-ink/80">
               <Tx v={TRANSLATIONS.brand.unofficialDisclaimer} />
             </p>
           </div>

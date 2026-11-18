@@ -107,21 +107,21 @@ export function ConsentBanner() {
       data-testid="consent-banner"
       className="fixed bottom-20 left-4 right-4 z-40 mx-auto flex max-w-[480px] flex-wrap items-center justify-between gap-3 rounded-[16px] border-[3px] border-ink bg-sticker p-4 text-ink shadow-sticker md:bottom-4"
     >
-      <p className="m-0 flex-1 basis-[220px] text-[13px] font-bold text-ink">
+      <p className="m-0 flex-1 basis-[220px] text-[16px] font-bold text-ink">
         <Tx v={TRANSLATIONS.consent.question} />
       </p>
       <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={() => choose("no")}
-          className="wall-btn min-h-[40px] bg-concrete px-3 text-[12px] text-ink"
+          className="wall-btn min-h-[44px] min-w-[44px] bg-concrete px-4 text-[14px] text-ink"
         >
           <Tx v={TRANSLATIONS.consent.no} />
         </button>
         <button
           type="button"
           onClick={() => choose("yes")}
-          className="wall-btn min-h-[40px] bg-yellow px-3 text-[12px] text-ink"
+          className="wall-btn min-h-[44px] min-w-[44px] bg-yellow px-4 text-[14px] text-ink"
         >
           <Tx v={TRANSLATIONS.consent.yes} />
         </button>

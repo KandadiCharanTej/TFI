@@ -70,9 +70,9 @@ export function AppFrame({ children }: AppFrameProps) {
         <Tx v={TRANSLATIONS.common.skipToContent} />
       </a>
 
-      {/* Slim sticky top bar with 3px ink bottom border */}
-      <header className="sticky top-0 z-30 border-b-[3px] border-ink bg-concrete">
-        <div className="mx-auto flex max-w-[1160px] items-center justify-between gap-3 px-4 py-2.5 md:px-8">
+      {/* Slim sticky top bar (56px, safe-area aware) */}
+      <header className="sticky top-0 z-30 border-b-[3px] border-ink bg-concrete pt-[env(safe-area-inset-top)]">
+        <div className="mx-auto flex min-h-[56px] max-w-[1160px] items-center justify-between gap-3 px-4 py-1.5 min-[430px]:px-5 md:px-8">
           <BrandWordmark href="/" />
           <LangSwitch />
         </div>
@@ -112,7 +112,7 @@ export function AppFrame({ children }: AppFrameProps) {
         <main
           id="content"
           tabIndex={-1}
-          className="v4-page-enter w-full flex-1 px-4 pb-28 pt-5 md:px-0 md:pb-12 md:pt-0"
+          className="v4-page-enter w-full flex-1 px-4 pb-28 pt-5 min-[430px]:px-5 md:px-0 md:pb-12 md:pt-0"
         >
           {children}
           <PublicFooter className="mt-12 rounded-[20px] border-[3px] border-ink" />

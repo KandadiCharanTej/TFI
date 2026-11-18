@@ -34,7 +34,7 @@ export default function NewRoomPage() {
           <h1 className="h2-title m-0 text-ink">
             <Tx v={R.roomsOpeningSoon} />
           </h1>
-          <p className="m-0 text-[15px] font-medium text-ink/90">
+          <p className="m-0 text-[16px] font-medium text-ink/90">
             <Tx v={R.roomsOpeningSoonBody} />
           </p>
           <WallLinkButton href="/play" variant="yellow">
@@ -82,7 +82,7 @@ export default function NewRoomPage() {
             <h1 className="h1-title m-0 text-ink">
               <Tx v={R.createRoomTitle} />
             </h1>
-            <p className="m-0 mt-1.5 text-[15px] font-medium text-ink/85">
+            <p className="m-0 mt-1.5 text-[16px] font-medium text-ink/85">
               <Tx v={R.createRoomSub} />
             </p>
           </div>

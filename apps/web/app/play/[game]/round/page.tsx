@@ -669,29 +669,29 @@ export default function JudgeRoundPage({
       </div>
 
       {/* Top Header Bar */}
-      <header className="flex items-center justify-between px-4 pt-3">
+      <header className="flex flex-wrap items-center justify-between gap-2 px-3 pt-3 sm:px-4">
         {/* Score pill + Streak */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex shrink-0 items-center gap-1.5">
           <div
-            className="mono-num rounded-full border-2 border-ink bg-white px-3 py-1 text-base font-black text-ink shadow-[2px_2px_0_#141313]"
+            className="mono-num shrink-0 whitespace-nowrap rounded-full border-2 border-ink bg-white px-2.5 py-1 text-base font-black text-ink shadow-[2px_2px_0_#141313]"
             aria-label="Score"
           >
             ✓ {s.currentTurnCorrect}
           </div>
           {streak >= 2 ? (
-            <div className="mono-num rounded-full border-2 border-ink bg-magenta px-2.5 py-1 text-[19px] font-bold text-white shadow-[2px_2px_0_#141313]">
+            <div className="mono-num shrink-0 whitespace-nowrap rounded-full border-2 border-ink bg-magenta px-2.5 py-1 text-[19px] font-bold text-white shadow-[2px_2px_0_#141313]">
               🔥 {streak}
             </div>
           ) : null}
         </div>
 
         {/* Current Judge Indicator */}
-        <div className="rounded-full border-2 border-ink bg-yellow px-3 py-0.5 text-xs font-black uppercase text-ink">
+        <div className="max-w-[110px] shrink truncate whitespace-nowrap rounded-full border-2 border-ink bg-yellow px-2.5 py-0.5 text-xs font-black uppercase text-ink">
           {currentPlayer.name}
         </div>
 
         {/* Actions: Help, Pause & Sound */}
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
           <button
             type="button"
             onClick={() => {
@@ -699,7 +699,7 @@ export default function JudgeRoundPage({
               setHelpOpen(true);
             }}
             aria-label="How to play"
-            className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink bg-white text-sm font-black text-ink shadow-[2px_2px_0_#141313]"
+            className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-ink bg-white text-sm font-black text-ink shadow-[2px_2px_0_#141313]"
           >
             ?
           </button>
@@ -707,7 +707,7 @@ export default function JudgeRoundPage({
             type="button"
             onClick={() => dispatch({ type: "TOGGLE_MUTE" })}
             aria-label={s.muted ? "Unmute" : "Mute"}
-            className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink bg-white text-sm font-black text-ink shadow-[2px_2px_0_#141313]"
+            className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-ink bg-white text-sm font-black text-ink shadow-[2px_2px_0_#141313]"
           >
             {s.muted ? "🔇" : "🔊"}
           </button>
@@ -724,7 +724,7 @@ export default function JudgeRoundPage({
               <button
                 type="button"
                 aria-label="Pause"
-                className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink bg-white text-sm font-black text-ink shadow-[2px_2px_0_#141313]"
+                className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-ink bg-white text-sm font-black text-ink shadow-[2px_2px_0_#141313]"
                 data-testid="judge-pause-btn"
               >
                 ⏸
@@ -763,7 +763,7 @@ export default function JudgeRoundPage({
 
           {/* Seconds Left Pill */}
           <div
-            className={`mono-num rounded-full border-2 border-ink px-3 py-1 text-base font-black shadow-[2px_2px_0_#141313] ${
+            className={`mono-num shrink-0 whitespace-nowrap rounded-full border-2 border-ink px-2.5 py-1 text-base font-black shadow-[2px_2px_0_#141313] ${
               s.secondsLeft <= 10 && s.secondsLeft > 0
                 ? "v4-pulse-urgent bg-magenta text-[19px] text-white"
                 : "bg-white text-ink"
@@ -814,7 +814,7 @@ export default function JudgeRoundPage({
               {answerText}
             </div>
             {currentCard?.hint && (
-              <div className="mt-1 text-[11px] font-bold text-ink/70">
+              <div className="mt-1 text-[13px] font-bold text-ink/80">
                 {currentCard.hint}
               </div>
             )}
@@ -822,12 +822,12 @@ export default function JudgeRoundPage({
         </div>
       </div>
 
-      {/* Bottom Thumb Action Buttons: Skip = magenta/white, Correct = green/ink */}
-      <footer className="grid grid-cols-2 gap-3 p-4">
+      {/* Bottom Thumb Action Buttons (>=64px high): Skip = magenta/white, Correct = green/ink */}
+      <footer className="grid grid-cols-2 gap-3 p-4 pb-[max(16px,env(safe-area-inset-bottom))]">
         <button
           type="button"
           onClick={handleSkip}
-          className="wall-btn min-h-[58px] bg-magenta text-[19px] font-bold text-white shadow-[4px_4px_0_#141313]"
+          className="wall-btn min-h-[64px] bg-magenta text-[19px] font-bold text-white shadow-[4px_4px_0_#141313]"
           data-testid="judge-skip-btn"
         >
           <Tx v={J.skip} />
@@ -835,7 +835,7 @@ export default function JudgeRoundPage({
         <button
           type="button"
           onClick={handleCorrect}
-          className="wall-btn min-h-[58px] bg-green text-[19px] font-bold text-ink shadow-[4px_4px_0_#141313]"
+          className="wall-btn min-h-[64px] bg-green text-[19px] font-bold text-ink shadow-[4px_4px_0_#141313]"
           data-testid="judge-correct-btn"
         >
           <Tx v={J.correct} />

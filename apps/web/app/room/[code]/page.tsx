@@ -345,7 +345,7 @@ export default function RoomLobbyPage({ params }: { params: Promise<{ code: stri
             </Badge>
           </div>
 
-          <ul role="list" className="min-h-[64px] space-y-2.5" data-testid="room-player-list">
+          <ul role="list" className="max-h-[42dvh] min-h-[64px] space-y-2.5 overflow-y-auto pr-1" data-testid="room-player-list">
             {(room?.players ?? []).map((p) => {
               const isDarkMagentaCircle = p.color === "#EC1276";
               const isReady = room?.gameState?.readyIds.includes(p.id) ?? false;
@@ -371,14 +371,14 @@ export default function RoomLobbyPage({ params }: { params: Promise<{ code: stri
                         {p.isHost ? (
                           <span
                             data-testid="host-badge"
-                            className="inline-flex items-center gap-1 rounded-full border border-ink bg-yellow px-2 py-0.5 text-[11px] font-bold text-ink"
+                            className="inline-flex items-center gap-1 rounded-full border border-ink bg-yellow px-2 py-0.5 text-[12px] font-bold text-ink"
                           >
                             <span aria-hidden="true">👑</span>
                             <Tx v={R.hostTag} />
                           </span>
                         ) : null}
                         {room?.status === "in_game" && isReady ? (
-                          <span className="inline-flex items-center rounded-full border border-ink bg-green px-2 py-0.5 text-[11px] font-bold text-ink">
+                          <span className="inline-flex items-center rounded-full border border-ink bg-green px-2 py-0.5 text-[12px] font-bold text-ink">
                             ✓ <Tx v={R.readyDone} />
                           </span>
                         ) : null}
@@ -399,7 +399,7 @@ export default function RoomLobbyPage({ params }: { params: Promise<{ code: stri
                       type="button"
                       data-testid={`remove-player-${p.id}`}
                       onClick={() => sendRemovePlayer(p.id)}
-                      className="min-h-[40px] rounded-[10px] border-2 border-ink bg-white px-3 text-[13px] font-bold text-ink hover:bg-card"
+                      className="min-h-[44px] min-w-[44px] rounded-[10px] border-2 border-ink bg-white px-3 text-[13px] font-bold text-ink hover:bg-card"
                     >
                       <Tx v={R.removePlayer} />
                     </button>
@@ -410,28 +410,30 @@ export default function RoomLobbyPage({ params }: { params: Promise<{ code: stri
           </ul>
         </Sticker>
 
-        {/* Host or Guest Controls */}
+        {/* Host or Guest Controls (sticky Start on phones) */}
         {!room || room.status === "lobby" ? (
           <Sticker className="min-h-[144px] space-y-3 p-5">
             {!room ? (
-              <p className="m-0 rounded-[12px] border-2 border-ink bg-card px-4 py-3 text-center text-[15px] font-bold text-ink">
+              <p className="m-0 rounded-[12px] border-2 border-ink bg-card px-4 py-3 text-center text-[16px] font-bold text-ink">
                 <Tx v={R.connecting} />
               </p>
             ) : isHost ? (
               <>
-                <WallButton
-                  variant="yellow"
-                  disabled={connectedCount < 2 || room.gameId === "box-office-auction"}
-                  onClick={() => sendStartGame(room.gameId)}
-                  data-testid="room-start-btn"
-                  className={`w-full ${
-                    connectedCount >= 2 && room.gameId !== "box-office-auction"
-                      ? "v4-host-pulse"
-                      : ""
-                  }`}
-                >
-                  <Tx v={R.startGame} /> →
-                </WallButton>
+                <div>
+                  <WallButton
+                    variant="yellow"
+                    disabled={connectedCount < 2 || room.gameId === "box-office-auction"}
+                    onClick={() => sendStartGame(room.gameId)}
+                    data-testid="room-start-btn"
+                    className={`w-full ${
+                      connectedCount >= 2 && room.gameId !== "box-office-auction"
+                        ? "v4-host-pulse"
+                        : ""
+                    }`}
+                  >
+                    <Tx v={R.startGame} /> →
+                  </WallButton>
+                </div>
                 {connectedCount < 2 ? (
                   <p className="m-0 text-center text-[13px] font-semibold text-ink/80">
                     <Tx v={R.needTwoPlayers} />

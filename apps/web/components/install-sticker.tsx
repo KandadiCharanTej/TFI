@@ -138,19 +138,19 @@ export function InstallSticker() {
           data-testid="ios-install-sheet"
           className="mt-3 space-y-2 rounded-[12px] border-2 border-ink bg-concrete p-3 text-ink"
         >
-          <p className="m-0 text-[14px] font-extrabold">
+          <p className="m-0 text-[16px] font-extrabold">
             <Tx v={P.iosTitle} />
           </p>
-          <p className="m-0 text-[13px] font-medium">
+          <p className="m-0 text-[16px] font-medium">
             <Tx v={P.iosStep1} />
           </p>
-          <p className="m-0 text-[13px] font-medium">
+          <p className="m-0 text-[16px] font-medium">
             <Tx v={P.iosStep2} />
           </p>
           <button
             type="button"
             onClick={() => setShowIosSheet(false)}
-            className="wall-btn min-h-[40px] bg-sticker px-3 text-[12px] text-ink"
+            className="wall-btn min-h-[44px] min-w-[44px] bg-sticker px-4 text-[14px] text-ink"
           >
             <Tx v={P.iosClose} />
           </button>

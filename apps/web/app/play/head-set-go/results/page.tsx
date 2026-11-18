@@ -170,36 +170,36 @@ export default function HsgResultsPage() {
           )}
         </Sticker>
 
-        {/* Actions */}
-        <div className="flex flex-wrap gap-3">
+        {/* Actions (full-width stacked on phones, 2-up on tablet/desktop) */}
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <WallButton
             variant="yellow"
-            className="flex-1"
+            className="w-full"
             onClick={() => router.push("/play/head-set-go/round")}
           >
             <Tx v={GAME_TRANSLATIONS.hsg.playAgain} />
           </WallButton>
-          <WallLinkButton href="/play/head-set-go" variant="white" className="flex-1">
+          <WallLinkButton href="/play/head-set-go" variant="white" className="w-full">
             <Tx v={GAME_TRANSLATIONS.hsg.changeDeck} />
           </WallLinkButton>
         </div>
 
-        <div className="flex flex-wrap gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <WallButton
             variant="white"
-            className="flex-1"
+            className="w-full"
             onClick={handleShare}
             disabled={sharing}
           >
             {sharing ? "…" : <Tx v={GAME_TRANSLATIONS.hsg.share} />}
           </WallButton>
-          <WallLinkButton href="/play" variant="white" className="flex-1">
+          <WallLinkButton href="/play" variant="white" className="w-full">
             <Tx v={GAME_TRANSLATIONS.hsg.home} />
           </WallLinkButton>
         </div>
 
         {shareMsg && (
-          <p className="text-center text-sm font-bold text-ink" role="status">
+          <p className="text-center text-base font-bold text-ink" role="status">
             {shareMsg}
           </p>
         )}

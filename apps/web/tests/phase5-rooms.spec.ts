@@ -15,10 +15,16 @@ import fs from "node:fs";
 import path from "node:path";
 
 const DESIGN_V4_DIR = path.resolve(process.cwd(), "../../reference/design-v4");
+const DESIGN_V5_DIR = path.resolve(process.cwd(), "../../reference/design-v5");
 
 function saveV4Shot(name: string, buf: Buffer) {
   fs.mkdirSync(DESIGN_V4_DIR, { recursive: true });
   fs.writeFileSync(path.join(DESIGN_V4_DIR, name), buf);
+}
+
+function saveV5Shot(name: string, buf: Buffer) {
+  fs.mkdirSync(DESIGN_V5_DIR, { recursive: true });
+  fs.writeFileSync(path.join(DESIGN_V5_DIR, name), buf);
 }
 
 const BASE = "http://127.0.0.1:3102";
@@ -106,14 +112,18 @@ test.describe("Phase 5 — Live PartyKit Online Rooms (3+ Browser Contexts)", ()
       await expect(p1.getByTestId("room-player-list")).toContainText("Charan");
       await expect(p1.getByTestId("room-player-list").locator("li")).toHaveCount(3);
 
-      // Capture Design V4 AFTER live lobby screenshots (EN & TE at 390x844) once on Chromium
+      // Capture Design V4 & V5 live lobby screenshots (EN & TE at 390x844) once on Chromium
       if (browserName === "chromium") {
         await p1.setViewportSize({ width: 390, height: 844 });
         await p1.waitForTimeout(250);
-        saveV4Shot("after-lobby-390x844-en.png", await p1.screenshot({ fullPage: true }));
+        const enBuf = await p1.screenshot({ fullPage: true });
+        saveV4Shot("after-lobby-390x844-en.png", enBuf);
+        saveV5Shot("lobby-390x844-en.png", enBuf);
         await p1.getByTestId("lang-switch-te").click();
         await p1.waitForTimeout(300);
-        saveV4Shot("after-lobby-390x844-te.png", await p1.screenshot({ fullPage: true }));
+        const teBuf = await p1.screenshot({ fullPage: true });
+        saveV4Shot("after-lobby-390x844-te.png", teBuf);
+        saveV5Shot("lobby-390x844-te.png", teBuf);
         await p1.getByTestId("lang-switch-en").click();
         await p1.waitForTimeout(200);
         await p1.setViewportSize({ width: 1280, height: 720 });

@@ -38,7 +38,7 @@ export default function OfflinePage() {
             <Tx v={TRANSLATIONS.pwa.offlineSavedHeading} />
           </h2>
           {savedGames.length === 0 ? (
-            <p className="m-0 text-sm font-bold text-ink">
+            <p className="m-0 text-[16px] font-bold text-ink">
               <Tx v={TRANSLATIONS.pwa.offlineNoneSaved} />
             </p>
           ) : (
@@ -49,7 +49,7 @@ export default function OfflinePage() {
                   className="flex items-center justify-between gap-3 rounded-[12px] border-2 border-ink bg-concrete p-3"
                 >
                   <GameTitle title={game.title} enClassName="text-[16px]" teClassName="text-[17px]" />
-                  <WallLinkButton href={`/play/${game.slug}`} variant="yellow" className="min-h-[40px] px-3 text-[12px]">
+                  <WallLinkButton href={`/play/${game.slug}`} variant="yellow" className="min-h-[44px] min-w-[44px] px-3 text-[13px]">
                     <Tx v={TRANSLATIONS.playHome.playAction} /> →
                   </WallLinkButton>
                 </li>

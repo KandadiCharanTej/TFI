@@ -21,10 +21,10 @@ export default function AboutPage() {
         <p className="m-0 text-base font-bold leading-relaxed text-ink">
           <Tx v={TRANSLATIONS.brand.unofficialDisclaimer} />
         </p>
-        <p className="m-0 text-sm font-medium leading-relaxed text-ink">
+        <p className="m-0 text-base font-medium leading-relaxed text-ink">
           <Tx v={P.aboutBody2} />
         </p>
-        <p className="m-0 text-sm font-extrabold text-ink">
+        <p className="m-0 text-base font-extrabold text-ink">
           <Tx v={P.aboutMadeBy} />
         </p>
         <WallLinkButton href="/play" variant="yellow">

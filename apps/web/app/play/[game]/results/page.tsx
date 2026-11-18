@@ -270,14 +270,14 @@ export default function JudgeResultsPage({
           </WallButton>
 
           {shareMsg && (
-            <p className="text-center text-xs font-bold text-ink" role="status">
+            <p className="text-center text-base font-bold text-ink" role="status">
               {shareMsg}
             </p>
           )}
         </Sticker>
 
         {/* Action Buttons */}
-        <div className="flex flex-col gap-3 pt-2">
+        <div className="flex flex-col gap-3 pt-1">
           <WallButton
             variant="white"
             className="w-full text-base"

@@ -112,7 +112,7 @@ export default function PlayHomePage() {
                     enClassName="text-[26px]"
                   />
                 </span>
-                <p className="m-0 mt-1 text-[15px] font-medium text-ink">
+                <p className="m-0 mt-1 text-[16px] font-medium text-ink">
                   <Tx v={todaysPick.description} />
                 </p>
               </div>
@@ -192,7 +192,7 @@ export default function PlayHomePage() {
             />
           </div>
 
-          <div className="mt-5 grid grid-cols-2 items-stretch gap-4 sm:gap-5 lg:grid-cols-3">
+          <div className="mt-5 grid grid-cols-1 items-stretch gap-4 min-[360px]:grid-cols-2 sm:gap-5 lg:grid-cols-3">
             {filteredGames.map((game) => {
               const displayNum = String(
                 visibleGames.findIndex((g) => g.slug === game.slug) + 1,
@@ -201,7 +201,7 @@ export default function PlayHomePage() {
               const gameColor = getGameColor(game.slug);
               const wideOnPhone =
                 filteredGames.length === 7 && game.slug === "box-office-auction"
-                  ? "col-span-2 lg:col-span-1"
+                  ? "min-[360px]:col-span-2 lg:col-span-1"
                   : "";
               return (
                 <Link
@@ -216,7 +216,7 @@ export default function PlayHomePage() {
                       <span className="mono-num rounded-full border-2 border-ink bg-white px-2 py-0.5 text-[12px] text-ink">
                         {displayNum}
                       </span>
-                      <Badge tone={game.isOnlineOnly ? "card" : "white"} className="!px-2 !py-0.5 !text-[11px]">
+                      <Badge tone={game.isOnlineOnly ? "card" : "white"} className="!px-2 !py-0.5 !text-[12px]">
                         {game.isOnlineOnly ? (
                           <Tx v={TRANSLATIONS.common.comingSoon} />
                         ) : (
@@ -239,7 +239,7 @@ export default function PlayHomePage() {
                       teClassName="text-[19px]"
                       enClassName="text-[18px]"
                     />
-                    <p className="m-0 mt-1 text-[13px] font-medium leading-[1.4] text-ink/90">
+                    <p className="m-0 mt-1 text-[16px] font-medium leading-[1.4] text-ink/90">
                       <Tx v={game.description} />
                     </p>
                     <div className="mt-2.5 flex flex-wrap items-center justify-between gap-1.5">
@@ -247,7 +247,7 @@ export default function PlayHomePage() {
                       {!game.isOnlineOnly && offlineSlugs.has(game.slug) ? (
                         <span
                           data-testid={`offline-ready-${game.slug}`}
-                          className="inline-flex items-center gap-1 rounded-full border border-ink bg-green px-2 py-0.5 text-[11px] font-bold text-ink"
+                          className="inline-flex items-center gap-1 rounded-full border border-ink bg-green px-2 py-0.5 text-[12px] font-bold text-ink"
                         >
                           ✓ <Tx v={TRANSLATIONS.pwa.readyOffline} />
                         </span>

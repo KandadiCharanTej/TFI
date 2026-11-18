@@ -97,8 +97,10 @@ html[data-large-text="true"] {
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+html,
 body {
   margin: 0;
+  overflow-x: clip;
   background-color: var(--concrete);
   font-family: var(--font-body), system-ui, sans-serif;
   font-weight: 500;
@@ -106,12 +108,27 @@ body {
   line-height: 1.55;
   color: var(--ink);
   text-align: start;
+  overflow-wrap: anywhere;
 }
 
 @media (min-width: 768px) {
   body {
     font-size: 17px;
   }
+}
+
+a,
+button,
+input,
+select,
+textarea {
+  touch-action: manipulation;
+}
+
+input,
+select,
+textarea {
+  scroll-margin-bottom: 140px;
 }
 
 p {
@@ -151,7 +168,7 @@ html[lang="te"] .keep-case {
   font-family: var(--font-display), system-ui, sans-serif;
   font-weight: 800;
   font-stretch: 75%;
-  font-size: clamp(46px, 14.5vw, 64px);
+  font-size: clamp(36px, 11.5vw, 60px);
   line-height: 0.98;
   letter-spacing: -0.02em;
   text-transform: uppercase;
@@ -417,63 +434,65 @@ html[lang="te"] .lang-switch-te {
   border-top: 2px dashed var(--ink);
 }
 
-.wall-btn {
-  position: relative;
-  overflow: hidden;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 52px;
-  min-width: 44px;
-  padding: 0 24px;
-  border: 3px solid var(--ink);
-  border-radius: 16px;
-  box-shadow: 0 5px 0 var(--ink);
-  font-family: var(--font-body), system-ui, sans-serif;
-  font-weight: 800;
-  font-size: 18px;
-  letter-spacing: 0;
-  text-transform: none;
-  transition: transform 0.14s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.14s cubic-bezier(0.22, 1, 0.36, 1);
-  cursor: pointer;
-}
-
-@media (min-width: 768px) {
+@layer components {
   .wall-btn {
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 52px;
+    min-width: 44px;
+    padding: 0 24px;
+    border: 3px solid var(--ink);
+    border-radius: 16px;
+    box-shadow: 0 5px 0 var(--ink);
+    font-family: var(--font-body), system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    letter-spacing: 0;
+    text-transform: none;
+    transition: transform 0.14s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.14s cubic-bezier(0.22, 1, 0.36, 1);
+    cursor: pointer;
+  }
+
+  @media (min-width: 768px) {
+    .wall-btn {
+      font-size: 19px;
+    }
+  }
+
+  .wall-btn::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 25%, rgba(255, 255, 255, 0.36) 50%, transparent 75%);
+    transform: translateX(-120%);
+    pointer-events: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .wall-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 0 var(--ink);
+    }
+    .wall-btn:hover::after {
+      transform: translateX(120%);
+      transition: transform 0.42s ease-out;
+    }
+  }
+
+  .wall-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 1px 0 var(--ink);
+  }
+
+  .wall-btn.bg-magenta {
     font-size: 19px;
+    font-weight: 800;
+    color: #FFFFFF;
   }
-}
-
-.wall-btn::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(110deg, transparent 25%, rgba(255, 255, 255, 0.36) 50%, transparent 75%);
-  transform: translateX(-120%);
-  pointer-events: none;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .wall-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 0 var(--ink);
-  }
-  .wall-btn:hover::after {
-    transform: translateX(120%);
-    transition: transform 0.42s ease-out;
-  }
-}
-
-.wall-btn:active {
-  transform: translateY(4px);
-  box-shadow: 0 1px 0 var(--ink);
-}
-
-.wall-btn.bg-magenta {
-  font-size: 19px;
-  font-weight: 800;
-  color: #FFFFFF;
 }
 
 .wall-chip {
@@ -629,7 +648,66 @@ html[lang="te"] .lang-switch-te {
   animation: wall-shake-x 150ms ease-in-out;
 }
 
-/* Reduced motion + Calm Mode (/me): keep non-motion transitions (color/bg), disable spatial motion */
+/* Phase 5c Hero Doodle animations (transform & opacity only; disabled in Calm / reduced-motion / low-power) */
+@keyframes doodle-enter-bl {
+  from { opacity: 0; transform: translate3d(-24px, 24px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes doodle-enter-br {
+  from { opacity: 0; transform: translate3d(24px, 24px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes doodle-spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes doodle-twinkle {
+  0%, 84%, 100% { transform: scale(1); opacity: 1; }
+  90% { transform: scale(1.18); opacity: 0.72; }
+}
+
+@keyframes doodle-flicker {
+  0%, 88%, 100% { opacity: 1; transform: scale(1); }
+  91%, 95% { opacity: 0.45; transform: scale(0.95); }
+  93% { opacity: 1; transform: scale(1.1); }
+}
+
+@keyframes doodle-oval-draw {
+  from { stroke-dashoffset: 620; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes doodle-bolt-flash {
+  0%, 100% { transform: scale(1); }
+  40% { transform: scale(1.26) rotate(-6deg); }
+}
+
+@keyframes doodle-x-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+.doodle-oval-path {
+  stroke-dasharray: 620;
+  stroke-dashoffset: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .doodle-enter-bl { animation: doodle-enter-bl 350ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .doodle-enter-br { animation: doodle-enter-br 350ms 90ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .doodle-spin-slow { animation: doodle-spin-slow 60s linear infinite; }
+  .doodle-twinkle { animation: doodle-twinkle 4s ease-in-out infinite; }
+  .doodle-flicker { animation: doodle-flicker 6s ease-in-out infinite; }
+  .doodle-oval-path { animation: doodle-oval-draw 700ms 180ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .doodle-bolt-flash { animation: doodle-bolt-flash 360ms ease-out; }
+  .doodle-x-shake { animation: doodle-x-shake 220ms ease-in-out; }
+}
+
+/* Reduced motion + Calm Mode (/me) + Low-power auto-downgrade */
 @media (prefers-reduced-motion: reduce) {
   .wall-tape-track,
   .wall-tape-rev,
@@ -640,7 +718,15 @@ html[lang="te"] .lang-switch-te {
   .v4-pulse-urgent,
   .v4-avatar-pop,
   .v4-host-pulse,
-  .wall-tile-art {
+  .wall-tile-art,
+  .doodle-enter-bl,
+  .doodle-enter-br,
+  .doodle-spin-slow,
+  .doodle-twinkle,
+  .doodle-flicker,
+  .doodle-oval-path,
+  .doodle-bolt-flash,
+  .doodle-x-shake {
     animation: none !important;
   }
   .wall-btn,
@@ -664,7 +750,18 @@ html[data-reduced-motion="true"] .v4-page-enter,
 html[data-reduced-motion="true"] .v4-pulse-urgent,
 html[data-reduced-motion="true"] .v4-avatar-pop,
 html[data-reduced-motion="true"] .v4-host-pulse,
-html[data-reduced-motion="true"] .wall-tile-art {
+html[data-reduced-motion="true"] .wall-tile-art,
+html[data-reduced-motion="true"] .doodle-enter-bl,
+html[data-reduced-motion="true"] .doodle-enter-br,
+html[data-reduced-motion="true"] .doodle-spin-slow,
+html[data-reduced-motion="true"] .doodle-twinkle,
+html[data-reduced-motion="true"] .doodle-flicker,
+html[data-reduced-motion="true"] .doodle-oval-path,
+html[data-reduced-motion="true"] .doodle-bolt-flash,
+html[data-reduced-motion="true"] .doodle-x-shake,
+html[data-low-power="true"] .doodle-spin-slow,
+html[data-low-power="true"] .doodle-twinkle,
+html[data-low-power="true"] .doodle-flicker {
   animation: none !important;
 }
 
@@ -689,7 +786,8 @@ html[data-reduced-motion="true"] .v4-reveal {
 
 .wall-safe-round {
   min-height: 100dvh;
-  padding-top: max(16px, env(safe-area-inset-top));
+  overscroll-behavior: none;
+  padding-top: max(12px, env(safe-area-inset-top));
   padding-right: max(16px, env(safe-area-inset-right));
   padding-bottom: max(16px, env(safe-area-inset-bottom));
   padding-left: max(16px, env(safe-area-inset-left));
@@ -700,6 +798,7 @@ html[data-reduced-motion="true"] .v4-reveal {
 }
 
 .wall-tap-safe {
+  overscroll-behavior: none;
   -webkit-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;

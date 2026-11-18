@@ -131,13 +131,13 @@ export function MarqueeTape({
   return (
     <section
       aria-label={label}
-      className={`wall-tape-wrap relative overflow-hidden bg-concrete pt-4 pb-11 ${
+      className={`wall-tape-wrap relative overflow-x-clip bg-concrete pt-3 pb-12 ${
         paused ? "wall-tape-paused" : ""
       }`}
     >
-      <div className="space-y-2.5">
+      <div className="space-y-2">
         <div
-          className="overflow-hidden border-y-[3px] border-ink bg-ink py-2.5"
+          className="overflow-hidden border-y-[3px] border-ink bg-ink py-2 sm:py-2.5"
           style={{ transform: "rotate(-1deg) scale(1.02)" }}
         >
           <div className="wall-tape-track">
@@ -146,7 +146,7 @@ export function MarqueeTape({
           </div>
         </div>
         <div
-          className="overflow-hidden border-y-[3px] border-ink bg-yellow py-2.5"
+          className="overflow-hidden border-y-[3px] border-ink bg-yellow py-2 sm:py-2.5"
           style={{ transform: "rotate(1deg) scale(1.02)" }}
         >
           <div className="wall-tape-rev">
@@ -160,7 +160,7 @@ export function MarqueeTape({
         type="button"
         onClick={() => setPaused((p) => !p)}
         data-testid="marquee-pause-btn"
-        className="absolute right-3 bottom-1 z-10 min-h-[36px] rounded-full border-2 border-ink bg-white px-3 text-[12px] font-bold text-ink shadow-[0_2px_0_#141313]"
+        className="absolute right-3 bottom-0.5 z-10 min-h-[44px] min-w-[44px] rounded-full border-2 border-ink bg-white px-3.5 text-[12px] font-bold text-ink shadow-[0_2px_0_#141313]"
       >
         {paused ? playLabel : pauseLabel}
       </button>

@@ -300,7 +300,7 @@ function VoteRoundRunner({
                     onClick={() => dispatch({ type: "CAST_VOTE", targetId: p.id })}
                     data-testid={`vote-target-${p.id}`}
                     style={{ touchAction: "manipulation" }}
-                    className={`min-h-[56px] rounded-[14px] border-[2.5px] border-ink px-3 py-2 text-[16px] font-black transition-transform active:translate-y-0.5 ${
+                    className={`min-h-[64px] rounded-[14px] border-[2.5px] border-ink px-3 py-2 text-[16px] font-black transition-transform active:translate-y-0.5 ${
                       isSelf
                         ? "cursor-not-allowed border-dashed bg-card text-ink/40"
                         : "bg-white text-ink shadow-btn hover:bg-yellow"
@@ -308,7 +308,7 @@ function VoteRoundRunner({
                   >
                     {p.name}
                     {isSelf ? (
-                      <span className="block text-[10px] font-bold uppercase tracking-wider">
+                      <span className="block text-[12px] font-bold uppercase tracking-wider">
                         (You)
                       </span>
                     ) : null}

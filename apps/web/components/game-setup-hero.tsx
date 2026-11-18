@@ -60,7 +60,7 @@ export function GameSetupHero({
             type="button"
             onClick={onOpenHowTo}
             data-testid={howToTestId}
-            className="inline-flex min-h-[40px] items-center gap-1.5 rounded-full border-[2.5px] border-ink bg-white px-3.5 text-[13px] font-extrabold text-ink shadow-[0_3px_0_#141313]"
+            className="inline-flex min-h-[44px] min-w-[44px] items-center gap-1.5 rounded-full border-[2.5px] border-ink bg-white px-3.5 text-[13px] font-extrabold text-ink shadow-[0_3px_0_#141313]"
           >
             <span aria-hidden="true">?</span>
             <Tx v={TRANSLATIONS.nav.howItPlays} />
@@ -80,7 +80,7 @@ export function GameSetupHero({
             enClassName="text-[28px] sm:text-[32px]"
             teClassName="text-[28px] sm:text-[32px]"
           />
-          <p className="m-0 mt-1 text-[15px] font-medium leading-[1.45] text-ink/90">
+          <p className="m-0 mt-1 text-[16px] font-medium leading-[1.45] text-ink/90">
             <Tx v={description} />
           </p>
         </div>

@@ -18,14 +18,14 @@ export default function TermsPage() {
         <p className="m-0 text-base font-bold leading-relaxed text-ink">
           <Tx v={TRANSLATIONS.brand.unofficialDisclaimer} />
         </p>
-        <p className="m-0 text-sm font-medium leading-relaxed text-ink">
+        <p className="m-0 text-base font-medium leading-relaxed text-ink">
           <Tx v={P.termsBody} />
         </p>
         <div className="space-y-1">
           <h2 className="m-0 text-base font-extrabold text-ink">
             <Tx v={P.termsHeadingRules} />
           </h2>
-          <p className="m-0 text-sm font-medium leading-relaxed text-ink">
+          <p className="m-0 text-base font-medium leading-relaxed text-ink">
             <Tx v={P.termsRules} />
           </p>
         </div>
@@ -33,7 +33,7 @@ export default function TermsPage() {
           <h2 className="m-0 text-base font-extrabold text-ink">
             <Tx v={P.termsHeadingLiability} />
           </h2>
-          <p className="m-0 text-sm font-medium leading-relaxed text-ink">
+          <p className="m-0 text-base font-medium leading-relaxed text-ink">
             <Tx v={P.termsLiability} />
           </p>
         </div>
