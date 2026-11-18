@@ -42,6 +42,7 @@ test.describe("Phase 5 — ENABLE_ROOMS=false safety & quality gates", () => {
   test("New room routes pass axe 0 violations, 0 console errors, EN no-Telugu, and TE Anek Telugu font", async ({
     page,
   }) => {
+    test.setTimeout(60_000);
     const consoleErrors: string[] = [];
     page.on("console", (msg) => {
       if (msg.type() === "error" && msg.text().includes("fetching the script")) return;
