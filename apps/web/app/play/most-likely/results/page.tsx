@@ -193,7 +193,7 @@ export default function MostLikelyResultsPage() {
             <ConfettiBurst trigger={1} />
           </div>
 
-          <div className="sticky bottom-[calc(72px+env(safe-area-inset-bottom))] z-20 flex flex-col gap-3 rounded-[18px] border-[3px] border-ink bg-concrete p-2 shadow-[0_4px_0_#141313] sm:flex-row md:static md:border-0 md:bg-transparent md:p-0 md:pt-2 md:shadow-none">
+          <div className="flex flex-col gap-3 pt-2 sm:flex-row">
             <WallLinkButton href="/play/most-likely" variant="yellow" className="flex-1">
               <Tx v={GAME_TRANSLATIONS.judge.playAgain} />
             </WallLinkButton>

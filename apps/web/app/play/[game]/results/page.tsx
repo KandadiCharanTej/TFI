@@ -276,8 +276,8 @@ export default function JudgeResultsPage({
           )}
         </Sticker>
 
-        {/* Action Buttons (sticky Play again on phones) */}
-        <div className="sticky bottom-[calc(72px+env(safe-area-inset-bottom))] z-20 flex flex-col gap-3 rounded-[18px] border-[3px] border-ink bg-concrete p-2 shadow-[0_4px_0_#141313] md:static md:border-0 md:bg-transparent md:p-0 md:pt-2 md:shadow-none">
+        {/* Action Buttons */}
+        <div className="flex flex-col gap-3 pt-1">
           <WallButton
             variant="white"
             className="w-full text-base"

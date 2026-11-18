@@ -96,7 +96,7 @@ export default function LandingPage() {
             <a href="#how" className="hidden min-h-[44px] min-w-[44px] items-center justify-center px-1.5 text-ink no-underline hover:underline md:inline-flex">
               <Tx v={TRANSLATIONS.nav.howItPlays} />
             </a>
-            <Link href="/about" className="hidden min-h-[44px] min-w-[44px] items-center justify-center px-1.5 text-ink no-underline hover:underline md:inline-flex">
+            <Link href="/about" prefetch={false} className="hidden min-h-[44px] min-w-[44px] items-center justify-center px-1.5 text-ink no-underline hover:underline md:inline-flex">
               <Tx v={TRANSLATIONS.nav.about} />
             </Link>
             <LangSwitch />
@@ -116,7 +116,7 @@ export default function LandingPage() {
           bg="yellow"
           pattern="halftone"
           aria-label={t(L.heroLabel)}
-          className="relative overflow-hidden border-b-[3px] border-ink pb-14 pt-5 sm:pt-7 md:py-14 lg:py-16"
+          className="relative overflow-hidden border-b-[3px] border-ink pb-14 pt-5 sm:pt-7 md:py-14 lg:py-16 xl:pb-20"
         >
           <SpotlightBeam />
           <div
@@ -179,9 +179,9 @@ export default function LandingPage() {
                     return (
                       <>
                         {sub.slice(0, pos)}
-                        <span className="relative inline-block px-1.5">
+                        <span className="relative inline-block">
                           <span className="relative z-10">{target}</span>
-                          <DoodleScribbleOval className="absolute -inset-x-1 -inset-y-1.5 h-[calc(100%+10px)] w-[calc(100%+8px)]" />
+                          <DoodleScribbleOval className="absolute -inset-x-2 -inset-y-1.5 h-[calc(100%+10px)] w-[calc(100%+16px)]" />
                         </span>
                         {sub.slice(pos + target.length)}
                       </>
@@ -258,13 +258,13 @@ export default function LandingPage() {
             <Tx v={TRANSLATIONS.brand.unofficialDisclaimer} />
           </p>
           <nav aria-label={t(TRANSLATIONS.nav.footerNav)} className="flex flex-wrap gap-2 font-bold">
-            <Link href="/about" className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center px-2 text-concrete underline">
+            <Link href="/about" prefetch={false} className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center px-2 text-concrete underline">
               <Tx v={TRANSLATIONS.nav.about} />
             </Link>
-            <Link href="/privacy" className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center px-2 text-concrete underline">
+            <Link href="/privacy" prefetch={false} className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center px-2 text-concrete underline">
               <Tx v={TRANSLATIONS.nav.privacy} />
             </Link>
-            <Link href="/terms" className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center px-2 text-concrete underline">
+            <Link href="/terms" prefetch={false} className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center px-2 text-concrete underline">
               <Tx v={TRANSLATIONS.nav.terms} />
             </Link>
             {feedbackUrl ? (

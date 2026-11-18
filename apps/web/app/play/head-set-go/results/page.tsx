@@ -170,20 +170,18 @@ export default function HsgResultsPage() {
           )}
         </Sticker>
 
-        {/* Actions (stack on phones, sticky Play again thumb zone) */}
-        <div className="sticky bottom-[calc(72px+env(safe-area-inset-bottom))] z-20 rounded-[18px] border-[3px] border-ink bg-concrete p-2 shadow-[0_4px_0_#141313] md:static md:border-0 md:bg-transparent md:p-0 md:shadow-none">
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <WallButton
-              variant="yellow"
-              className="w-full"
-              onClick={() => router.push("/play/head-set-go/round")}
-            >
-              <Tx v={GAME_TRANSLATIONS.hsg.playAgain} />
-            </WallButton>
-            <WallLinkButton href="/play/head-set-go" variant="white" className="w-full">
-              <Tx v={GAME_TRANSLATIONS.hsg.changeDeck} />
-            </WallLinkButton>
-          </div>
+        {/* Actions (full-width stacked on phones, 2-up on tablet/desktop) */}
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <WallButton
+            variant="yellow"
+            className="w-full"
+            onClick={() => router.push("/play/head-set-go/round")}
+          >
+            <Tx v={GAME_TRANSLATIONS.hsg.playAgain} />
+          </WallButton>
+          <WallLinkButton href="/play/head-set-go" variant="white" className="w-full">
+            <Tx v={GAME_TRANSLATIONS.hsg.changeDeck} />
+          </WallLinkButton>
         </div>
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">

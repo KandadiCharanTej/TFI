@@ -183,7 +183,7 @@ export default function HsgSetupPage() {
           </div>
         </Sticker>
 
-        <div className="sticky bottom-[calc(72px+env(safe-area-inset-bottom))] z-20 rounded-[18px] border-[3px] border-ink bg-concrete p-2 shadow-[0_4px_0_#141313] md:static md:border-0 md:bg-transparent md:p-0 md:shadow-none">
+        <div>
           <WallButton
             variant="yellow"
             size="lg"

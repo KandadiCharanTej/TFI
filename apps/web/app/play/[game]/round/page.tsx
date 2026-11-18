@@ -669,29 +669,29 @@ export default function JudgeRoundPage({
       </div>
 
       {/* Top Header Bar */}
-      <header className="flex items-center justify-between px-4 pt-3">
+      <header className="flex flex-wrap items-center justify-between gap-2 px-3 pt-3 sm:px-4">
         {/* Score pill + Streak */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex shrink-0 items-center gap-1.5">
           <div
-            className="mono-num rounded-full border-2 border-ink bg-white px-3 py-1 text-base font-black text-ink shadow-[2px_2px_0_#141313]"
+            className="mono-num shrink-0 whitespace-nowrap rounded-full border-2 border-ink bg-white px-2.5 py-1 text-base font-black text-ink shadow-[2px_2px_0_#141313]"
             aria-label="Score"
           >
             ✓ {s.currentTurnCorrect}
           </div>
           {streak >= 2 ? (
-            <div className="mono-num rounded-full border-2 border-ink bg-magenta px-2.5 py-1 text-[19px] font-bold text-white shadow-[2px_2px_0_#141313]">
+            <div className="mono-num shrink-0 whitespace-nowrap rounded-full border-2 border-ink bg-magenta px-2.5 py-1 text-[19px] font-bold text-white shadow-[2px_2px_0_#141313]">
               🔥 {streak}
             </div>
           ) : null}
         </div>
 
         {/* Current Judge Indicator */}
-        <div className="rounded-full border-2 border-ink bg-yellow px-3 py-0.5 text-xs font-black uppercase text-ink">
+        <div className="max-w-[110px] shrink truncate whitespace-nowrap rounded-full border-2 border-ink bg-yellow px-2.5 py-0.5 text-xs font-black uppercase text-ink">
           {currentPlayer.name}
         </div>
 
         {/* Actions: Help, Pause & Sound */}
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
           <button
             type="button"
             onClick={() => {
@@ -763,7 +763,7 @@ export default function JudgeRoundPage({
 
           {/* Seconds Left Pill */}
           <div
-            className={`mono-num rounded-full border-2 border-ink px-3 py-1 text-base font-black shadow-[2px_2px_0_#141313] ${
+            className={`mono-num shrink-0 whitespace-nowrap rounded-full border-2 border-ink px-2.5 py-1 text-base font-black shadow-[2px_2px_0_#141313] ${
               s.secondsLeft <= 10 && s.secondsLeft > 0
                 ? "v4-pulse-urgent bg-magenta text-[19px] text-white"
                 : "bg-white text-ink"

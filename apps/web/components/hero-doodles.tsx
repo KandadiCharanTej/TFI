@@ -132,13 +132,13 @@ export function HeroDoodles({ correctPulse = 0, passShake = 0 }: HeroDoodlesProp
         <div
           aria-hidden="true"
           data-doodle-item="xl-x-magenta"
-          className={`pointer-events-none absolute -bottom-16 -left-12 sm:-bottom-14 sm:-left-10 md:-bottom-16 md:-left-12 ${
+          className={`pointer-events-none absolute -bottom-24 -left-16 sm:-bottom-24 sm:-left-16 md:-bottom-28 md:-left-20 ${
             animReady ? "doodle-enter-bl" : ""
           } ${xShake ? "doodle-x-shake" : ""}`}
         >
           <div className={animReady ? "doodle-spin-slow" : ""}>
             <DoodleX tone="magenta" size={140} tilt={16} className="md:hidden" />
-            <DoodleX tone="magenta" size={190} tilt={16} className="hidden md:block" />
+            <DoodleX tone="magenta" size={172} tilt={16} className="hidden md:block" />
           </div>
         </div>
 
@@ -176,10 +176,11 @@ export function HeroDoodles({ correctPulse = 0, passShake = 0 }: HeroDoodlesProp
         </div>
 
         {/* 5. 4x2 ink dot column top-right inset */}
+        {/* 5. 4x2 ink dot column */}
         <div
           aria-hidden="true"
           data-doodle-item="dot-column"
-          className="pointer-events-none absolute right-12 top-3 sm:right-20 sm:top-5 lg:right-24 lg:top-6"
+          className="pointer-events-none absolute right-3 top-[32%] sm:right-20 sm:top-5 lg:right-24 lg:top-6"
         >
           <DoodleDotColumn />
         </div>
@@ -219,11 +220,11 @@ export function HeroDoodles({ correctPulse = 0, passShake = 0 }: HeroDoodlesProp
 
         {/* === DESKTOP SET (+4 = 12 doodles total at 1280px+) === */}
 
-        {/* 9. Ink M XMark (56px) bottom-left desktop whitespace */}
+        {/* 9. Ink M XMark (56px) open center gutter on desktop */}
         <div
           aria-hidden="true"
           data-doodle-item="md-x-ink"
-          className="pointer-events-none absolute bottom-8 left-48 hidden xl:block"
+          className="pointer-events-none absolute left-[53%] top-[58%] hidden xl:block"
         >
           <DoodleX tone="ink" size={56} tilt={-14} />
         </div>
@@ -237,11 +238,11 @@ export function HeroDoodles({ correctPulse = 0, passShake = 0 }: HeroDoodlesProp
           <DoodleFilmStrip size={44} />
         </div>
 
-        {/* 11. Ticket stub upper-right desktop corner */}
+        {/* 11. Ticket stub upper-center desktop gutter */}
         <div
           aria-hidden="true"
           data-doodle-item="ticket-doodle"
-          className="pointer-events-none absolute right-24 top-20 hidden xl:block"
+          className="pointer-events-none absolute left-[53%] top-[22%] hidden xl:block"
         >
           <DoodleTicket size={44} />
         </div>
