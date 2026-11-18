@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { Tx } from "@/components/lang-provider";
 import { TRANSLATIONS } from "@/lib/i18n";
 
-export const SW_CACHE_NAME = "tfi-offline-v2";
+export const SW_CACHE_NAME = "tfi-offline-v3";
 
 /**
  * Registers the service worker after load and shows a non-intrusive
@@ -20,7 +20,30 @@ export function SwManager() {
     const forceSw =
       typeof window !== "undefined" &&
       (window as unknown as { __FORCE_SW__?: boolean }).__FORCE_SW__;
-    if ((process.env.NODE_ENV !== "production" && !forceSw) || !("serviceWorker" in navigator)) {
+    if (!("serviceWorker" in navigator)) {
+      return;
+    }
+    // In dev mode, actively clean up any stale SW/caches left over from earlier prod runs on localhost.
+    if (process.env.NODE_ENV !== "production" && !forceSw) {
+      const hadController = Boolean(navigator.serviceWorker.controller);
+      void (async () => {
+        try {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(regs.map((r) => r.unregister()));
+          if ("caches" in window) {
+            const keys = await caches.keys();
+            await Promise.all(
+              keys.filter((k) => k.startsWith("tfi-")).map((k) => caches.delete(k)),
+            );
+          }
+          if (hadController && !sessionStorage.getItem("tfi.sw_cleaned")) {
+            sessionStorage.setItem("tfi.sw_cleaned", "1");
+            window.location.reload();
+          }
+        } catch {
+          // Ignore cleanup errors
+        }
+      })();
       return;
     }
 

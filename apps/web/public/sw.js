@@ -1,4 +1,4 @@
-const CACHE_NAME = "tfi-offline-v2";
+const CACHE_NAME = "tfi-offline-v3";
 
 const PRECACHE_URLS = [
   "/offline",
@@ -64,6 +64,13 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET") return;
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
+  if (
+    url.searchParams.has("v") ||
+    url.pathname.includes("webpack-hmr") ||
+    url.pathname.startsWith("/_next/webpack")
+  ) {
+    return;
+  }
 
   if (request.mode === "navigate") {
     event.respondWith(

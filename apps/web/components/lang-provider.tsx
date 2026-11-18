@@ -60,16 +60,22 @@ export function useLang(): LangContextValue {
 }
 
 /** Renders one translated string in the current language. */
-export function Tx({ v, values }: { readonly v: Bi; readonly values?: Record<string, string | number> }) {
+export function Tx({ v, values }: { readonly v?: Bi | null; readonly values?: Record<string, string | number> }) {
   const { lang } = useLang();
-  return <>{values ? fmt(v[lang], values) : v[lang]}</>;
+  if (!v) return null;
+  const text = v[lang] ?? v.en ?? "";
+  return <>{values ? fmt(text, values) : text}</>;
 }
 
 /** Returns a translate function for use in attributes and logic. */
-export function useT(): (v: Bi, values?: Record<string, string | number>) => string {
+export function useT(): (v?: Bi | null, values?: Record<string, string | number>) => string {
   const { lang } = useLang();
   return useCallback(
-    (v: Bi, values?: Record<string, string | number>) => (values ? fmt(v[lang], values) : v[lang]),
+    (v?: Bi | null, values?: Record<string, string | number>) => {
+      if (!v) return "";
+      const text = v[lang] ?? v.en ?? "";
+      return values ? fmt(text, values) : text;
+    },
     [lang],
   );
 }
